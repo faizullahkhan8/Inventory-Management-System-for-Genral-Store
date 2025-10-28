@@ -1,0 +1,62 @@
+# Node modules
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Logs
+logs/
+*.log
+*.log.*
+log.txt
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+
+# Coverage & testing
+coverage/
+.nyc_output/
+jest-test-results.json
+
+# Build & dist folders
+dist/
+build/
+out/
+tmp/
+
+# IDE / Editor
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# PM2 or forever process logs
+pids/
+*.pid
+*.seed
+
+# TypeScript (if using)
+*.tsbuildinfo
+
+# Local database / cache files
+data/
+cache/
+*.sqlite
+*.db
+
+# Docker
+docker-compose.override.yml
+*.tar
