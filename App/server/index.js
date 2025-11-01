@@ -10,6 +10,7 @@ import connectDB from "./config/db.js";
 
 // routers
 import authRouter from "./routers/auth.router.js";
+import errorHandler from "./middlewares/errorhandler.middleware.js";
 
 dotenv.config();
 
@@ -53,3 +54,5 @@ app.listen(PORT, () => {
 });
 
 connectDB();
+
+app.use(errorHandler);
