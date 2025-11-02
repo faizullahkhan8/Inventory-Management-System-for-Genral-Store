@@ -1,9 +1,12 @@
 import asyncHandler from "express-async-handler";
-import ErrorResponse from "../utils/ErrorResponse";
-import User from "../models/user.model";
+import { ErrorResponse } from "../utils/ErrorResponse.js";
+import User from "../models/user.model.js";
+import UserDTO from "../dto/user.dto.js";
 
 export const registerUser = asyncHandler(async (req, res, next) => {
     try {
+        if (!req.body)
+            return next(new ErrorResponse("Request body is null", 400));
         const { fullname, username, contact, password } = req.body;
         if ((!fullname, !username, !password, !contact)) {
             return next(
@@ -16,6 +19,9 @@ export const registerUser = asyncHandler(async (req, res, next) => {
         }
         const newUser = new User({ fullname, username, password, contact });
         await newUser.save();
+
+        req.session.user = { id: newUser._id, username: newUser.username };
+
         res.status(201).json({
             success: true,
             message: "User registered successfully",
@@ -47,6 +53,7 @@ export const loginUser = asyncHandler(async (req, res, next) => {
         res.status(200).json({
             success: true,
             message: "Logged in successfully",
+            user: new UserDTO(user),
         });
     } catch (error) {
         console.log("Error in Login User Controller.", error.message);

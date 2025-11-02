@@ -1,4 +1,4 @@
-import ErrorResponse from "../utils/ErrorResponse";
+import { ErrorResponse } from "../utils/ErrorResponse.js";
 
 const errorHandler = (err, req, res, next) => {
     // ✅ If error is not instance of ErrorResponse, convert it
