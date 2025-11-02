@@ -13,11 +13,14 @@ import {
 
 import { useLogin } from "../api/auth.api";
 
+import { setUser } from "../store/Slices/user.slice";
+
 import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
 import { Label } from "../ui/Label";
 import { Checkbox } from "../ui/Checkbox";
 import { Card } from "../ui/Card";
+import { useDispatch } from "react-redux";
 
 const Login = () => {
     const [username, setUsername] = useState("");
@@ -25,12 +28,17 @@ const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [rememberMe, setRememberMe] = useState(false);
 
+    const dispatch = useDispatch();
+
     const { login, loading } = useLogin();
 
     async function handleSubmit(e) {
         e.preventDefault();
         const data = await login(username, password);
-        console.log(data);
+
+        if (data) {
+            dispatch(setUser({ ...data.user, isLoggedIn: true }));
+        }
     }
 
     return (
