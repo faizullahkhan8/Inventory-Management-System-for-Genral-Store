@@ -12,8 +12,10 @@ import {
 } from "lucide-react";
 
 import { useLogin } from "../api/auth.api";
+import { useNavigate } from "react-router-dom";
 
 import { setUser } from "../store/Slices/user.slice";
+import { persistor } from "../store/store";
 
 import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
@@ -28,6 +30,8 @@ const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [rememberMe, setRememberMe] = useState(false);
 
+    const navigate = useNavigate();
+
     const dispatch = useDispatch();
 
     const { login, loading } = useLogin();
@@ -38,6 +42,17 @@ const Login = () => {
 
         if (data) {
             dispatch(setUser({ ...data.user, isLoggedIn: true }));
+
+            if (!rememberMe) {
+                persistor.pause();
+                persistor.flush().then(() => {
+                    persistor.purge();
+                });
+            } else {
+                persistor.persist();
+            }
+
+            navigate("/?page=dashboard");
         }
     }
 
