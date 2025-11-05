@@ -30,14 +30,74 @@
     --color-transparent: transparent;
 }
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
 body,
 html {
     max-width: 100%;
     min-height: 100vh;
+}
+
+.neon-bg {
+    position: relative;
+    min-height: 100vh;
+    background: #00126164;
+    overflow: hidden;
+}
+
+/* BLOB BASE STYLING */
+.neon-blob {
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(70px) saturate(150%);
+    mix-blend-mode: screen;
+    pointer-events: none;
+    opacity: 0.9;
+    animation: floatGlow 12s ease-in-out infinite alternate;
+}
+
+/* Blob 1 — Red (top-left) */
+.blob-red {
+    width: 650px;
+    height: 650px;
+    top: -200px;
+    left: -220px;
+    background: radial-gradient(circle, #ff0e0e 0%, transparent 45%);
+}
+
+/* Blob 2 — Purple (bottom-right) */
+.blob-purple {
+    width: 500px;
+    height: 500px;
+    bottom: -200px;
+    right: -180px;
+    background: radial-gradient(circle, #8c097d 0%, transparent 45%);
+}
+
+/* Blob 3 — Cyan (right-center) */
+.blob-cyan {
+    width: 450px;
+    height: 450px;
+    top: 15%;
+    right: -120px;
+    background: radial-gradient(circle, #00eaff 0%, transparent 50%);
+}
+
+/* Blob 4 — Orange (bottom-left) */
+.blob-orange {
+    width: 480px;
+    height: 480px;
+    bottom: -180px;
+    left: -100px;
+    background: radial-gradient(circle, #ff7a18 0%, transparent 50%);
+}
+
+@keyframes floatGlow {
+    0% {
+        transform: translateY(0px) scale(1);
+    }
+    50% {
+        transform: translateY(-100px) scale(1.05);
+    }
+    100% {
+        transform: translateY(0px) scale(1);
+    }
 }

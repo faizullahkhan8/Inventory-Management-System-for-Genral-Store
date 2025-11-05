@@ -59,3 +59,16 @@ export const loginUser = asyncHandler(async (req, res, next) => {
         console.log("Error in Login User Controller.", error.message);
     }
 });
+
+export const logoutUser = asyncHandler(async (req, res, next) => {
+    try {
+        req.session.destroy();
+
+        return res.status(200).json({
+            success: "true",
+            message: "User logged out successfully.",
+        });
+    } catch (error) {
+        console.log("Error in logout User Controller", error.message);
+    }
+});

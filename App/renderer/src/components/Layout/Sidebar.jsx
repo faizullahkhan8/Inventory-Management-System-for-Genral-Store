@@ -1,6 +1,6 @@
 import Logo from "../../assets/StockPilot-removebg-preview.png";
 import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 
 import {
     LayoutDashboard,
@@ -14,12 +14,18 @@ import {
     User,
     LogOut,
     SidebarIcon,
+    Loader,
 } from "lucide-react";
 import { useState } from "react";
+import { useLogout } from "../../api/auth.api";
 
 const SidebarComponent = () => {
-    const [isCollapsed, setIsCollapsed] = useState(true);
+    const [isCollapsed, setIsCollapsed] = useState(false);
     const [showSidebarIcon, setShowSidebarIcon] = useState(false);
+
+    const navigate = useNavigate();
+
+    const { loading, logout } = useLogout();
 
     return (
         <Sidebar
@@ -56,13 +62,12 @@ const SidebarComponent = () => {
                                     }
                                 />
                             ) : (
-                                <Link to={"/"}>
-                                    <img
-                                        src={Logo}
-                                        alt="logo"
-                                        className="w-full h-full object-contain"
-                                    />
-                                </Link>
+                                <img
+                                    onClick={() => navigate("/")}
+                                    src={Logo}
+                                    alt="logo"
+                                    className="w-full h-full object-contain cursor-pointer"
+                                />
                             )}
                         </div>
                     }
@@ -175,12 +180,15 @@ const SidebarComponent = () => {
                             backgroundColor: "rgba(255, 0, 0, 0.1) !important",
                         },
                     }}
-                    onClick={() => {
-                        console.log("logout");
+                    onClick={async () => {
+                        const data = await logout();
+                        if (data.success) {
+                            navigate("/auth/login");
+                        }
                     }}
                     icon={<LogOut width={20} style={{ rotate: "180deg" }} />}
                 >
-                    Logout
+                    {loading ? <Loader /> : "Logout"}
                 </MenuItem>
             </Menu>
         </Sidebar>

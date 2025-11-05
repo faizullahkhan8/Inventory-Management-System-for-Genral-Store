@@ -24,6 +24,8 @@ import { Checkbox } from "../ui/Checkbox";
 import { Card } from "../ui/Card";
 import { useDispatch } from "react-redux";
 
+import logo from "../assets/StockPilot-removebg-preview.png";
+
 const Login = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -57,29 +59,38 @@ const Login = () => {
     }
 
     return (
-        <div className="min-h-screen flex">
+        <div className="neon-bg min-h-screen flex bg-gray-50/60!">
+            <div className="neon-blob blob-red"></div>
+            <div className="neon-blob blob-purple"></div>
+            <div className="neon-blob blob-cryn"></div>
+            <div className="neon-blob blob-orange"></div>
             {/* ---------------- LEFT SIDE PANEL ---------------- */}
-            <div className="hidden lg:flex lg:w-1/2 bg-linear-to-br from-blue-600 via-blue-700 to-blue-900 p-12 flex-col text-white">
+            <div className="hidden lg:flex lg:w-1/2 p-12 flex-col ">
                 {/* Logo */}
                 <div>
                     <div className="flex items-center gap-3 mb-8">
-                        <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center">
-                            <Package className="w-7 h-7" />
+                        <div className="w-20 h-20 bg-white/10 rounded-xl flex items-center justify-center">
+                            <img src={logo} className="w-20 h-20" />
                         </div>
 
-                        <div>
-                            <h1 className="text-2xl font-bold">InventoryPro</h1>
-                            <p className="text-sm text-blue-200">
-                                Business Management Suite
-                            </p>
+                        <div className="flex items-center justify-between">
+                            <div className="leading-none">
+                                <h1 className="font-bold text-3xl text-blue-600">
+                                    StockPilot
+                                </h1>
+                                <hr />
+                                <span className="text-sm font-bold opacity-70">
+                                    Inventory Management <br /> System
+                                </span>
+                            </div>
                         </div>
                     </div>
 
                     {/* App Text */}
-                    <h2 className="text-3xl font-bold mb-4">
+                    <h2 className="text-3xl font-bold mb-4 text-blue-600">
                         Inventory Management System
                     </h2>
-                    <p className="text-lg text-blue-100 leading-relaxed">
+                    <p className="text-lg leading-relaxed">
                         Manage inventory, track sales & analyze business
                         statistics.
                     </p>
@@ -87,24 +98,22 @@ const Login = () => {
 
                 {/* Developer Info */}
                 <div className="border-t border-white/20 pt-6">
-                    <p className="text-sm font-medium text-blue-100 mb-3">
-                        Developed By
-                    </p>
+                    <p className="text-sm font-medium mb-3">Developed By</p>
                     <div className="flex items-center gap-3 mb-3">
                         <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center">
                             <User className="w-5 h-5" />
                         </div>
                         <div>
-                            <p className="font-semibold">Faiz Ullah Khan</p>
-                            <p className="text-sm text-blue-200">
-                                Full Stack Developer
+                            <p className="font-semibold text-blue-600">
+                                Faiz Ullah Khan
                             </p>
+                            <p className="text-sm ">Full Stack Developer</p>
                         </div>
                     </div>
                     <div className="flex justify-center flex-col gap-2 ml-8">
                         <a
                             href="https://github.com/faizullahkhan8"
-                            className="text-blue-200 hover:underline flex items-center gap-2"
+                            className=" hover:underline flex items-center gap-2"
                             target="__blank"
                         >
                             <Github />
@@ -113,7 +122,7 @@ const Login = () => {
 
                         <a
                             href="mailto:faizullahofficial0@gmail.com"
-                            className="text-blue-200 hover:underline flex items-center gap-2"
+                            className=" hover:underline flex items-center gap-2"
                             target="__blank"
                         >
                             <MailIcon />
@@ -122,7 +131,7 @@ const Login = () => {
 
                         <a
                             href="https://wa.me/923328753452?text=Hello%20I%20want%20to%20contact%20you"
-                            className="text-blue-200 hover:underline flex items-center gap-2"
+                            className=" hover:underline flex items-center gap-2"
                             target="__blank"
                         >
                             <Contact />
@@ -133,21 +142,23 @@ const Login = () => {
             </div>
 
             {/* ---------------- RIGHT SIDE LOGIN FORM ---------------- */}
-            <div className="flex-1 flex items-center justify-center p-8 bg-gray-50">
+            <div className="flex-1 flex items-center justify-center p-8">
                 <div className="w-full max-w-md">
                     {/* Logo (mobile) */}
-                    <div className="lg:hidden text-center mb-8">
-                        <div className="inline-flex items-center gap-3 mb-4">
-                            <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center">
-                                <Package className="w-7 h-7 text-white" />
-                            </div>
-                            <div>
-                                <h1 className="text-2xl font-bold">
-                                    InventoryPro
+                    <div className="lg:hidden flex items-center justify-center gap-3 mb-8">
+                        <div className="w-20 h-20 bg-white/10 rounded-xl flex items-center justify-center">
+                            <img src={logo} className="w-20 h-20" />
+                        </div>
+
+                        <div className="flex items-center justify-between">
+                            <div className="leading-none">
+                                <h1 className="font-bold text-3xl text-blue-600">
+                                    StockPilot
                                 </h1>
-                                <p className="text-sm text-gray-600">
-                                    Business Management
-                                </p>
+                                <hr />
+                                <span className="text-sm font-bold opacity-70">
+                                    Inventory Management <br /> System
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -222,7 +233,12 @@ const Login = () => {
                                             setRememberMe((prev) => !prev);
                                         }}
                                     />
-                                    <Label className="cursor-pointer">
+                                    <Label
+                                        className="cursor-pointer"
+                                        onClick={() =>
+                                            setRememberMe((pre) => !pre)
+                                        }
+                                    >
                                         Remember me
                                     </Label>
                                 </div>

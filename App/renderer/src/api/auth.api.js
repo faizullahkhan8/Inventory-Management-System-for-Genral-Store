@@ -28,3 +28,26 @@ export const useLogin = () => {
 
     return { loading, login };
 };
+
+export const useLogout = () => {
+    const [loading, setLoading] = useState(false);
+
+    const logout = async () => {
+        setLoading(true);
+        try {
+            const response = await apiClient.post(authRoutes.LOGOUT);
+
+            if (response.status === 200) {
+                toast.success("Logout successfully.");
+                return response.data;
+            }
+        } catch (error) {
+            toast.error(error?.response?.data?.error || "Logout failed");
+            console.log("Error in logout:", error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return { loading, logout };
+};
