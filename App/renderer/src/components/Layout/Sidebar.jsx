@@ -13,62 +13,100 @@ import {
     Settings,
     User,
     LogOut,
+    SidebarIcon,
 } from "lucide-react";
+import { useState } from "react";
 
 const SidebarComponent = () => {
+    const [isCollapsed, setIsCollapsed] = useState(true);
+    const [showSidebarIcon, setShowSidebarIcon] = useState(false);
+
     return (
         <Sidebar
+            collapsed={isCollapsed}
             rootStyles={{
-                width: "100%",
+                width: "270px",
+                height: "100vh",
+                "& .ps-sidebar-root": {
+                    maxHeight: "100vh",
+                },
             }}
-            className="h-screen"
         >
             {/* Logo Section */}
             <Menu
                 rootStyles={{
                     padding: "10px",
+                    "& .ps-menu-button": {
+                        padding: isCollapsed ? "0px 10px" : "0px 0px",
+                    },
                 }}
             >
                 <MenuItem
                     component={<Link to="/" />}
                     icon={
-                        <img
-                            src={Logo}
-                            alt="logo"
-                            className="w-12 object-contain"
-                        />
+                        <div
+                            className="relative w-[50px] h-[50px] flex items-center justify-center"
+                            onMouseEnter={() => setShowSidebarIcon(true)}
+                            onMouseLeave={() => setShowSidebarIcon(false)}
+                        >
+                            {showSidebarIcon && isCollapsed ? (
+                                <SidebarIcon
+                                    className="cursor-pointer"
+                                    onClick={() =>
+                                        setIsCollapsed((pre) => !pre)
+                                    }
+                                />
+                            ) : (
+                                <img
+                                    src={Logo}
+                                    alt="logo"
+                                    className="w-full h-full object-contain"
+                                />
+                            )}
+                        </div>
                     }
                     rootStyles={{
-                        "&:hover": {
+                        "&:hover, & .ps-menu-button:hover": {
                             backgroundColor: "transparent !important",
                         },
-                        "& .ps-menu-button:hover": {
-                            backgroundColor: "transparent !important",
+                        "& .ps-menu-icon": {
+                            width: "60px",
+                        },
+                        "& .ps-menu-icon img": {
+                            width: "50px",
                         },
                     }}
                 >
-                    <div className="leading-none">
-                        <h1 className="font-bold text-lg">StockPilot</h1>
-                        <span className="text-xs opacity-70">
-                            Inventory Management System
-                        </span>
+                    <div className="flex items-center justify-between">
+                        <div className="leading-none">
+                            <h1 className="font-bold text-lg">StockPilot</h1>
+                            <hr />
+                            <span className="text-xs opacity-70">
+                                Inventory Management <br /> System
+                            </span>
+                        </div>
+                        <SidebarIcon
+                            onClick={() => setIsCollapsed((pre) => !pre)}
+                        />
                     </div>
                 </MenuItem>
             </Menu>
+
             <Menu
                 rootStyles={{
-                    padding: "10px 10px",
+                    padding: isCollapsed ? "0px" : "10px",
                     "& .ps-menu-button": {
                         height: "36px",
                     },
                 }}
             >
-                {/* -------- MENU TITLE -------- */}
-                <div className="mb-4! text-[11px] font-semibold uppercase opacity-60">
-                    Main Menu
-                </div>
-
-                {/* -------- MAIN MENU -------- */}
+                {isCollapsed ? (
+                    <div className="w-full h-0.5 bg-black/70 my-2!"></div>
+                ) : (
+                    <div className="my-2! text-[11px] font-semibold uppercase opacity-60">
+                        Main Menu
+                    </div>
+                )}
                 <MenuItem
                     icon={<LayoutDashboard width={20} />}
                     component={<Link to="/" />}
@@ -111,11 +149,13 @@ const SidebarComponent = () => {
                 >
                     Suppliers
                 </MenuItem>
-
-                {/* -------- SETTINGS -------- */}
-                <div className="my-4! text-[11px] font-semibold uppercase opacity-60">
-                    Other
-                </div>
+                {isCollapsed ? (
+                    <div className="w-full h-0.5 bg-black/70 my-2!"></div>
+                ) : (
+                    <div className="my-2! text-[11px] font-semibold uppercase opacity-60">
+                        Other
+                    </div>
+                )}
                 <MenuItem
                     icon={<Settings width={20} />}
                     component={<Link to="/settings" />}

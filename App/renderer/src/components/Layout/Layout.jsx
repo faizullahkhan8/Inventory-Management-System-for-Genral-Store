@@ -3,7 +3,7 @@ import SidebarComponet from "./Sidebar";
 
 const Layout = () => {
     return (
-        <div className="flex h-screen w-full">
+        <div className="flex max-h-screen max-w-[100dwh]">
             <div>
                 <SidebarComponet />
             </div>
