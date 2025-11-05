@@ -3,6 +3,7 @@ import Home from "./pages/Home.jsx";
 import Login from "./pages/Login.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import RootLayout from "./components/Layout/Layout.jsx";
+import NotFound from "./pages/NotFound.jsx";
 
 const router = createBrowserRouter([
     {
@@ -16,6 +17,10 @@ const router = createBrowserRouter([
             {
                 path: "/",
                 element: <Home />,
+            },
+            {
+                path: "*",
+                element: <NotFound />,
             },
         ],
     },

@@ -42,7 +42,6 @@ const SidebarComponent = () => {
                 }}
             >
                 <MenuItem
-                    component={<Link to="/" />}
                     icon={
                         <div
                             className="relative w-[50px] h-[50px] flex items-center justify-center"
@@ -57,11 +56,13 @@ const SidebarComponent = () => {
                                     }
                                 />
                             ) : (
-                                <img
-                                    src={Logo}
-                                    alt="logo"
-                                    className="w-full h-full object-contain"
-                                />
+                                <Link to={"/"}>
+                                    <img
+                                        src={Logo}
+                                        alt="logo"
+                                        className="w-full h-full object-contain"
+                                    />
+                                </Link>
                             )}
                         </div>
                     }
