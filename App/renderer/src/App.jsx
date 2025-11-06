@@ -4,6 +4,7 @@ import Login from "./pages/Login.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import RootLayout from "./components/Layout/Layout.jsx";
 import NotFound from "./pages/NotFound.jsx";
+import Inventory from "./pages/Inventory.jsx";
 
 const router = createBrowserRouter([
     {
@@ -17,6 +18,10 @@ const router = createBrowserRouter([
             {
                 path: "/",
                 element: <Home />,
+            },
+            {
+                path: "/inventory",
+                element: <Inventory />,
             },
             {
                 path: "*",

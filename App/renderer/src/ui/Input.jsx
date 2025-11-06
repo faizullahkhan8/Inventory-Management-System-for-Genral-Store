@@ -1,4 +1,4 @@
-function Input({ className = "", type, ...props }) {
+function Input({ className = "", type = "text", ...props }) {
     return (
         <input
             type={type}

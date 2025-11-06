@@ -56,7 +56,7 @@ const SidebarComponent = () => {
                         >
                             {showSidebarIcon && isCollapsed ? (
                                 <SidebarIcon
-                                    className="cursor-pointer"
+                                    className="cursor-e-resize"
                                     onClick={() =>
                                         setIsCollapsed((pre) => !pre)
                                     }
@@ -88,12 +88,14 @@ const SidebarComponent = () => {
                             <h1 className="font-bold text-lg text-primary">
                                 StockPilot
                             </h1>
-                            <div className="w-full h-0.5 bg-black" />
-                            <span className="text-sm font-bold opacity-70">
+                            <div className="w-full h-[1.5px] bg-black" />
+                            <span className="text-sm font-bold opacity-50">
                                 Inventory Management <br /> System
                             </span>
                         </div>
                         <SidebarIcon
+                            size={20}
+                            className="cursor-e-resize"
                             onClick={() => setIsCollapsed((pre) => !pre)}
                         />
                     </div>
