@@ -28,6 +28,7 @@ export const registerUser = asyncHandler(async (req, res, next) => {
         });
     } catch (error) {
         console.log("Error in Register User Controller.", error.message);
+        return next(new ErrorResponse("Internal server error.", 500));
     }
 });
 
@@ -57,6 +58,7 @@ export const loginUser = asyncHandler(async (req, res, next) => {
         });
     } catch (error) {
         console.log("Error in Login User Controller.", error.message);
+        return next(new ErrorResponse("Internal server error.", 500));
     }
 });
 
@@ -70,5 +72,6 @@ export const logoutUser = asyncHandler(async (req, res, next) => {
         });
     } catch (error) {
         console.log("Error in logout User Controller", error.message);
+        return next(new ErrorResponse("Internal server error.", 500));
     }
 });

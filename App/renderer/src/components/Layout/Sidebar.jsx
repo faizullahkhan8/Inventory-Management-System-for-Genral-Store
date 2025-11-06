@@ -31,7 +31,7 @@ const SidebarComponent = () => {
         <Sidebar
             collapsed={isCollapsed}
             rootStyles={{
-                width: "270px",
+                width: "280px",
                 height: "100vh",
                 "& .ps-sidebar-root": {
                     maxHeight: "100vh",
@@ -85,9 +85,11 @@ const SidebarComponent = () => {
                 >
                     <div className="flex items-center justify-between">
                         <div className="leading-none">
-                            <h1 className="font-bold text-lg">StockPilot</h1>
-                            <hr />
-                            <span className="text-xs opacity-70">
+                            <h1 className="font-bold text-lg text-primary">
+                                StockPilot
+                            </h1>
+                            <div className="w-full h-0.5 bg-black" />
+                            <span className="text-sm font-bold opacity-70">
                                 Inventory Management <br /> System
                             </span>
                         </div>
@@ -109,7 +111,7 @@ const SidebarComponent = () => {
                 {isCollapsed ? (
                     <div className="w-full h-0.5 bg-black/70 my-2!"></div>
                 ) : (
-                    <div className="my-2! text-[11px] font-semibold uppercase opacity-60">
+                    <div className="my-2! text-[11px] font-semibold uppercase opacity-60 text-">
                         Main Menu
                     </div>
                 )}
