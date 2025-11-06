@@ -66,6 +66,7 @@ const SidebarComponent = () => {
                                     onClick={() => navigate("/")}
                                     src={Logo}
                                     alt="logo"
+                                    loading="lazy"
                                     className="w-full h-full object-contain cursor-pointer"
                                 />
                             )}

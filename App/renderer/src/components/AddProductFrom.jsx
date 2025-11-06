@@ -1,6 +1,8 @@
 import { XCircle } from "lucide-react";
 import { Input } from "../ui/Input";
+import { Button } from "../ui/Button";
 import Select from "../ui/Select";
+import { Link } from "react-router-dom";
 
 const AddProductFrom = ({ isOpen, setIsOpen }) => {
     return (
@@ -97,6 +99,36 @@ const AddProductFrom = ({ isOpen, setIsOpen }) => {
                             type="number"
                             placeholder="Enter product quantity in stock..."
                         />
+                    </div>
+                </div>
+                <div className="gird grid-cols-1">
+                    <div>
+                        <label htmlFor="description">
+                            Description <span className="text-red-500">*</span>
+                        </label>
+                        <br />
+                        <textarea
+                            id="description"
+                            type="text"
+                            className="flex w-full min-w-0 h-20 rounded-md border border-input bg-input-background
+    px-3 py-2 text-base md:text-sm text-foreground placeholder:text-muted-foreground
+    focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 outline-none
+    disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50
+    aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40
+    dark:bg-input/30 transition-all duration-200"
+                            placeholder="Enter the words that best describe the product..."
+                        />
+                    </div>
+                    <Link
+                        to={"#"}
+                        className="text-sm text-primary hover:text-shadow-primary-hover"
+                    >
+                        Want to add custom fields?
+                    </Link>
+                </div>
+                <div className="flex items-center justify-end">
+                    <div>
+                        <Button>Add Product</Button>
                     </div>
                 </div>
             </div>
