@@ -27,9 +27,10 @@ const productSchema = new Schema(
             min: 0,
             default: 0,
         },
-        inventoryRef: {
+        inventoryId: {
             type: mongoose.SchemaTypes.ObjectId,
             ref: "Inventory",
+            required: true,
         },
         mfgDate: {
             type: Date,
@@ -37,13 +38,14 @@ const productSchema = new Schema(
         expDate: {
             type: Date,
         },
-        supplier: {
+        supplierId: {
             type: mongoose.SchemaTypes.ObjectId,
             ref: "Supplier",
         },
-        category: {
+        categoryId: {
             type: mongoose.SchemaTypes.ObjectId,
             ref: "Category",
+            required: true,
         },
         imageUrl: {
             type: String,
@@ -54,10 +56,8 @@ const productSchema = new Schema(
         },
         customFields: [
             {
-                fieldName: String,
-                fieldType: String,
-                isRequired: Boolean,
-                isActive: Boolean,
+                fieldKey: String,
+                fieldValue: String,
             },
         ],
     },

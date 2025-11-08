@@ -1,7 +1,7 @@
-import { toast } from "react-hot-toast";
-import { authRoutes } from "./routes.api";
 import { useState } from "react";
-import apiClient from "./base.api";
+import { toast } from "react-hot-toast";
+import { authRoutes } from "../routes.api";
+import apiClient from "../base.api";
 
 export const useLogin = () => {
     const [loading, setLoading] = useState(false);

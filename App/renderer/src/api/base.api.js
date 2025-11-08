@@ -18,7 +18,7 @@ apiClient.interceptors.response.use(
             toast.error("session expired login again.");
             window.location.href = "/auth/login";
         }
-        Promise.reject(error);
+        return Promise.reject(error);
     }
 );
 

@@ -1,6 +1,6 @@
 import Logo from "../../assets/StockPilot-removebg-preview.png";
 import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import {
     LayoutDashboard,
@@ -17,7 +17,7 @@ import {
     Loader,
 } from "lucide-react";
 import { useState } from "react";
-import { useLogout } from "../../api/auth.api";
+import { useLogout } from "../../api/Hooks/auth.api";
 
 const SidebarComponent = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);

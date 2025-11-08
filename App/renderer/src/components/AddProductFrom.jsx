@@ -1,15 +1,81 @@
-import { XCircle } from "lucide-react";
+import { Loader, XCircle } from "lucide-react";
 import { Input } from "../ui/Input";
 import { Button } from "../ui/Button";
 import Select from "../ui/Select";
 import { Link } from "react-router-dom";
+import { Card } from "../ui/Card";
+import { useState } from "react";
+import { toast } from "react-hot-toast";
+
+import defaultImage from "../assets/default-image.png";
+import { useCreateProduct } from "../api/Hooks/product.api";
 
 const AddProductFrom = ({ isOpen, setIsOpen }) => {
+    const [selectedImageUrl, setSelectedImageUrl] = useState(defaultImage);
+    const [selectedImage, setSelectedImage] = useState(null);
+
+    const { createProduct, loading } = useCreateProduct();
+
+    const [productData, setProductData] = useState({
+        name: "",
+        sku: "",
+        description: "",
+        purchasedPrice: "",
+        sellingPrice: "",
+        quantity: "",
+        mfgDate: "",
+        expDate: "",
+        supplierRef: "69066452cc22a72016e30125",
+        category: "",
+        imageUrl: "http://localhost:3000/test-image.jpg",
+        // customFields: [
+        //     {
+        //         fieldKey: "",
+        //         fieldValue: "",
+        //     },
+        // ],
+    });
+
+    const handleFormDataChange = (e) => {
+        setProductData({
+            ...productData,
+            [e.target.id]: e.target.value,
+        });
+    };
+
+    const handleSelectFieldValue = (val, id) => {
+        setProductData({
+            ...productData,
+            [id]: val,
+        });
+    };
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            if (file.size > 2 * 1024 * 1024) {
+                toast.error("File is too large.");
+            }
+
+            setSelectedImageUrl(URL.createObjectURL(file));
+            setSelectedImage(file);
+        }
+    };
+
+    const handleImageUpload = () => {
+        console.log(`"${selectedImage.name}" is uploading...`);
+    };
+
+    const handleAddProduct = async () => {
+        console.log(productData);
+        const data = await createProduct(productData);
+    };
+
     return (
         <div
             className={`
     fixed top-0 right-0 h-screen w-[40vw] bg-gray-50 p-4 border-l border-gray-300 shadow-lg
-    transform transition-transform duration-300
+    transform transition-transform duration-300 overflow-y-scroll
     ${isOpen ? "translate-x-0" : "translate-x-full"}
   `}
         >
@@ -32,19 +98,42 @@ const AddProductFrom = ({ isOpen, setIsOpen }) => {
                         <label htmlFor="name">
                             Name <span className="text-red-500">*</span>
                         </label>
-                        <Input id="name" placeholder="Enter product name..." />
+                        <Input
+                            id="name"
+                            name="product-name"
+                            value={productData.name}
+                            autoComplete="product-name"
+                            required
+                            placeholder="Enter product name..."
+                            onChange={handleFormDataChange}
+                        />
                     </div>
                     <div>
                         <label className="mb-2">
                             SKU <span className="text-red-500">*</span>
                         </label>
-                        <Input placeholder="Enter product SKU..." />
+                        <Input
+                            placeholder="Enter product SKU..."
+                            required
+                            value={productData.sku}
+                            name="sku"
+                            id="sku"
+                            autoComplete="sku"
+                            onChange={handleFormDataChange}
+                        />
                     </div>
                     <div>
                         <label className="mb-2">
                             Category <span className="text-red-500">*</span>
                         </label>
                         <Select
+                            id="category"
+                            name="category"
+                            required
+                            autoComplete="category"
+                            onChange={(val) =>
+                                handleSelectFieldValue(val, "category")
+                            }
                             placeholder="Select category"
                             options={[
                                 { label: "Apple", value: "apple" },
@@ -58,6 +147,13 @@ const AddProductFrom = ({ isOpen, setIsOpen }) => {
                             Supplier <span className="text-red-500">*</span>
                         </label>
                         <Select
+                            id="supplier"
+                            name="supplier"
+                            required
+                            autoComplete="supplier"
+                            onChange={(val) =>
+                                handleSelectFieldValue(val, "supplier")
+                            }
                             placeholder="Select Supplier"
                             options={[
                                 { label: "Apple", value: "apple" },
@@ -74,7 +170,12 @@ const AddProductFrom = ({ isOpen, setIsOpen }) => {
                             <span className="text-red-500">*</span>
                         </label>
                         <Input
-                            id="purchasePrice"
+                            id="purchasedPrice"
+                            name="purchasedPrice"
+                            value={productData.purchasedPrice}
+                            required
+                            autoComplete="purchasedPrice"
+                            onChange={handleFormDataChange}
                             type="number"
                             placeholder="Enter product purchased price..."
                         />
@@ -86,6 +187,11 @@ const AddProductFrom = ({ isOpen, setIsOpen }) => {
                         </label>
                         <Input
                             id="sellingPrice"
+                            name="sellingPrice"
+                            value={productData.sellingPrice}
+                            onChange={handleFormDataChange}
+                            required
+                            autoComplete="sellingPrice"
                             type="number"
                             placeholder="Enter product sellilng price..."
                         />
@@ -96,8 +202,39 @@ const AddProductFrom = ({ isOpen, setIsOpen }) => {
                         </label>
                         <Input
                             id="quantity"
+                            name="quantity"
+                            value={productData.quantity}
+                            onChange={handleFormDataChange}
+                            required
+                            autoComplete="quantity"
                             type="number"
                             placeholder="Enter product quantity in stock..."
+                        />
+                    </div>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                    <div>
+                        <label htmlFor="mfgDate">Mfg Date</label>
+                        <Input
+                            id="mfgDate"
+                            name="mfgDate"
+                            value={productData.mfgDate}
+                            onChange={handleFormDataChange}
+                            autoComplete="mfgDate"
+                            type="date"
+                            placeholder="Enter mfg date for the product..."
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="expDate">Expiry Date</label>
+                        <Input
+                            id="expDate"
+                            name="expDate"
+                            value={productData.expDate}
+                            onChange={handleFormDataChange}
+                            autoComplete="expDate"
+                            type="date"
+                            placeholder="Enter mfg date for the product..."
                         />
                     </div>
                 </div>
@@ -109,6 +246,11 @@ const AddProductFrom = ({ isOpen, setIsOpen }) => {
                         <br />
                         <textarea
                             id="description"
+                            value={productData.description}
+                            name="description"
+                            required
+                            onChange={handleFormDataChange}
+                            autoComplete="description"
                             type="text"
                             className="flex w-full min-w-0 h-20 rounded-md border border-input bg-input-background
     px-3 py-2 text-base md:text-sm text-foreground placeholder:text-muted-foreground
@@ -119,6 +261,55 @@ const AddProductFrom = ({ isOpen, setIsOpen }) => {
                             placeholder="Enter the words that best describe the product..."
                         />
                     </div>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                    <Card className="p-2 gap-y-1">
+                        <label htmlFor="image">Image</label>
+                        <Input
+                            type="file"
+                            id="image"
+                            name="image"
+                            accept="image/*"
+                            onChange={handleImageChange}
+                        />
+                        <ul className="text-xs list-disc pl-4 text-gray-500">
+                            <li>Use a square image (1:1 ratio).</li>
+                            <li>
+                                Center the product with a clean and white
+                                background.
+                            </li>
+                            <li>Minimum size: 1000 * 1000 px.</li>
+                            <li>max size ≤ 2 MB JPEG format preferred.</li>
+                        </ul>
+                    </Card>
+                    <Card className="relative p-2 gap-y-2">
+                        <XCircle
+                            onClick={() => setSelectedImageUrl(defaultImage)}
+                            className="absolute top-2 right-2 hover:text-red-500 transition-colors duration-200"
+                            size={20}
+                        />
+                        <label>
+                            Preview{" "}
+                            <span className="italic text-sm text-gray-500">
+                                {!selectedImage && "(default)"}
+                            </span>
+                        </label>
+                        <img
+                            src={selectedImageUrl}
+                            alt="select image preview"
+                            className="w-50 rounded-lg"
+                        />
+                        <Button
+                            size="sm"
+                            variant="success"
+                            className=" self-end"
+                            onClick={handleImageUpload}
+                        >
+                            Confirm
+                        </Button>
+                    </Card>
+                </div>
+                <div>
                     <Link
                         to={"#"}
                         className="text-sm text-primary hover:text-shadow-primary-hover"
@@ -128,7 +319,10 @@ const AddProductFrom = ({ isOpen, setIsOpen }) => {
                 </div>
                 <div className="flex items-center justify-end">
                     <div>
-                        <Button>Add Product</Button>
+                        <Button onClick={handleAddProduct}>
+                            {loading && <Loader size={20} />}
+                            Add Product
+                        </Button>
                     </div>
                 </div>
             </div>

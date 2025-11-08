@@ -11,7 +11,7 @@ import {
     Loader,
 } from "lucide-react";
 
-import { useLogin } from "../api/auth.api";
+import { useLogin } from "../api/Hooks/auth.api";
 import { useNavigate } from "react-router-dom";
 
 import { setUser } from "../store/Slices/user.slice";
