@@ -16,9 +16,10 @@ import errorHandler from "./middlewares/errorhandler.middleware.js";
 dotenv.config();
 
 const app = express();
+
 const PORT = process.env.PORT || 3000;
 
-app.use(express.json());
+app.use(express.json({ limit: "10mb" }));
 app.use(
     cors({
         origin: process.env.CLIENT_URL || "http://localhost:5173",
@@ -26,6 +27,9 @@ app.use(
         credentials: true,
     })
 );
+
+app.use("/assets", express.static("assets"));
+app.use(express.urlencoded({ extended: true }));
 
 app.use(
     session({

@@ -8,13 +8,18 @@ import { useState } from "react";
 import { toast } from "react-hot-toast";
 
 import defaultImage from "../assets/default-image.png";
-import { useCreateProduct } from "../api/Hooks/product.api";
+import {
+    useCreateProduct,
+    useUploadProductImage,
+} from "../api/Hooks/product.api";
 
 const AddProductFrom = ({ isOpen, setIsOpen }) => {
     const [selectedImageUrl, setSelectedImageUrl] = useState(defaultImage);
     const [selectedImage, setSelectedImage] = useState(null);
 
     const { createProduct, loading } = useCreateProduct();
+    const { uploadProductImage, loading: ImageLoading } =
+        useUploadProductImage();
 
     const [productData, setProductData] = useState({
         name: "",
@@ -62,13 +67,42 @@ const AddProductFrom = ({ isOpen, setIsOpen }) => {
         }
     };
 
-    const handleImageUpload = () => {
-        console.log(`"${selectedImage.name}" is uploading...`);
-    };
-
     const handleAddProduct = async () => {
-        console.log(productData);
-        const data = await createProduct(productData);
+        try {
+            if (!selectedImage) {
+                toast.error("Please select a product image");
+                return;
+            }
+
+            // First upload the image
+            const productImageFormData = new FormData();
+            productImageFormData.append("productImage", selectedImage);
+
+            const imageResponse = await uploadProductImage(
+                productImageFormData
+            );
+
+            if (!imageResponse || !imageResponse.fileInfo) {
+                toast.error("Failed to upload image");
+                return;
+            }
+
+            // Create product with the image URL
+            const productWithImage = {
+                ...productData,
+                imageUrl: `http://localhost:3000/assets/images/product-images/${imageResponse.fileInfo.filename}`,
+            };
+
+            const productResponse = await createProduct(productWithImage);
+
+            if (productResponse.success) {
+                setSelectedImage(null);
+                setSelectedImageUrl(defaultImage);
+            }
+        } catch (error) {
+            console.error("Error in handleAddProduct:", error);
+            toast.error("Failed to create product with image");
+        }
     };
 
     return (
@@ -299,14 +333,6 @@ const AddProductFrom = ({ isOpen, setIsOpen }) => {
                             alt="select image preview"
                             className="w-50 rounded-lg"
                         />
-                        <Button
-                            size="sm"
-                            variant="success"
-                            className=" self-end"
-                            onClick={handleImageUpload}
-                        >
-                            Confirm
-                        </Button>
                     </Card>
                 </div>
                 <div>

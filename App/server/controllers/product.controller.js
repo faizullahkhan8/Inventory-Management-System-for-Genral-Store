@@ -71,3 +71,15 @@ export const createProduct = AsyncHandler(async (req, res, next) => {
         return next(new ErrorResponse("Internal server error.", 500));
     }
 });
+
+export const uploadImage = AsyncHandler(async (req, res, next) => {
+    try {
+        if (!req.file) {
+            return next(new ErrorResponse("File upload failed.", 400));
+        }
+        return res.status(201).json({ fileInfo: req.file });
+    } catch (error) {
+        console.log("Error in upload product image controller.", error.message);
+        return next(new ErrorResponse("Internal server error.", 500));
+    }
+});
