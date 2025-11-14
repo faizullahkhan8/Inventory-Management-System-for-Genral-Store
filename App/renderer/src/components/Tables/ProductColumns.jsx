@@ -1,5 +1,6 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import { Eye, Pencil, Trash2 } from "lucide-react";
+import DefaultImage from "../../assets/default-image.png";
 
 const onDelete = (item) => {
     console.log(item);
@@ -19,7 +20,7 @@ export const Columns = [
             <img
                 src={info.getValue()}
                 alt="Product"
-                className="w-14 h-14 object-cover rounded-md shadow-sm border"
+                className="w-full h-full object-cover rounded-md shadow-sm border"
             />
         ),
     }),
@@ -35,7 +36,7 @@ export const Columns = [
     }),
     columnHelper.accessor("purchasedPrice", {
         header: "Purchased Price",
-        size: 130,
+        size: 140,
         cell: (info) => `Rs. ${info.getValue()}`,
     }),
     columnHelper.accessor("sellingPrice", {

@@ -22,7 +22,7 @@ const ProductTable = ({ data, columns, loading }) => {
 
     return (
         <div className="w-full max-h-[70vh] overflow-auto border border-gray-200 rounded-lg">
-            <table className="w-full">
+            <table className="w-full table-fixed">
                 <thead className="bg-gray-50 sticky top-0">
                     {TableInstance.getHeaderGroups().map((headerGroup) => (
                         <tr key={headerGroup.id}>
@@ -47,7 +47,7 @@ const ProductTable = ({ data, columns, loading }) => {
                             {row.getVisibleCells().map((cell) => (
                                 <td
                                     key={cell.id}
-                                    className="px-4 py-3 text-sm text-gray-600"
+                                    className="px-4 py-1 text-sm text-gray-600"
                                     style={{ width: cell.column.getSize() }}
                                 >
                                     {flexRender(
