@@ -7,4 +7,5 @@ export const authRoutes = {
 export const productRoutes = {
     ADD_PRODUCT: "/product/create",
     UPLOAD_IMAGE: "/product/upload-image",
+    GET_ALL_FOR_TABLE: "/product/get-all-for-product",
 };

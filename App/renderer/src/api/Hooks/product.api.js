@@ -71,3 +71,34 @@ export const useUploadProductImage = () => {
 
     return { loading, uploadProductImage };
 };
+
+export const useGetAllProductsForTable = () => {
+    const [loading, setLoading] = useState(false);
+
+    const getAllProductsForTable = async () => {
+        setLoading(true);
+        try {
+            const response = await apiClient.get(
+                productRoutes.GET_ALL_FOR_TABLE
+            );
+
+            if (response?.data || response?.status === 200) {
+                return response.data;
+            }
+        } catch (error) {
+            const message =
+                error?.response?.data?.error ||
+                error?.response?.data?.message ||
+                error?.message ||
+                "fetching product failed!";
+
+            toast.error(message);
+            console.error("Error in fetching product:", message);
+            return null;
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return { loading, getAllProductsForTable };
+};

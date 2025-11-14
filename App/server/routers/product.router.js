@@ -4,6 +4,7 @@ import { isAuthenticated } from "../middlewares/auth.middleware.js";
 import {
     createProduct,
     uploadImage,
+    getAllProducts,
 } from "../controllers/product.controller.js";
 import { uploadProductImage } from "../middlewares/multer.middleware.js";
 
@@ -23,5 +24,7 @@ router.post(
     uploadProductImage.single("productImage"),
     uploadImage
 );
+
+router.get("/get-all-for-product", isAuthenticated, getAllProducts);
 
 export default router;

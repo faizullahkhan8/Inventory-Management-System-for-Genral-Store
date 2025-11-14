@@ -3,6 +3,7 @@ import { ErrorResponse } from "../utils/ErrorResponse.js";
 
 import Product from "../models/product.model.js";
 import Inventory from "../models/inventory.model.js";
+import ProductDto from "../dto/product.dto.js";
 
 export const createProduct = AsyncHandler(async (req, res, next) => {
     try {
@@ -80,6 +81,31 @@ export const uploadImage = AsyncHandler(async (req, res, next) => {
         return res.status(201).json({ fileInfo: req.file });
     } catch (error) {
         console.log("Error in upload product image controller.", error.message);
+        return next(new ErrorResponse("Internal server error.", 500));
+    }
+});
+
+export const getAllProducts = AsyncHandler(async (req, res, next) => {
+    try {
+        const allProducts = await Product.find({}).populate([
+            // "categoryId",
+            // "supplierId",
+            "inventoryId",
+        ]);
+
+        if (allProducts.length < 1)
+            return next(new ErrorResponse("No product added yet.", 400));
+
+        const FilteredProducts = allProducts.map(
+            (item) => new ProductDto(item)
+        );
+
+        return res.status(200).json({
+            success: true,
+            Products: FilteredProducts,
+        });
+    } catch (error) {
+        console.log("Error in get all products controller: ", error.message);
         return next(new ErrorResponse("Internal server error.", 500));
     }
 });
