@@ -16,7 +16,7 @@ export default function Select({
             <SelectPrimitive.Trigger
                 className={
                     "flex w-full items-center justify-between gap-2 rounded-md border border-gray-500 px-3 py-2 h-9 text-sm" +
-                    "bg-white dark:bg-neutral-900 focus:ring-2 outline-none cursor-pointer " +
+                    "bg-white focus:ring-2 outline-none cursor-pointer " +
                     "disabled:opacity-50 disabled:cursor-not-allowed " +
                     className
                 }
@@ -30,7 +30,7 @@ export default function Select({
             <SelectPrimitive.Portal>
                 <SelectPrimitive.Content
                     position="popper"
-                    className="rounded-md border bg-white dark:bg-neutral-800 shadow-md max-h-60 overflow-hidden"
+                    className="rounded-md border bg-white shadow-md max-h-60 overflow-hidden"
                 >
                     <SelectPrimitive.ScrollUpButton className="flex items-center justify-center py-1">
                         <ChevronUpIcon className="h-4 w-4" />
@@ -45,7 +45,7 @@ export default function Select({
                   relative flex items-center rounded-md 
                   py-2 pl-8 pr-2 text-sm cursor-pointer
                   select-none
-                  hover:bg-gray-100 dark:hover:bg-neutral-700
+                  hover:bg-gray-100
                   focus:bg-blue-500 focus:text-white outline-none
                 "
                             >

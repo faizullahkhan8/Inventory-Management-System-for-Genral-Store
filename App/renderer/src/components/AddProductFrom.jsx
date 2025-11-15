@@ -98,6 +98,8 @@ const AddProductFrom = ({ isOpen, setIsOpen }) => {
             if (productResponse.success) {
                 setSelectedImage(null);
                 setSelectedImageUrl(defaultImage);
+                setProductData({});
+                setIsOpen(false);
             }
         } catch (error) {
             console.error("Error in handleAddProduct:", error);
@@ -109,7 +111,7 @@ const AddProductFrom = ({ isOpen, setIsOpen }) => {
         <div
             className={`
     fixed top-0 right-0 h-screen w-[40vw] bg-gray-50 p-4 border-l border-gray-300 shadow-lg
-    transform transition-transform duration-300 overflow-y-scroll
+    transform transition-transform duration-300 overflow-y-scroll z-9
     ${isOpen ? "translate-x-0" : "translate-x-full"}
   `}
         >

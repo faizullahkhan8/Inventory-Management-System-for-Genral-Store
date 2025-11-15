@@ -12,6 +12,7 @@ import { useGetAllProductsForTable } from "../api/Hooks/product.api";
 const Inventory = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [productData, setProductData] = useState([]);
+    const [searchQuery, setSearchQuery] = useState("");
     const { loading, getAllProductsForTable } = useGetAllProductsForTable();
 
     useEffect(() => {
@@ -39,11 +40,14 @@ const Inventory = () => {
                                 type="text"
                                 placeholder="Search for product."
                                 className="pl-10 w-full"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
                             />
                         </div>
                         <Select
                             placeholder="Search by category"
                             className="w-full sm:w-auto"
+                            onChange={setSearchQuery}
                             options={[
                                 { label: "Apple", value: "apple" },
                                 { label: "Banana", value: "banana" },
@@ -72,6 +76,8 @@ const Inventory = () => {
                         columns={Columns}
                         data={productData}
                         loading={loading}
+                        searchQuery={searchQuery}
+                        setSearchQuery={setSearchQuery}
                     />
                 </div>
             </div>

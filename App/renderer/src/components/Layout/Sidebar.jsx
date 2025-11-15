@@ -1,5 +1,5 @@
 import Logo from "../../assets/StockPilot-removebg-preview.png";
-import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
+import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { Link, useNavigate } from "react-router-dom";
 
 import {
@@ -15,6 +15,7 @@ import {
     LogOut,
     SidebarIcon,
     Loader,
+    BoxesIcon,
 } from "lucide-react";
 import { useState } from "react";
 import { useLogout } from "../../api/Hooks/auth.api";
@@ -31,7 +32,7 @@ const SidebarComponent = () => {
         <Sidebar
             collapsed={isCollapsed}
             rootStyles={{
-                width: "280px",
+                width: "300px",
                 height: "100vh",
                 "& .ps-sidebar-root": {
                     maxHeight: "100vh",
@@ -159,6 +160,12 @@ const SidebarComponent = () => {
                     component={<Link to="/suppliers" />}
                 >
                     Suppliers
+                </MenuItem>
+                <MenuItem
+                    icon={<BoxesIcon width={20} />}
+                    component={<Link to="/catogory" />}
+                >
+                    Category
                 </MenuItem>
                 {isCollapsed ? (
                     <div className="w-full h-0.5 bg-black/70 my-2!"></div>

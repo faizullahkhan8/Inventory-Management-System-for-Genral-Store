@@ -2,14 +2,38 @@ import {
     useReactTable,
     getCoreRowModel,
     flexRender,
+    getFilteredRowModel,
+    getPaginationRowModel,
 } from "@tanstack/react-table";
-import { Loader } from "lucide-react";
+import { ChevronLeftIcon, ChevronRightIcon, Loader } from "lucide-react";
+import Select from "../../ui/Select";
+import { Button } from "../../ui/Button";
+import { useState } from "react";
 
-const ProductTable = ({ data, columns, loading }) => {
+const ProductTable = ({
+    data,
+    columns,
+    loading,
+    searchQuery,
+    setSearchQuery,
+}) => {
+    const [pagination, setPagination] = useState({
+        pageIndex: 0,
+        pageSize: 5,
+    });
+
     const TableInstance = useReactTable({
         columns,
         data,
+        state: {
+            globalFilter: searchQuery,
+            pagination: pagination,
+        },
+        onGlobalFilterChange: setSearchQuery,
+        onPaginationChange: setPagination,
         getCoreRowModel: getCoreRowModel(),
+        getFilteredRowModel: getFilteredRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
     });
 
     if (loading) {
@@ -21,46 +45,91 @@ const ProductTable = ({ data, columns, loading }) => {
     }
 
     return (
-        <div className="w-full max-h-[70vh] overflow-auto border border-gray-200 rounded-lg">
-            <table className="w-full table-fixed">
-                <thead className="bg-gray-50 sticky top-0">
-                    {TableInstance.getHeaderGroups().map((headerGroup) => (
-                        <tr key={headerGroup.id}>
-                            {headerGroup.headers.map((header) => (
-                                <th
-                                    key={header.id}
-                                    className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200"
-                                    style={{ width: header.column.getSize() }}
-                                >
-                                    {flexRender(
-                                        header.column.columnDef.header,
-                                        header.getContext()
-                                    )}
-                                </th>
-                            ))}
-                        </tr>
-                    ))}
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                    {TableInstance.getRowModel().rows.map((row) => (
-                        <tr key={row.id} className="hover:bg-gray-50">
-                            {row.getVisibleCells().map((cell) => (
-                                <td
-                                    key={cell.id}
-                                    className="px-4 py-1 text-sm text-gray-600"
-                                    style={{ width: cell.column.getSize() }}
-                                >
-                                    {flexRender(
-                                        cell.column.columnDef.cell,
-                                        cell.getContext()
-                                    )}
-                                </td>
-                            ))}
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
+        <>
+            <div className="w-full lg:max-h-[60vh] max-h-[70vh] overflow-auto border border-gray-200 rounded-lg">
+                <table className="w-full table-fixed">
+                    <thead className="bg-gray-50 sticky top-0">
+                        {TableInstance.getHeaderGroups().map((headerGroup) => (
+                            <tr key={headerGroup.id}>
+                                {headerGroup.headers.map((header) => (
+                                    <th
+                                        key={header.id}
+                                        className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200"
+                                        style={{
+                                            width: header.column.getSize(),
+                                        }}
+                                    >
+                                        {flexRender(
+                                            header.column.columnDef.header,
+                                            header.getContext()
+                                        )}
+                                    </th>
+                                ))}
+                            </tr>
+                        ))}
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                        {TableInstance.getRowModel().rows.map((row) => (
+                            <tr key={row.id} className="hover:bg-gray-50">
+                                {row.getVisibleCells().map((cell) => (
+                                    <td
+                                        key={cell.id}
+                                        className="px-4 py-1 text-sm text-gray-600"
+                                        style={{ width: cell.column.getSize() }}
+                                    >
+                                        {flexRender(
+                                            cell.column.columnDef.cell,
+                                            cell.getContext()
+                                        )}
+                                    </td>
+                                ))}
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+            <div className="my-2 flex items-center justify-between gap-2">
+                {/* Drop Down */}
+                <div className="px-2">
+                    <Select
+                        placeholder="Default value is '5'"
+                        className="w-full sm:w-auto"
+                        value={TableInstance.getState().pagination.pageSize}
+                        onChange={(value) =>
+                            TableInstance.setPageSize(Number(value))
+                        }
+                        options={[
+                            { label: "5", value: 5 },
+                            { label: "10", value: 10 },
+                            { label: "30", value: 20 },
+                            { label: "40", value: 30 },
+                            { label: "50", value: 40 },
+                        ]}
+                    />
+                </div>
+                {/* Buttons */}
+                <div>
+                    <Button
+                        children={<ChevronLeftIcon />}
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => TableInstance.previousPage()}
+                        disabled={!TableInstance.getCanPreviousPage()}
+                    />
+                    <span>
+                        Page {TableInstance.getState().pagination.pageIndex + 1}{" "}
+                        of {TableInstance.getPageCount()}
+                    </span>
+                    <Button
+                        children={<ChevronRightIcon />}
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => TableInstance.nextPage()}
+                        disabled={!TableInstance.getCanNextPage()}
+                    />
+                </div>
+            </div>
+        </>
     );
 };
 
