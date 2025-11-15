@@ -57,6 +57,8 @@ cache/
 *.sqlite
 *.db
 
+assets/images
+
 # Docker
 docker-compose.override.yml
 *.tar
