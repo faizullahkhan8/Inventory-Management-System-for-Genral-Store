@@ -5,6 +5,7 @@ import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import RootLayout from "./components/Layout/Layout.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import Inventory from "./pages/Inventory.jsx";
+import AddProductPage from "./pages/AddProductPage.jsx";
 
 const router = createBrowserRouter([
     {
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
             {
                 path: "/inventory",
                 element: <Inventory />,
+            },
+            {
+                path: "/inventory/add-product",
+                element: <AddProductPage />,
             },
             {
                 path: "*",

@@ -6,11 +6,11 @@ import { Input } from "../ui/Input";
 import AddProductFrom from "../components/AddProductFrom";
 import { useEffect, useState } from "react";
 import ProductTable from "../components/Tables/ProductTable";
-import { Columns } from "../components/Tables/ProductColumns";
+import { getProductColumns } from "../components/Tables/ProductColumns";
 import { useGetAllProductsForTable } from "../api/Hooks/product.api";
+import { Link } from "react-router-dom";
 
 const Inventory = () => {
-    const [isOpen, setIsOpen] = useState(false);
     const [productData, setProductData] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
     const { loading, getAllProductsForTable } = useGetAllProductsForTable();
@@ -24,11 +24,11 @@ const Inventory = () => {
         })();
     }, []);
 
+    const ProductColumns = getProductColumns(productData);
+
     return (
         <div className="w-full h-screen flex flex-col">
             <Header title={"Inventory"} />
-            <AddProductFrom isOpen={isOpen} setIsOpen={setIsOpen} />
-
             <div className="flex-1 p-2 sm:p-4 overflow-hidden flex flex-col">
                 {/* top */}
                 <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3 mb-4">
@@ -46,11 +46,11 @@ const Inventory = () => {
                         </div>
                         <Select
                             placeholder="Search by category"
-                            className="w-full sm:w-auto"
                             onChange={setSearchQuery}
                             options={[
-                                { label: "Apple", value: "apple" },
+                                { label: " (Reset)" },
                                 { label: "Banana", value: "banana" },
+                                { label: "Orange", value: "orange" },
                                 { label: "Orange", value: "orange" },
                             ]}
                         />
@@ -58,12 +58,13 @@ const Inventory = () => {
 
                     {/* Button Section */}
                     <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full lg:w-auto">
-                        <Button
-                            onClick={() => setIsOpen(true)}
-                            className="w-full sm:w-auto"
+                        <Link
+                            to={`/inventory/add-product?prevRoute=${document.location.pathname}`}
                         >
-                            Add Product
-                        </Button>
+                            <Button className="w-full sm:w-auto">
+                                Add Product
+                            </Button>
+                        </Link>
                         <Button className="w-full sm:w-auto">
                             Add Multiple Product
                         </Button>
@@ -73,7 +74,7 @@ const Inventory = () => {
                 {/* Table */}
                 <div className="flex-1 overflow-hidden">
                     <ProductTable
-                        columns={Columns}
+                        columns={ProductColumns}
                         data={productData}
                         loading={loading}
                         searchQuery={searchQuery}

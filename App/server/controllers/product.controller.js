@@ -7,7 +7,7 @@ import ProductDto from "../dto/product.dto.js";
 
 export const createProduct = AsyncHandler(async (req, res, next) => {
     try {
-        const data = req.body;
+        const data = JSON.parse(req.body.data);
 
         if (!data) {
             return next(new ErrorResponse("In-complete product data.", 400));
@@ -35,7 +35,7 @@ export const createProduct = AsyncHandler(async (req, res, next) => {
             );
         }
 
-        const isExist = await Product.findOne({ name, sku });
+        const isExist = await Product.findOne({ $or: [{ name }, { sku }] });
 
         if (isExist) {
             return next(
@@ -46,7 +46,10 @@ export const createProduct = AsyncHandler(async (req, res, next) => {
             );
         }
 
-        const newProduct = new Product(data);
+        const newProduct = new Product({
+            ...data,
+            imageUrl: `${process.env.BACKEND_SERVER_IMAGE_PATH}/${req.file.filename}`,
+        });
 
         const newInventory = await Inventory.create({
             productId: newProduct._id,

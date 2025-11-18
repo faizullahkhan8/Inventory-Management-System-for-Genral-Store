@@ -14,12 +14,7 @@ export default function Select({
             defaultValue={defaultValue}
         >
             <SelectPrimitive.Trigger
-                className={
-                    "flex w-full items-center justify-between gap-2 rounded-md border border-gray-500 px-3 py-2 h-9 text-sm" +
-                    "bg-white focus:ring-2 outline-none cursor-pointer " +
-                    "disabled:opacity-50 disabled:cursor-not-allowed " +
-                    className
-                }
+                className={`flex w-full items-center justify-between gap-2 rounded-md border border-gray-300 px-3 py-2 h-9 text-sm bg-white focus:ring-2 focus:ring-blue-500 outline-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
             >
                 <SelectPrimitive.Value placeholder={placeholder} />
                 <SelectPrimitive.Icon>
@@ -30,7 +25,7 @@ export default function Select({
             <SelectPrimitive.Portal>
                 <SelectPrimitive.Content
                     position="popper"
-                    className="rounded-md border bg-white shadow-md max-h-60 overflow-hidden"
+                    className="rounded-md border border-gray-200 bg-white shadow-lg max-h-60 overflow-hidden z-50"
                 >
                     <SelectPrimitive.ScrollUpButton className="flex items-center justify-center py-1">
                         <ChevronUpIcon className="h-4 w-4" />
@@ -41,15 +36,8 @@ export default function Select({
                             <SelectPrimitive.Item
                                 key={index}
                                 value={item.value}
-                                className="
-                  relative flex items-center rounded-md 
-                  py-2 pl-8 pr-2 text-sm cursor-pointer
-                  select-none
-                  hover:bg-gray-100
-                  focus:bg-blue-500 focus:text-white outline-none
-                "
+                                className="relative flex items-center rounded-md py-2 pl-8 pr-2 text-sm cursor-pointer select-none hover:bg-gray-100 focus:bg-gray-300 focus:text-white outline-none data-[state=checked]:bg-blue-500 my-1 transition-colors duration-200"
                             >
-                                {/* ✅ Check icon always stays aligned */}
                                 <SelectPrimitive.ItemIndicator className="absolute left-2">
                                     <CheckIcon className="h-4 w-4" />
                                 </SelectPrimitive.ItemIndicator>

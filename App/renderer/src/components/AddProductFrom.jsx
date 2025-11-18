@@ -1,45 +1,22 @@
-import { Loader, XCircle } from "lucide-react";
+import { Loader, PlusCircle, XCircle } from "lucide-react";
 import { Input } from "../ui/Input";
 import { Button } from "../ui/Button";
 import Select from "../ui/Select";
-import { Link } from "react-router-dom";
 import { Card } from "../ui/Card";
-import { useState } from "react";
 import { toast } from "react-hot-toast";
+import { useState } from "react";
 
-import defaultImage from "../assets/default-image.png";
-import {
-    useCreateProduct,
-    useUploadProductImage,
-} from "../api/Hooks/product.api";
+import CustomFieldsComponent from "./Tables/CustomFields";
+import { Label } from "../ui/Label";
 
-const AddProductFrom = ({ isOpen, setIsOpen }) => {
-    const [selectedImageUrl, setSelectedImageUrl] = useState(defaultImage);
-    const [selectedImage, setSelectedImage] = useState(null);
-
-    const { createProduct, loading } = useCreateProduct();
-    const { uploadProductImage, loading: ImageLoading } =
-        useUploadProductImage();
-
-    const [productData, setProductData] = useState({
-        name: "",
-        sku: "",
-        description: "",
-        purchasedPrice: "",
-        sellingPrice: "",
-        quantity: "",
-        mfgDate: "",
-        expDate: "",
-        supplierRef: "69066452cc22a72016e30125",
-        category: "",
-        imageUrl: "http://localhost:3000/test-image.jpg",
-        // customFields: [
-        //     {
-        //         fieldKey: "",
-        //         fieldValue: "",
-        //     },
-        // ],
-    });
+const AddProductFrom = ({
+    setProductData,
+    productData,
+    handleAddProduct,
+    setSelectedImage,
+    loading,
+}) => {
+    const [selectedImageUrl, setSelectedImageUrl] = useState("");
 
     const handleFormDataChange = (e) => {
         setProductData({
@@ -58,63 +35,47 @@ const AddProductFrom = ({ isOpen, setIsOpen }) => {
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            if (file.size > 2 * 1024 * 1024) {
-                toast.error("File is too large.");
+            // Check file size (5MB limit)
+            if (file.size > 5 * 1024 * 1024) {
+                toast.error("File is too large. Maximum size is 5MB.");
+                e.target.value = ""; // Reset the input
+                return; // Don't set the file
             }
 
-            setSelectedImageUrl(URL.createObjectURL(file));
+            // Create preview URL and set both states
+            const previewUrl = URL.createObjectURL(file);
+            setSelectedImageUrl(previewUrl);
             setSelectedImage(file);
         }
     };
 
-    const handleAddProduct = async () => {
-        try {
-            if (!selectedImage) {
-                toast.error("Please select a product image");
-                return;
-            }
+    const handleClearImage = () => {
+        // Clear both the preview URL and the file
+        setSelectedImageUrl("");
+        setSelectedImage(null);
 
-            // First upload the image
-            const productImageFormData = new FormData();
-            productImageFormData.append("productImage", selectedImage);
+        // Reset the file input
+        const fileInput = document.getElementById("image");
+        if (fileInput) {
+            fileInput.value = "";
+        }
 
-            const imageResponse = await uploadProductImage(
-                productImageFormData
-            );
-
-            if (!imageResponse || !imageResponse.fileInfo) {
-                toast.error("Failed to upload image");
-                return;
-            }
-
-            // Create product with the image URL
-            const productWithImage = {
-                ...productData,
-                imageUrl: `http://localhost:3000/assets/images/product-images/${imageResponse.fileInfo.filename}`,
-            };
-
-            const productResponse = await createProduct(productWithImage);
-
-            if (productResponse.success) {
-                setSelectedImage(null);
-                setSelectedImageUrl(defaultImage);
-                setProductData({});
-                setIsOpen(false);
-            }
-        } catch (error) {
-            console.error("Error in handleAddProduct:", error);
-            toast.error("Failed to create product with image");
+        // Clean up the object URL to prevent memory leaks
+        if (selectedImageUrl) {
+            URL.revokeObjectURL(selectedImageUrl);
         }
     };
 
+    if (loading) {
+        return (
+            <div className="w-full h-screen flex items-center justify-center">
+                <Loader size={50} className="animate-spin" />
+            </div>
+        );
+    }
+
     return (
-        <div
-            className={`
-    fixed top-0 right-0 h-screen w-[40vw] bg-gray-50 p-4 border-l border-gray-300 shadow-lg
-    transform transition-transform duration-300 overflow-y-scroll z-9
-    ${isOpen ? "translate-x-0" : "translate-x-full"}
-  `}
-        >
+        <div className="h-screen w-full p-4 transform transition-transform duration-300 overflow-y-scroll">
             <div className="mb-4 relative">
                 <h1 className="text-primary font-bold text-xl">Add Product</h1>
                 <p>Fill the detials to add new product to your inventory.</p>
@@ -122,13 +83,11 @@ const AddProductFrom = ({ isOpen, setIsOpen }) => {
                     <span className="text-red-500">* </span>
                     is required fields
                 </p>
-                <XCircle
-                    onClick={() => setIsOpen(false)}
-                    size={20}
-                    className="absolute top-0 right-0 hover:text-red-500 cursor-pointer transform transition-colors duration-100"
-                />
             </div>
-            <div className="flex flex-col gap-4 justify-center">
+            <form
+                onSubmit={handleAddProduct}
+                className="flex flex-col gap-4 justify-center"
+            >
                 <div className="grid grid-cols-2 gap-2">
                     <div>
                         <label htmlFor="name">
@@ -315,45 +274,50 @@ const AddProductFrom = ({ isOpen, setIsOpen }) => {
                                 background.
                             </li>
                             <li>Minimum size: 1000 * 1000 px.</li>
-                            <li>max size ≤ 2 MB JPEG format preferred.</li>
+                            <li>max size ≤ 5 MB JPEG format preferred.</li>
                         </ul>
                     </Card>
                     <Card className="relative p-2 gap-y-2">
-                        <XCircle
-                            onClick={() => setSelectedImageUrl(defaultImage)}
-                            className="absolute top-2 right-2 hover:text-red-500 transition-colors duration-200"
-                            size={20}
-                        />
+                        {selectedImageUrl && (
+                            <XCircle
+                                onClick={handleClearImage}
+                                className="absolute top-2 right-2 cursor-pointer hover:text-red-500 transition-colors duration-200 z-10"
+                                size={20}
+                            />
+                        )}
                         <label>
                             Preview{" "}
                             <span className="italic text-sm text-gray-500">
-                                {!selectedImage && "(default)"}
+                                {!selectedImageUrl && "(no image selected)"}
                             </span>
                         </label>
-                        <img
-                            src={selectedImageUrl}
-                            alt="select image preview"
-                            className="w-50 rounded-lg"
-                        />
+                        {!selectedImageUrl ? (
+                            <div className="text-gray-400 text-sm">
+                                No image selected yet!
+                            </div>
+                        ) : (
+                            <img
+                                src={selectedImageUrl}
+                                alt="select image preview"
+                                className="w-full h-auto max-h-48 object-contain rounded-lg"
+                            />
+                        )}
                     </Card>
                 </div>
                 <div>
-                    <Link
-                        to={"#"}
-                        className="text-sm text-primary hover:text-shadow-primary-hover"
-                    >
-                        Want to add custom fields?
-                    </Link>
+                    <Label>Custom Fields</Label>
+                    <br />
+                    <CustomFieldsComponent
+                        productData={productData}
+                        setProductData={setProductData}
+                    />
                 </div>
                 <div className="flex items-center justify-end">
                     <div>
-                        <Button onClick={handleAddProduct}>
-                            {loading && <Loader size={20} />}
-                            Add Product
-                        </Button>
+                        <Button type="submit">Add Product</Button>
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
     );
 };

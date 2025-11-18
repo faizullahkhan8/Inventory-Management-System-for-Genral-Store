@@ -17,12 +17,11 @@ router.get("/test", (req, res, next) => {
     });
 });
 
-router.post("/create", isAuthenticated, createProduct);
 router.post(
-    "/upload-image",
-    isAuthenticated,
+    "/create",
     uploadProductImage.single("productImage"),
-    uploadImage
+    isAuthenticated,
+    createProduct
 );
 
 router.get("/get-all-for-product", isAuthenticated, getAllProducts);

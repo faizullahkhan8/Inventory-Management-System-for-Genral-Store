@@ -36,6 +36,13 @@ const ProductTable = ({
         getPaginationRowModel: getPaginationRowModel(),
     });
 
+    const pageIndex = TableInstance.getState().pagination.pageIndex;
+    const pageSize = TableInstance.getState().pagination.pageSize;
+
+    const start = pageIndex * pageSize + 1;
+    const end = pageIndex * pageSize + TableInstance.getRowModel().rows.length;
+    const total = TableInstance.getFilteredRowModel().rows.length;
+
     if (loading) {
         return (
             <div className="w-full h-screen flex items-center justify-center">
@@ -90,10 +97,9 @@ const ProductTable = ({
             </div>
             <div className="my-2 flex items-center justify-between gap-2">
                 {/* Drop Down */}
-                <div className="px-2">
+                <div className="px-2 flex items-center justify-center gap-2 w-max">
                     <Select
-                        placeholder="Default value is '5'"
-                        className="w-full sm:w-auto"
+                        placeholder="5"
                         value={TableInstance.getState().pagination.pageSize}
                         onChange={(value) =>
                             TableInstance.setPageSize(Number(value))
@@ -106,9 +112,12 @@ const ProductTable = ({
                             { label: "50", value: 40 },
                         ]}
                     />
+                    <div className="w-[20rem]">
+                        Showing: {start} - {end} of {total}
+                    </div>
                 </div>
                 {/* Buttons */}
-                <div>
+                <div className="flex items-center justify-center gap-2">
                     <Button
                         children={<ChevronLeftIcon />}
                         size="sm"
