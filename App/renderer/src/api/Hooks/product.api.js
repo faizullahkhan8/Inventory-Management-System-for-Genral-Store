@@ -72,3 +72,34 @@ export const useGetAllProductsForTable = () => {
 
     return { loading, getAllProductsForTable };
 };
+
+export const useGetSingleProduct = () => {
+    const [loading, setLoading] = useState(false);
+
+    const getSingleProduct = async (productId) => {
+        setLoading(true);
+        try {
+            const response = await apiClient.get(
+                `${productRoutes.GET_SINGLE_FOR_VIEW}/${productId}`
+            );
+
+            if (response?.data || response?.status === 200) {
+                return response.data;
+            }
+        } catch (error) {
+            const message =
+                error?.response?.data?.error ||
+                error?.response?.data?.message ||
+                error?.message ||
+                "fetching product failed!";
+
+            toast.error(message);
+            console.error("Error in fetching product:", message);
+            return null;
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return { loading, getSingleProduct };
+};

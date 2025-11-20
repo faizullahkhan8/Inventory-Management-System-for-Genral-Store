@@ -3,8 +3,8 @@ import { isAuthenticated } from "../middlewares/auth.middleware.js";
 
 import {
     createProduct,
-    uploadImage,
     getAllProducts,
+    getProduct,
 } from "../controllers/product.controller.js";
 import { uploadProductImage } from "../middlewares/multer.middleware.js";
 
@@ -24,6 +24,8 @@ router.post(
     createProduct
 );
 
-router.get("/get-all-for-product", isAuthenticated, getAllProducts);
+router.get("/get-all-for-table", isAuthenticated, getAllProducts);
+
+router.get("/get-product-for-view/:id", isAuthenticated, getProduct);
 
 export default router;

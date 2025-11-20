@@ -1,6 +1,7 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import { Eye, Pencil, Trash2 } from "lucide-react";
 import Hightlighter from "./Highlighter";
+import { Link } from "react-router-dom";
 
 const columnHelper = createColumnHelper();
 
@@ -168,17 +169,21 @@ export const getProductColumns = (products) => {
         columnHelper.display({
             id: "actions",
             header: "Actions",
+            meta: {
+                sticky: "right",
+            },
             size: 120,
             cell: ({ row }) => {
                 const item = row.original;
 
                 return (
                     <div className="flex items-center gap-3 justify-center">
-                        <Eye
-                            className="cursor-pointer text-gray-700 hover:text-gray-900"
-                            size={18}
-                            onClick={() => console.log("View:", item)}
-                        />
+                        <Link to={`/inventory/view-product/${item._id}`}>
+                            <Eye
+                                className="cursor-pointer text-gray-500 hover:text-gray-900"
+                                size={18}
+                            />
+                        </Link>
                         <Pencil
                             className="cursor-pointer text-blue-500 hover:text-blue-700"
                             size={18}

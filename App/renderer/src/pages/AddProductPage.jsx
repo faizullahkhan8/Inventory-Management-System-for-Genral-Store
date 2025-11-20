@@ -18,9 +18,9 @@ const AddProductPage = () => {
         quantity: "",
         mfgDate: "",
         expDate: "",
-        supplierRef: "69066452cc22a72016e30125",
+        supplierRef: "",
         category: "",
-        imageUrl: "http://localhost:3000/test-image.jpg",
+        imageUrl: "",
         customFields: [],
     });
 

@@ -6,6 +6,7 @@ import RootLayout from "./components/Layout/Layout.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import Inventory from "./pages/Inventory.jsx";
 import AddProductPage from "./pages/AddProductPage.jsx";
+import ViewProductPage from "./pages/ViewProductPage.jsx";
 
 const router = createBrowserRouter([
     {
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
             {
                 path: "/inventory/add-product",
                 element: <AddProductPage />,
+            },
+            {
+                path: "/inventory/view-product/:id",
+                element: <ViewProductPage />,
             },
             {
                 path: "*",

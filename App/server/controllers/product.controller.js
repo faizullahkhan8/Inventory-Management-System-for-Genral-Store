@@ -4,6 +4,7 @@ import { ErrorResponse } from "../utils/ErrorResponse.js";
 import Product from "../models/product.model.js";
 import Inventory from "../models/inventory.model.js";
 import ProductDto from "../dto/product.dto.js";
+import mongoose from "mongoose";
 
 export const createProduct = AsyncHandler(async (req, res, next) => {
     try {
@@ -76,18 +77,6 @@ export const createProduct = AsyncHandler(async (req, res, next) => {
     }
 });
 
-export const uploadImage = AsyncHandler(async (req, res, next) => {
-    try {
-        if (!req.file) {
-            return next(new ErrorResponse("File upload failed.", 400));
-        }
-        return res.status(201).json({ fileInfo: req.file });
-    } catch (error) {
-        console.log("Error in upload product image controller.", error.message);
-        return next(new ErrorResponse("Internal server error.", 500));
-    }
-});
-
 export const getAllProducts = AsyncHandler(async (req, res, next) => {
     try {
         const allProducts = await Product.find({}).populate([
@@ -109,6 +98,37 @@ export const getAllProducts = AsyncHandler(async (req, res, next) => {
         });
     } catch (error) {
         console.log("Error in get all products controller: ", error.message);
+        return next(new ErrorResponse("Internal server error.", 500));
+    }
+});
+
+export const getProduct = AsyncHandler(async (req, res, next) => {
+    try {
+        const productId = req.params.id;
+
+        if (!productId || !mongoose.Types.ObjectId.isValid(productId)) {
+            return next(new ErrorResponse("Null or invalid product id.", 400));
+        }
+
+        const dbProduct = await Product.findById(productId).populate([
+            "inventoryId",
+            // "supplierId",
+            // "categoryId",
+        ]);
+
+        if (!dbProduct) {
+            return next(new ErrorResponse("Product not found!.", 404));
+        }
+
+        return res.status(200).json({
+            success: true,
+            product: new ProductDto(dbProduct),
+        });
+    } catch (error) {
+        console.log(
+            "Error in get products for view controller: ",
+            error.message
+        );
         return next(new ErrorResponse("Internal server error.", 500));
     }
 });

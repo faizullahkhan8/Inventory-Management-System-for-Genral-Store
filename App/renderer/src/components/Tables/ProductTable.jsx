@@ -55,13 +55,17 @@ const ProductTable = ({
         <>
             <div className="w-full lg:max-h-[60vh] max-h-[70vh] overflow-auto border border-gray-200 rounded-lg">
                 <table className="w-full table-fixed">
-                    <thead className="bg-gray-50 sticky top-0">
+                    <thead className="bg-gray-50 sticky z-10 top-0">
                         {TableInstance.getHeaderGroups().map((headerGroup) => (
                             <tr key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => (
                                     <th
                                         key={header.id}
-                                        className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200"
+                                        className={`${
+                                            header.column.columnDef.meta
+                                                ?.sticky === "right" &&
+                                            "sticky right-0 bg-gray-50"
+                                        } px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200`}
                                         style={{
                                             width: header.column.getSize(),
                                         }}
@@ -81,7 +85,11 @@ const ProductTable = ({
                                 {row.getVisibleCells().map((cell) => (
                                     <td
                                         key={cell.id}
-                                        className="px-4 py-1 text-sm text-gray-600"
+                                        className={`${
+                                            cell.column.columnDef.meta
+                                                ?.sticky === "right" &&
+                                            "sticky right-0 bg-gray-50"
+                                        } px-4 py-1 text-sm text-gray-600`}
                                         style={{ width: cell.column.getSize() }}
                                     >
                                         {flexRender(

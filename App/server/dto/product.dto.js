@@ -11,7 +11,7 @@ export default class ProductDto {
         this.isActive = product.isActive;
         this.imageUrl = product.imageUrl;
         this.customFields = product.customFields;
-        // this.inventoryId = product.inventoryId._id;
+        this.inventoryId = product.inventoryId._id;
         this.quantity = product.inventoryId.quantity;
         // this.supplierName = product.supplierId.name;
         // this.category = product.categoryId.name;
