@@ -1,10 +1,12 @@
 import AsyncHandler from "express-async-handler";
 import { ErrorResponse } from "../utils/ErrorResponse.js";
+import fs from "fs";
 
 import Product from "../models/product.model.js";
 import Inventory from "../models/inventory.model.js";
 import ProductDto from "../dto/product.dto.js";
 import mongoose from "mongoose";
+import path from "path";
 
 export const createProduct = AsyncHandler(async (req, res, next) => {
     try {
@@ -129,6 +131,111 @@ export const getProduct = AsyncHandler(async (req, res, next) => {
             "Error in get products for view controller: ",
             error.message
         );
+        return next(new ErrorResponse("Internal server error.", 500));
+    }
+});
+
+export const getProductForEdit = AsyncHandler(async (req, res, next) => {
+    try {
+        const productId = req.params.id;
+
+        const dbProduct = await Product.findById(productId).populate([
+            "inventoryId",
+            // "supplierId",
+            // "categoryId",
+        ]);
+
+        if (!dbProduct) {
+            return next(new ErrorResponse("Product not found!", 404));
+        }
+
+        return res.status(200).json({
+            success: true,
+            product: new ProductDto(dbProduct),
+        });
+    } catch (error) {
+        console.log(
+            "Error in get products for edit controller: ",
+            error.message
+        );
+        return next(new ErrorResponse("Internal server error.", 500));
+    }
+});
+
+export const updateProduct = AsyncHandler(async (req, res, next) => {
+    try {
+        const productId = req.params.id;
+        const dbProduct = await Product.findById(productId);
+
+        const data = JSON.parse(req.body.data);
+
+        if (!dbProduct) {
+            return next(new ErrorResponse("Product not found!", 404));
+        }
+
+        const isExist = await Product.findOne({
+            $or: [{ name: data?.name }, { sku: data?.sku }],
+            _id: { $ne: productId }, // Exclude the current product
+        });
+
+        if (isExist) {
+            return next(
+                new ErrorResponse(
+                    "Product with name or sku already exists",
+                    400
+                )
+            );
+        }
+
+        const fields = [
+            "name",
+            "sku",
+            "description",
+            "purchasedPrice",
+            "sellingPrice",
+            "inventoryId",
+            "mfgDate",
+            "expDate",
+            "supplierId",
+            "categoryId",
+            "isActive",
+            "customFields",
+        ];
+
+        fields.forEach((field) => {
+            if (data[field] !== undefined) dbProduct[field] = data[field];
+        });
+
+        if (req.file) {
+            if (dbProduct.imageUrl) {
+                const filename = dbProduct.imageUrl.split("/").pop(); // "167344082.jpg"
+
+                // Construct the local file path
+                const filePath = path.join(
+                    "assets/images/product-images",
+                    filename
+                );
+                fs.unlink(filePath, (err) => {
+                    if (err)
+                        next(
+                            new ErrorResponse(
+                                "failed to delete old image!",
+                                400
+                            )
+                        );
+                });
+                dbProduct.imageUrl = `${process.env.BACKEND_SERVER_IMAGE_PATH}/${req.file.filename}`;
+            }
+        }
+
+        await dbProduct.save({ validateModifiedOnly: true });
+
+        return res.status(201).json({
+            success: true,
+            product: dbProduct,
+        });
+    } catch (error) {
+        console.log("Error in update product controller: ", error.message);
         return next(new ErrorResponse("Internal server error.", 500));
     }
 });

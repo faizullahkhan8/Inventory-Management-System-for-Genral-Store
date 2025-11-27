@@ -7,6 +7,7 @@ import NotFound from "./pages/NotFound.jsx";
 import Inventory from "./pages/Inventory.jsx";
 import AddProductPage from "./pages/AddProductPage.jsx";
 import ViewProductPage from "./pages/ViewProductPage.jsx";
+import EditProductPage from "./pages/EditProductPage.jsx";
 
 const router = createBrowserRouter([
     {
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
             {
                 path: "/inventory/view-product/:id",
                 element: <ViewProductPage />,
+            },
+            {
+                path: "/inventory/edit-product/:id",
+                element: <EditProductPage />,
             },
             {
                 path: "*",

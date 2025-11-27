@@ -3,7 +3,7 @@ import Header from "../components/Header";
 import { Button } from "../ui/Button";
 import Select from "../ui/Select";
 import { Input } from "../ui/Input";
-import AddProductFrom from "../components/AddProductFrom";
+import AddProductFrom from "../components/ProductFrom";
 import { useEffect, useState } from "react";
 import ProductTable from "../components/Tables/ProductTable";
 import { getProductColumns } from "../components/Tables/ProductColumns";

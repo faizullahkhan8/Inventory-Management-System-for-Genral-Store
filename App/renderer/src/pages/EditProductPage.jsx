@@ -1,14 +1,16 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import ProductFrom from "../components/ProductFrom";
-import toast from "react-hot-toast";
-import { useCreateProduct } from "../api/Hooks/product.api";
 import Header from "../components/Header";
+import {
+    useGetSingleProductForEdit,
+    useUpdateProduct,
+} from "../api/Hooks/product.api";
+import { useParams } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const AddProductPage = () => {
+    const productId = useParams().id;
     const [selectedImage, setSelectedImage] = useState(null);
-
-    const { createProduct, loading } = useCreateProduct();
-
     const [productData, setProductData] = useState({
         name: "",
         sku: "",
@@ -24,43 +26,50 @@ const AddProductPage = () => {
         customFields: [],
     });
 
-    const handleAddProduct = async (e) => {
-        e.preventDefault();
-        try {
-            if (!selectedImage) {
-                toast.error("Please select a product image");
-                return;
-            }
+    const { getSingleProductForEdit, loading: getProductLoading } =
+        useGetSingleProductForEdit();
+    const { updateProduct, loading: updateLoading } = useUpdateProduct();
 
-            // First upload the image
+    useMemo(() => {
+        (async () => {
+            const data = await getSingleProductForEdit(productId);
+
+            setProductData(data?.product);
+        })();
+    }, [productId]);
+
+    const handleUpdate = async (e) => {
+        e.preventDefault();
+
+        try {
             const productFormData = new FormData();
             productFormData.append("productImage", selectedImage);
             productFormData.append("data", JSON.stringify(productData));
 
-            const productResponse = await createProduct(
+            const productResponse = await updateProduct(
                 productFormData,
-                productData.name
+                productId
             );
 
-            if (productResponse.success) {
-                setSelectedImage(null);
-                setProductData({});
+            if (productResponse?.success) {
+                console.log("udpated successfully");
             }
         } catch (error) {
-            console.error("Error in handleAddProduct:", error);
-            toast.error("Failed to create product with image");
+            console.error("Error in handleUpdateProduct:", error);
+            toast.error("Failed to update product with image");
         }
     };
 
     return (
         <div className="w-full h-screen flex flex-col">
-            <Header title={"Add Product"} />
+            <Header title={"Edit Product"} />
             <ProductFrom
                 setProductData={setProductData}
                 productData={productData}
-                handler={handleAddProduct}
+                handler={handleUpdate}
+                loading={updateLoading}
+                isEditing={true}
                 setSelectedImage={setSelectedImage}
-                loading={loading}
             />
         </div>
     );

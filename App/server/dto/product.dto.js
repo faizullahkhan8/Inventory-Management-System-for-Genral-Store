@@ -13,6 +13,8 @@ export default class ProductDto {
         this.customFields = product.customFields;
         this.inventoryId = product.inventoryId._id;
         this.quantity = product.inventoryId.quantity;
+        this.minStock = product.inventoryId.threshold;
+        this.maxStock = product.inventoryId.reservedQuantity;
         // this.supplierName = product.supplierId.name;
         // this.category = product.categoryId.name;
         this.lastUpdatd = product.updatedAt;

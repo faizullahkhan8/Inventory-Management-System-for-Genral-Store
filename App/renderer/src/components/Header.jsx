@@ -5,8 +5,7 @@ const Header = ({ title }) => {
     const location = useLocation();
 
     const searchParams = new URLSearchParams(location.search);
-
-    const prevRoute = searchParams.get("prevRoute");
+    const prevRoute = searchParams.get("prevRoute") || -1; // fallback to go back
 
     return (
         <div className="flex gap-2 items-center w-full py-2 px-4 border-b border-gray-100 bg-gray-50">

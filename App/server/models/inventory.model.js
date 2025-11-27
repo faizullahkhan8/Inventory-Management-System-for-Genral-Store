@@ -19,6 +19,7 @@ const inventorySchema = new Schema(
         },
         reservedQuantity: {
             type: Number,
+            default: 100,
         },
     },
     {

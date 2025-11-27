@@ -12,11 +12,14 @@ import { Label } from "../ui/Label";
 const AddProductFrom = ({
     setProductData,
     productData,
-    handleAddProduct,
+    handler,
     setSelectedImage,
     loading,
+    isEditing,
 }) => {
-    const [selectedImageUrl, setSelectedImageUrl] = useState("");
+    const [selectedImageUrl, setSelectedImageUrl] = useState(
+        productData.imageUrl
+    );
 
     const handleFormDataChange = (e) => {
         setProductData({
@@ -77,15 +80,23 @@ const AddProductFrom = ({
     return (
         <div className="h-screen w-full p-4 transform transition-transform duration-300 overflow-y-scroll">
             <div className="mb-4 relative">
-                <h1 className="text-primary font-bold text-xl">Add Product</h1>
-                <p>Fill the detials to add new product to your inventory.</p>
+                <h1 className="text-primary font-bold text-xl">
+                    {isEditing ? "Edit Product" : "Add Product"}
+                </h1>
+                {isEditing ? (
+                    <p>Edit the existing detials.</p>
+                ) : (
+                    <p>
+                        Fill the detials to add new product to your inventory.
+                    </p>
+                )}
                 <p>
                     <span className="text-red-500">* </span>
                     is required fields
                 </p>
             </div>
             <form
-                onSubmit={handleAddProduct}
+                onSubmit={handler}
                 className="flex flex-col gap-4 justify-center"
             >
                 <div className="grid grid-cols-2 gap-2">
@@ -213,7 +224,11 @@ const AddProductFrom = ({
                         <Input
                             id="mfgDate"
                             name="mfgDate"
-                            value={productData.mfgDate}
+                            value={
+                                productData.mfgDate
+                                    ? productData.mfgDate.split("T")[0]
+                                    : ""
+                            }
                             onChange={handleFormDataChange}
                             autoComplete="mfgDate"
                             type="date"
@@ -225,7 +240,11 @@ const AddProductFrom = ({
                         <Input
                             id="expDate"
                             name="expDate"
-                            value={productData.expDate}
+                            value={
+                                productData.expDate
+                                    ? productData.expDate.split("T")[0]
+                                    : ""
+                            }
                             onChange={handleFormDataChange}
                             autoComplete="expDate"
                             type="date"
@@ -314,7 +333,9 @@ const AddProductFrom = ({
                 </div>
                 <div className="flex items-center justify-end">
                     <div>
-                        <Button type="submit">Add Product</Button>
+                        <Button type="submit">
+                            {isEditing ? "Update Product" : "Add Product"}
+                        </Button>
                     </div>
                 </div>
             </form>

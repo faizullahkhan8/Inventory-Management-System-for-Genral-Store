@@ -10,14 +10,21 @@ export const getProductColumns = (products) => {
         columnHelper.accessor("imageUrl", {
             header: "Image",
             size: 100,
-            cell: (info) => (
-                <img
-                    src={info.getValue()}
-                    alt="Product"
-                    loading="lazy"
-                    className="w-[70px] h-[70px] object-cover rounded-md shadow-sm border"
-                />
-            ),
+            cell: ({ row }) => {
+                const item = row.original;
+                return (
+                    <Link
+                        to={`/inventory/view-product/${item._id}?prevRoute=/inventory`}
+                    >
+                        <img
+                            src={item.imageUrl}
+                            alt="Product"
+                            loading="lazy"
+                            className="w-[70px] h-[70px] object-cover rounded-md shadow-sm border cursor-pointer"
+                        />
+                    </Link>
+                );
+            },
         }),
         columnHelper.accessor("name", {
             header: "Name",
@@ -178,19 +185,25 @@ export const getProductColumns = (products) => {
 
                 return (
                     <div className="flex items-center gap-3 justify-center">
-                        <Link to={`/inventory/view-product/${item._id}`}>
+                        <Link
+                            to={`/inventory/view-product/${item._id}?prevRoute=/inventory`}
+                        >
                             <Eye
                                 className="cursor-pointer text-gray-500 hover:text-gray-900"
                                 size={18}
                             />
                         </Link>
-                        <Pencil
-                            className="cursor-pointer text-blue-500 hover:text-blue-700"
-                            size={18}
-                            onClick={() => {
-                                console.log(item);
-                            }}
-                        />
+                        <Link
+                            to={`/inventory/edit-product/${item._id}?prevRoute=/inventory`}
+                        >
+                            <Pencil
+                                className="cursor-pointer text-blue-500 hover:text-blue-700"
+                                size={18}
+                                onClick={() => {
+                                    console.log(item);
+                                }}
+                            />
+                        </Link>
                         <Trash2
                             className="cursor-pointer text-red-500 hover:text-red-700"
                             size={18}

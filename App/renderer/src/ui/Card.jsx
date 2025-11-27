@@ -1,6 +1,6 @@
 function Card({ className = "", ...props }) {
     const classes =
-        "bg-card text-card-foreground flex flex-col gap-6 rounded-xl border " +
+        "bg-card text-card-foreground flex flex-col gap-6 rounded-xl border border-gray-300 " +
         className;
 
     return <div data-slot="card" className={classes} {...props} />;
