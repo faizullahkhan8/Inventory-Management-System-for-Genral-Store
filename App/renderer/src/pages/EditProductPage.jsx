@@ -5,12 +5,13 @@ import {
     useGetSingleProductForEdit,
     useUpdateProduct,
 } from "../api/Hooks/product.api";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 
-const AddProductPage = () => {
+const EditProductPage = () => {
     const productId = useParams().id;
     const [selectedImage, setSelectedImage] = useState(null);
+    const navigate = useNavigate();
     const [productData, setProductData] = useState({
         name: "",
         sku: "",
@@ -52,11 +53,12 @@ const AddProductPage = () => {
             );
 
             if (productResponse?.success) {
-                console.log("udpated successfully");
+                toast.success("Product updated successfully");
+                navigate("/inventory");
             }
         } catch (error) {
             console.error("Error in handleUpdateProduct:", error);
-            toast.error("Failed to update product with image");
+            toast.error("Failed to update product. Please try again.");
         }
     };
 
@@ -67,7 +69,7 @@ const AddProductPage = () => {
                 setProductData={setProductData}
                 productData={productData}
                 handler={handleUpdate}
-                loading={updateLoading}
+                loading={updateLoading || getProductLoading}
                 isEditing={true}
                 setSelectedImage={setSelectedImage}
             />
@@ -75,4 +77,4 @@ const AddProductPage = () => {
     );
 };
 
-export default AddProductPage;
+export default EditProductPage;

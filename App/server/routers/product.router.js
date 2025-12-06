@@ -9,6 +9,9 @@ import {
     updateProduct,
 } from "../controllers/product.controller.js";
 import { uploadProductImage } from "../middlewares/multer.middleware.js";
+import { deleteOne } from "../utils/deleteOne.js";
+import Product from "../models/product.model.js";
+import { restoreOne } from "../utils/restoreOne.js";
 
 const router = Router();
 
@@ -36,5 +39,8 @@ router.put(
     uploadProductImage.single("productImage"),
     updateProduct
 );
+
+router.delete("/delete/:id", isAuthenticated, deleteOne(Product));
+router.put("/restore/:trashId", isAuthenticated, restoreOne(Product));
 
 export default router;

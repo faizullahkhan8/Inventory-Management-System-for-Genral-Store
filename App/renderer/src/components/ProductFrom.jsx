@@ -8,6 +8,7 @@ import { useState } from "react";
 
 import CustomFieldsComponent from "./Tables/CustomFields";
 import { Label } from "../ui/Label";
+import { Link } from "react-router-dom";
 
 const AddProductFrom = ({
     setProductData,
@@ -333,6 +334,11 @@ const AddProductFrom = ({
                 </div>
                 <div className="flex items-center justify-end">
                     <div>
+                        <Link to="/inventory">
+                            <Button variant="danger" className="mr-2">
+                                Cancel
+                            </Button>
+                        </Link>
                         <Button type="submit">
                             {isEditing ? "Update Product" : "Add Product"}
                         </Button>
