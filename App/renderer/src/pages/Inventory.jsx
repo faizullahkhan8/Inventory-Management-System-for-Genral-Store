@@ -3,17 +3,23 @@ import Header from "../components/Header";
 import { Button } from "../ui/Button";
 import Select from "../ui/Select";
 import { Input } from "../ui/Input";
-import AddProductFrom from "../components/ProductFrom";
 import { useEffect, useState } from "react";
 import ProductTable from "../components/Tables/ProductTable";
 import { getProductColumns } from "../components/Tables/ProductColumns";
-import { useGetAllProductsForTable } from "../api/Hooks/product.api";
+import {
+    useDeleteProduct,
+    useGetAllProductsForTable,
+} from "../api/Hooks/product.api";
 import { Link } from "react-router-dom";
+import DeleteConfirmDialog from "../components/Tables/DeleteConfirmDialog";
 
 const Inventory = () => {
     const [productData, setProductData] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
+    const [deletingProductId, setDeletingProductId] = useState("");
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
     const { loading, getAllProductsForTable } = useGetAllProductsForTable();
+    const { deleteProduct, loading: deleteLoading } = useDeleteProduct();
 
     useEffect(() => {
         (async () => {
@@ -24,11 +30,31 @@ const Inventory = () => {
         })();
     }, []);
 
-    const ProductColumns = getProductColumns(productData);
+    const ProductColumns = getProductColumns({
+        products: productData,
+        setDeletingProductId,
+        setIsDialogOpen,
+    });
+
+    const onConfirmDelete = async () => {
+        const data = await deleteProduct(deletingProductId);
+        if (data?.success) {
+            setProductData((prevData) =>
+                prevData.filter((product) => product._id !== deletingProductId)
+            );
+            setIsDialogOpen(false);
+        }
+    };
 
     return (
         <div className="w-full h-screen flex flex-col">
             <Header title={"Inventory"} />
+            <DeleteConfirmDialog
+                isOpen={isDialogOpen}
+                setIsOpen={setIsDialogOpen}
+                onConfirm={onConfirmDelete}
+                loading={deleteLoading}
+            />
             <div className="flex-1 p-2 sm:p-4 overflow-hidden flex flex-col">
                 {/* top */}
                 <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3 mb-4">

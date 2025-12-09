@@ -172,3 +172,32 @@ export const useUpdateProduct = () => {
 
     return { loading, updateProduct };
 };
+
+export const useDeleteProduct = () => {
+    const [loading, setLoading] = useState(false);
+    const deleteProduct = async (productId) => {
+        setLoading(true);
+        try {
+            const response = await apiClient.delete(
+                `${productRoutes.DELETE_PRODUCT}/${productId}`
+            );
+            if (response?.data || response?.status === 200) {
+                toast.success("Product deleted successfully.");
+                return response.data;
+            }
+        } catch (error) {
+            const message =
+                error?.response?.data?.error ||
+                error?.response?.data?.message ||
+                error?.message ||
+                "deleting product failed!";
+            toast.error(message);
+            console.error("Error in deleting product:", message);
+            return null;
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return { loading, deleteProduct };
+};

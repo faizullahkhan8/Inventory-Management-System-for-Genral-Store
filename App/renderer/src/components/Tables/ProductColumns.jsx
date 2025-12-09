@@ -5,7 +5,11 @@ import { Link } from "react-router-dom";
 
 const columnHelper = createColumnHelper();
 
-export const getProductColumns = (products) => {
+export const getProductColumns = ({
+    products,
+    setIsDialogOpen,
+    setDeletingProductId,
+}) => {
     const columns = [
         columnHelper.accessor("imageUrl", {
             header: "Image",
@@ -199,15 +203,15 @@ export const getProductColumns = (products) => {
                             <Pencil
                                 className="cursor-pointer text-blue-500 hover:text-blue-700"
                                 size={18}
-                                onClick={() => {
-                                    console.log(item);
-                                }}
                             />
                         </Link>
                         <Trash2
                             className="cursor-pointer text-red-500 hover:text-red-700"
                             size={18}
-                            onClick={() => console.log(item._id)}
+                            onClick={() => {
+                                setIsDialogOpen(true);
+                                setDeletingProductId(item._id);
+                            }}
                         />
                     </div>
                 );

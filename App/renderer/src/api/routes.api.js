@@ -11,4 +11,6 @@ export const productRoutes = {
     GET_SINGLE_FOR_VIEW: "/product/get-product-for-view",
     GET_SINGLE_FOR_EDIT: "/product/get-product-for-edit",
     UPDATE_PRODUCT: "/product/update-product",
+    DELETE_PRODUCT: "/product/delete",
+    RESTORE_PRODUCT: "/product/restore",
 };
