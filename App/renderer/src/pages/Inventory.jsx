@@ -1,4 +1,4 @@
-import { SearchIcon } from "lucide-react";
+import { SearchIcon, Trash2 } from "lucide-react";
 import Header from "../components/Header";
 import { Button } from "../ui/Button";
 import Select from "../ui/Select";
@@ -11,7 +11,7 @@ import {
     useGetAllProductsForTable,
 } from "../api/Hooks/product.api";
 import { Link } from "react-router-dom";
-import DeleteConfirmDialog from "../components/Tables/DeleteConfirmDialog";
+import DialogBox from "../components/DialogBox";
 
 const Inventory = () => {
     const [productData, setProductData] = useState([]);
@@ -49,11 +49,17 @@ const Inventory = () => {
     return (
         <div className="w-full h-screen flex flex-col">
             <Header title={"Inventory"} />
-            <DeleteConfirmDialog
+            <DialogBox
                 isOpen={isDialogOpen}
-                setIsOpen={setIsDialogOpen}
+                onClose={() => setIsDialogOpen(false)} // Maps to the 'onClose' prop of the reusable component
                 onConfirm={onConfirmDelete}
                 loading={deleteLoading}
+                // Soft Delete Specifics:
+                title="Move to Trash?"
+                message="This item will be moved to the trash bin. You can restore it later if you change your mind."
+                confirmText="Move to Trash"
+                variant="danger" // Keeps the red styling, but you could use 'warning' if preferred
+                icon={Trash2} // Overrides the default alert triangle with a Trash icon
             />
             <div className="flex-1 p-2 sm:p-4 overflow-hidden flex flex-col">
                 {/* top */}

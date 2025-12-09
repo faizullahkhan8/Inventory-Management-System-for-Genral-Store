@@ -16,6 +16,7 @@ import {
     SidebarIcon,
     Loader,
     BoxesIcon,
+    Trash,
 } from "lucide-react";
 import { useState } from "react";
 import { useLogout } from "../../api/Hooks/auth.api";
@@ -166,6 +167,12 @@ const SidebarComponent = () => {
                     component={<Link to="/catogory" />}
                 >
                     Category
+                </MenuItem>
+                <MenuItem
+                    icon={<Trash width={20} />}
+                    component={<Link to="/trash" />}
+                >
+                    Trash
                 </MenuItem>
                 {isCollapsed ? (
                     <div className="w-full h-0.5 bg-black/70 my-2!"></div>

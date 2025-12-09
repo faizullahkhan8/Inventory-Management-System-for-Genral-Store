@@ -14,3 +14,8 @@ export const productRoutes = {
     DELETE_PRODUCT: "/product/delete",
     RESTORE_PRODUCT: "/product/restore",
 };
+
+export const trashRoutes = {
+    GET_ALL_TRASHED_ITEMS: "/trash/get-all",
+    RESTORE_ONE_ITEM: "/trash/restore",
+};

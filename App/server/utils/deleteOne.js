@@ -6,8 +6,10 @@ import { ErrorResponse } from "./ErrorResponse.js"; // Your custom error class
 export const deleteOne = (Model) =>
     expressAsyncHandler(async (req, res, next) => {
         const { id } = req.params;
-        const userId = req.session?._id; // logged-in user ID
+        const userId = req.session.user.id; // logged-in user ID
         const reason = req.body?.reason || "";
+
+        console.log(userId);
 
         // 1. Check if document exists
         const doc = await Model.findById(id);

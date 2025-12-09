@@ -8,6 +8,7 @@ import Inventory from "./pages/Inventory.jsx";
 import AddProductPage from "./pages/AddProductPage.jsx";
 import ViewProductPage from "./pages/ViewProductPage.jsx";
 import EditProductPage from "./pages/EditProductPage.jsx";
+import TrashPage from "./pages/TrashPage.jsx";
 
 const router = createBrowserRouter([
     {
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
             {
                 path: "/inventory/edit-product/:id",
                 element: <EditProductPage />,
+            },
+            {
+                path: "/trash",
+                element: <TrashPage />,
             },
             {
                 path: "*",

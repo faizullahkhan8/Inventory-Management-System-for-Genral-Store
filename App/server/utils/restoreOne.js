@@ -2,37 +2,36 @@
 import expressAsyncHandler from "express-async-handler";
 import Trash from "../models/trash.model.js";
 import { ErrorResponse } from "./ErrorResponse.js";
+import { modelMap } from "./modelMap.js";
 
-export const restoreOne = (Model) =>
-    expressAsyncHandler(async (req, res, next) => {
-        const { trashId } = req.params; // Trash document ID
-        const userId = req.session?._id; // Optional: logged-in user
+export const restoreFromTrash = expressAsyncHandler(async (req, res, next) => {
+    const { trashId } = req.params; // ID of trash record
+    const trashDoc = await Trash.findById(trashId);
 
-        // 1. Find the Trash record
-        const trashDoc = await Trash.findById(trashId);
-        if (!trashDoc) {
-            return next(new ErrorResponse("Trash record not found", 404));
-        }
+    if (!trashDoc) {
+        return next(new ErrorResponse("Trash record not found", 404));
+    }
 
-        // 2. Ensure Trash record belongs to the correct collection
-        if (trashDoc.collectionName !== Model.collection.name) {
-            return next(
-                new ErrorResponse(
-                    `Trash record does not belong to ${Model.modelName}`,
-                    400
-                )
-            );
-        }
+    const { collectionName, data } = trashDoc;
+    const Model = modelMap[collectionName];
 
-        // Insert new document with original _id
-        await Model.create({ ...trashDoc.data, _id: trashDoc.data._id });
+    if (!Model) {
+        return next(
+            new ErrorResponse(
+                `No model found for collection: ${collectionName}`,
+                400
+            )
+        );
+    }
 
-        // 4. Remove the Trash record
-        await trashDoc.deleteOne();
+    // Restore document with original _id
+    await Model.create({ ...data, _id: data._id });
 
-        // 5. Return success
-        res.status(200).json({
-            success: true,
-            message: `${Model.modelName} restored successfully`,
-        });
+    // Remove the trash record
+    await trashDoc.deleteOne();
+
+    res.status(200).json({
+        success: true,
+        message: `${Model.modelName} restored successfully`,
     });
+});
