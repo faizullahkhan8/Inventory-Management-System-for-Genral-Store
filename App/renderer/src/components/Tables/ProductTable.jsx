@@ -19,7 +19,7 @@ const ProductTable = ({
 }) => {
     const [pagination, setPagination] = useState({
         pageIndex: 0,
-        pageSize: 5,
+        pageSize: 10,
     });
 
     const TableInstance = useReactTable({
@@ -107,7 +107,7 @@ const ProductTable = ({
                 {/* Drop Down */}
                 <div className="px-2 flex items-center justify-center gap-2 w-max">
                     <Select
-                        placeholder="5"
+                        placeholder="10"
                         value={TableInstance.getState().pagination.pageSize}
                         onChange={(value) =>
                             TableInstance.setPageSize(Number(value))

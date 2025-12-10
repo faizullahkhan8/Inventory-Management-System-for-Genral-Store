@@ -35,9 +35,8 @@ export const useRestoreOneItem = () => {
     const restoreOneItem = async (itemId) => {
         setLoading(true);
         try {
-            const response = await apiClient.post(
-                trashRoutes.RESTORE_ONE_ITEM,
-                { itemId }
+            const response = await apiClient.put(
+                trashRoutes.RESTORE_ONE_ITEM + "/" + itemId
             );
             if (response?.data || response?.status === 200) {
                 toast.success("Item restored successfully!");
@@ -57,4 +56,32 @@ export const useRestoreOneItem = () => {
         }
     };
     return { loading, restoreOneItem };
+};
+
+export const useDeleteOneItem = () => {
+    const [loading, setLoading] = useState(false);
+    const deleteOneItem = async (itemId) => {
+        setLoading(true);
+        try {
+            const response = await apiClient.delete(
+                `${trashRoutes.DELETE_ONE_ITEM}/${itemId}`
+            );
+            if (response?.data || response?.status === 200) {
+                toast.success("Item permanently deleted!");
+                return response.data;
+            }
+        } catch (error) {
+            const message =
+                error?.response?.data?.error ||
+                error?.response?.data?.message ||
+                error?.message ||
+                "deleting item failed!";
+            toast.error(message);
+            console.error("Error in deleting item:", message);
+            return null;
+        } finally {
+            setLoading(false);
+        }
+    };
+    return { loading, deleteOneItem };
 };

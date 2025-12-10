@@ -48,7 +48,7 @@ const DialogBox = ({
             onClick={onClose}
         >
             <div
-                className="z-50 w-max min-w-[350px] max-w-[90%] rounded-xl p-6 flex flex-col gap-4 bg-white shadow-xl animate-in fade-in zoom-in-95 duration-200"
+                className="transition-all z-50 w-max min-w-[350px] max-w-[90%] rounded-xl p-6 flex flex-col gap-4 bg-white shadow-xl animate-in fade-in zoom-in-95 duration-200"
                 onClick={(e) => e.stopPropagation()} // Prevent click from bubbling to backdrop
             >
                 {/* Header */}

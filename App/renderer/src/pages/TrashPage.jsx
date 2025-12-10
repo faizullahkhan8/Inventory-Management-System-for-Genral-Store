@@ -17,7 +17,11 @@ import ProductTable from "../components/Tables/ProductTable";
 import { useMemo, useState } from "react";
 import { Input } from "../ui/Input";
 import Select from "../ui/Select";
-import { useGetAllTrashedItems } from "../api/Hooks/trash.api";
+import {
+    useDeleteOneItem,
+    useGetAllTrashedItems,
+    useRestoreOneItem,
+} from "../api/Hooks/trash.api";
 import { getTrashedTableColumns } from "../components/Trash/TrashTableColumns";
 import DialogBox from "../components/DialogBox";
 
@@ -37,6 +41,9 @@ const TrashPage = () => {
     const { getAllTrashedItems, loading: trashLoading } =
         useGetAllTrashedItems();
 
+    const { restoreOneItem, loading: restoreLoading } = useRestoreOneItem();
+    const { deleteOneItem, loading: deleteLoading } = useDeleteOneItem();
+
     useMemo(() => {
         const fetchTrashedItems = async () => {
             const data = await getAllTrashedItems();
@@ -46,11 +53,30 @@ const TrashPage = () => {
     }, []);
 
     const onConfirmDelete = async () => {
-        console.log("Permanently Deleted.");
+        if (!actionedItemId) return;
+
+        const data = await deleteOneItem(actionedItemId);
+
+        if (data) {
+            setTrashedItems((prevItems) =>
+                prevItems.filter((item) => item.id !== actionedItemId)
+            );
+            setIsDeleteDialogOpen(false);
+        }
+
+        setActionedItemId(null);
     };
 
     const onConfirmRestore = async () => {
-        console.log("Restored Successfully.");
+        if (!actionedItemId) return;
+        const data = await restoreOneItem(actionedItemId);
+        if (data) {
+            setTrashedItems((prevItems) =>
+                prevItems.filter((item) => item.id !== actionedItemId)
+            );
+            setIsRestoreDialogOpen(false);
+        }
+        setActionedItemId(null);
     };
 
     return (
@@ -71,7 +97,7 @@ const TrashPage = () => {
                 isOpen={isRestoreDialogOpen}
                 onClose={() => setIsRestoreDialogOpen(false)}
                 onConfirm={onConfirmRestore} // Use your specific restore handler
-                loading={null}
+                loading={restoreLoading}
                 title="Restore Item"
                 message="This item will be successfully moved out of the trash and returned to its previous location."
                 confirmText="Restore"

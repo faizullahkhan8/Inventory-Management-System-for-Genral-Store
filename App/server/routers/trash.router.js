@@ -1,6 +1,9 @@
 import { Router } from "express";
 import { isAuthenticated } from "../middlewares/auth.middleware.js";
-import { getAllTrashedItems } from "../controllers/trash.controller.js";
+import {
+    getAllTrashedItems,
+    deleteFromTrash,
+} from "../controllers/trash.controller.js";
 import { restoreFromTrash } from "../utils/restoreOne.js";
 
 const router = Router();
@@ -12,5 +15,6 @@ router.get("/test", (req, res) => {
 
 router.get("/get-all", isAuthenticated, getAllTrashedItems);
 router.put("/restore/:trashId", isAuthenticated, restoreFromTrash);
+router.delete("/delete/:trashId", isAuthenticated, deleteFromTrash);
 
 export default router;

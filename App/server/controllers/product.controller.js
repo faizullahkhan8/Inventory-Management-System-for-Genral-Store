@@ -81,11 +81,7 @@ export const createProduct = AsyncHandler(async (req, res, next) => {
 
 export const getAllProducts = AsyncHandler(async (req, res, next) => {
     try {
-        const allProducts = await Product.find({}).populate([
-            // "categoryId",
-            // "supplierId",
-            "inventoryId",
-        ]);
+        const allProducts = await Product.find({});
 
         if (allProducts.length < 1)
             return next(new ErrorResponse("No product added yet.", 400));
