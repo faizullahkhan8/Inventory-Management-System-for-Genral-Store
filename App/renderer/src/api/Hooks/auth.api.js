@@ -3,6 +3,33 @@ import { toast } from "react-hot-toast";
 import { authRoutes } from "../routes.api";
 import apiClient from "../base.api";
 
+export const useRegister = () => {
+    const [loading, setLoading] = useState(false);
+
+    const register = async (data) => {
+        setLoading(true);
+        try {
+            const response = await apiClient.post(authRoutes.REGISTER, data);
+            if (response?.data || response?.status === 201) {
+                toast.success("Registration successful.");
+                return response.data;
+            }
+        } catch (error) {
+            const message =
+                error?.response?.data?.error ||
+                error?.response?.data?.message ||
+                error?.message ||
+                "registration failed!";
+            toast.error(message);
+            console.error("Error in registration:", message);
+            return null;
+        } finally {
+            setLoading(false);
+        }
+    };
+    return { loading, register };
+};
+
 export const useLogin = () => {
     const [loading, setLoading] = useState(false);
 

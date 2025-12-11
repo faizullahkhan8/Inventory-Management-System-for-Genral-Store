@@ -9,10 +9,12 @@ import {
     MailIcon,
     Contact,
     Loader,
+    Phone,
+    Mail,
 } from "lucide-react";
 
 import { useLogin } from "../api/Hooks/auth.api";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { setUser } from "../store/Slices/user.slice";
 import { persistor } from "../store/store";
@@ -97,89 +99,81 @@ const Login = () => {
                 </div>
 
                 {/* Developer Info */}
-                <div className="border-t border-white/20 pt-6">
-                    <p className="text-sm font-medium mb-3">Developed By</p>
-                    <div className="flex items-center gap-3 mb-3">
-                        <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center">
+                <div className="border-t border-white/30 pt-6">
+                    <p className="text-sm font-medium mb-3 opacity-80">
+                        Developed By
+                    </p>
+                    <div className="flex items-center gap-3 mb-4">
+                        <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
                             <User className="w-5 h-5" />
                         </div>
                         <div>
-                            <p className="font-semibold text-blue-600">
-                                Faiz Ullah Khan
+                            <p className="font-semibold">Faiz Ullah Khan</p>
+                            <p className="text-sm opacity-80">
+                                Full Stack Developer
                             </p>
-                            <p className="text-sm ">Full Stack Developer</p>
                         </div>
                     </div>
-                    <div className="flex justify-center flex-col gap-2 ml-8">
+                    <div className="flex flex-col gap-2 text-sm opacity-90">
                         <a
                             href="https://github.com/faizullahkhan8"
-                            className=" hover:underline flex items-center gap-2"
-                            target="__blank"
+                            className="hover:underline flex items-center gap-2"
+                            target="_blank"
                         >
-                            <Github />
-                            https://github.com/faizullahkhan8
+                            <Github className="w-4 h-4" />
+                            github.com/faizullahkhan8
                         </a>
-
                         <a
                             href="mailto:faizullahofficial0@gmail.com"
-                            className=" hover:underline flex items-center gap-2"
-                            target="__blank"
+                            className="hover:underline flex items-center gap-2"
+                            target="_blank"
                         >
-                            <MailIcon />
+                            <Mail className="w-4 h-4" />
                             faizullahofficial0@gmail.com
                         </a>
-
                         <a
-                            href="https://wa.me/923328753452?text=Hello%20I%20want%20to%20contact%20you"
-                            className=" hover:underline flex items-center gap-2"
-                            target="__blank"
+                            href="https://wa.me/923328753452"
+                            className="hover:underline flex items-center gap-2"
+                            target="_blank"
                         >
-                            <Contact />
-                            <p> +92 332 8753452</p>
+                            <Phone className="w-4 h-4" />
+                            +92 332 8753452
                         </a>
                     </div>
                 </div>
             </div>
 
             {/* ---------------- RIGHT SIDE LOGIN FORM ---------------- */}
-            <div className="flex-1 flex items-center justify-center p-8">
-                <div className="w-full max-w-md">
-                    {/* Logo (mobile) */}
-                    <div className="lg:hidden flex items-center justify-center gap-3 mb-8">
-                        <div className="w-20 h-20 bg-white/10 rounded-xl flex items-center justify-center">
-                            <img src={logo} className="w-20 h-20" />
-                        </div>
 
-                        <div className="flex items-center justify-between">
-                            <div className="leading-none">
-                                <h1 className="font-bold text-3xl text-blue-600">
-                                    StockPilot
-                                </h1>
-                                <hr />
-                                <span className="text-sm font-bold opacity-70">
-                                    Inventory Management <br /> System
-                                </span>
-                            </div>
+            <div className="flex-1 flex items-center justify-center p-6">
+                <div className="w-full max-w-md">
+                    <div className="lg:hidden flex items-center justify-center gap-3 mb-6">
+                        <div className="w-14 h-14 bg-blue-600 rounded-xl flex items-center justify-center">
+                            <User className="w-7 h-7 text-white" />
+                        </div>
+                        <div>
+                            <h1 className="font-bold text-2xl text-blue-600">
+                                StockPilot
+                            </h1>
+                            <p className="text-xs text-gray-600">
+                                Inventory Management
+                            </p>
                         </div>
                     </div>
 
-                    {/* Card */}
-                    <Card className="p-8 shadow-lg border-0">
-                        <h2 className="text-2xl font-bold text-center mb-2">
+                    <div className="bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
+                        <h2 className="text-2xl font-bold text-center mb-2 text-gray-800">
                             Welcome Back
                         </h2>
-                        <p className="text-center text-gray-600 mb-8">
+                        <p className="text-center text-gray-500 text-sm mb-6">
                             Sign in to access your dashboard
                         </p>
 
-                        <form onSubmit={handleSubmit} className="space-y-6">
-                            {/* Username */}
+                        <div className="space-y-5">
                             <div className="space-y-2">
                                 <Label>Username</Label>
-
                                 <div className="relative">
-                                    <User className="absolute left-[5%] top-[50%] -translate-x-1/2 -translate-y-1/2 text-gray-400" />
-
+                                    <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                                     <Input
                                         type="text"
                                         placeholder="Enter your username"
@@ -192,13 +186,10 @@ const Login = () => {
                                 </div>
                             </div>
 
-                            {/* Password */}
                             <div className="space-y-2">
                                 <Label>Password</Label>
-
                                 <div className="relative">
-                                    <Lock className="absolute left-[5%] top-[50%] -translate-x-1/2 -translate-y-1/2 text-gray-400" />
-
+                                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                                     <Input
                                         type={
                                             showPassword ? "text" : "password"
@@ -210,55 +201,76 @@ const Login = () => {
                                         }
                                         className="pl-10 pr-10"
                                     />
-
-                                    {/* Toggle icon */}
                                     <button
                                         type="button"
                                         onClick={() =>
                                             setShowPassword(!showPassword)
                                         }
-                                        className="absolute right-[0%] top-[50%] -translate-x-1/2 -translate-y-1/2 text-gray-500"
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                                     >
-                                        {showPassword ? <EyeOff /> : <Eye />}
+                                        {showPassword ? (
+                                            <EyeOff className="w-5 h-5" />
+                                        ) : (
+                                            <Eye className="w-5 h-5" />
+                                        )}
                                     </button>
                                 </div>
                             </div>
 
-                            {/* Remember me */}
                             <div className="flex justify-between items-center">
-                                <div className="flex items-center gap-2">
+                                <label className="flex items-center gap-2 cursor-pointer">
                                     <Checkbox
                                         checked={rememberMe}
-                                        onChange={() => {
-                                            setRememberMe((prev) => !prev);
-                                        }}
+                                        onChange={() =>
+                                            setRememberMe(!rememberMe)
+                                        }
                                     />
                                     <Label
-                                        className="cursor-pointer"
+                                        className="cursor-pointer mb-0"
                                         onClick={() =>
-                                            setRememberMe((pre) => !pre)
+                                            setRememberMe(!rememberMe)
                                         }
                                     >
                                         Remember me
                                     </Label>
-                                </div>
-
-                                <button className="text-sm text-blue-600 hover:underline">
+                                </label>
+                                <button
+                                    type="button"
+                                    className="text-sm text-blue-600 hover:underline"
+                                >
                                     Forgot Password?
                                 </button>
                             </div>
 
-                            {/* Submit */}
                             <Button
-                                type="submit"
+                                type="button"
+                                onClick={handleSubmit}
                                 disabled={loading}
-                                className="w-full h-11"
-                                size="lg"
+                                className="w-full bg-linear-to-r from-blue-600 to-purple-600 text-white py-2.5 hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                             >
-                                {loading ? <Loader /> : "Sign In"}
+                                {loading ? (
+                                    <>
+                                        <Loader className="w-5 h-5 animate-spin" />
+                                        Signing In...
+                                    </>
+                                ) : (
+                                    "Sign In"
+                                )}
                             </Button>
-                        </form>
-                    </Card>
+
+                            <div className="text-center pt-2">
+                                <p className="text-sm text-gray-600">
+                                    Not yet registered?{" "}
+                                    <Link
+                                        to="/auth/register"
+                                        className="text-blue-600 font-medium hover:underline"
+                                    >
+                                        Register here
+                                    </Link>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

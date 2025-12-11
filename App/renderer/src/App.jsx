@@ -10,6 +10,7 @@ import ViewProductPage from "./pages/ViewProductPage.jsx";
 import EditProductPage from "./pages/EditProductPage.jsx";
 import TrashPage from "./pages/TrashPage.jsx";
 import SupplierPage from "./pages/SupplierPage.jsx";
+import Register from "./pages/Register.jsx";
 
 const router = createBrowserRouter([
     {
@@ -57,6 +58,10 @@ const router = createBrowserRouter([
     {
         path: "/auth/login",
         element: <Login />,
+    },
+    {
+        path: "/auth/register",
+        element: <Register />,
     },
 ]);
 

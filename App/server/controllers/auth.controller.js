@@ -7,17 +7,29 @@ export const registerUser = asyncHandler(async (req, res, next) => {
     try {
         if (!req.body)
             return next(new ErrorResponse("Request body is null", 400));
-        const { fullname, username, contact, password } = req.body;
-        if ((!fullname, !username, !password, !contact)) {
+        const { fullname, username, contactNo, password, developerSecret } =
+            req.body;
+        if ((!fullname, !username, !password, !contactNo, !developerSecret)) {
             return next(
                 new ErrorResponse("Please provide all required fields", 400)
             );
         }
+
+        if (developerSecret !== process.env.DEVELOPER_SECRET) {
+            return next(new ErrorResponse("Invalid developer secret", 403));
+        }
+
         const existingUser = await User.findOne({ username });
         if (existingUser) {
             return next(new ErrorResponse("Username already exists", 400));
         }
-        const newUser = new User({ fullname, username, password, contact });
+        const newUser = new User({
+            fullname,
+            username,
+            password,
+            contactNo,
+            lastLogin: Date.now(),
+        });
         await newUser.save();
 
         req.session.user = { id: newUser._id, username: newUser.username };
@@ -25,6 +37,7 @@ export const registerUser = asyncHandler(async (req, res, next) => {
         res.status(201).json({
             success: true,
             message: "User registered successfully",
+            user: new UserDTO(newUser),
         });
     } catch (error) {
         console.log("Error in Register User Controller.", error.message);
