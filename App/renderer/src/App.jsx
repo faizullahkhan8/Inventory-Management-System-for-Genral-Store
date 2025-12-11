@@ -9,6 +9,7 @@ import AddProductPage from "./pages/AddProductPage.jsx";
 import ViewProductPage from "./pages/ViewProductPage.jsx";
 import EditProductPage from "./pages/EditProductPage.jsx";
 import TrashPage from "./pages/TrashPage.jsx";
+import SupplierPage from "./pages/SupplierPage.jsx";
 
 const router = createBrowserRouter([
     {
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
             {
                 path: "/trash",
                 element: <TrashPage />,
+            },
+            {
+                path: "/suppliers",
+                element: <SupplierPage />,
             },
             {
                 path: "*",

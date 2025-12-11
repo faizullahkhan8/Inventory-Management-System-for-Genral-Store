@@ -86,7 +86,7 @@ const TrashPage = () => {
                 isOpen={isDeleteDialogOpen}
                 onClose={() => setIsDeleteDialogOpen(false)}
                 onConfirm={onConfirmDelete}
-                loading={null}
+                loading={deleteLoading}
                 // Permanent Delete Specifics:
                 title="Permanently Delete?"
                 message="This action cannot be undone. This item will be permanently removed from your account and servers."

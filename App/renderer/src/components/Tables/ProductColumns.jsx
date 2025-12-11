@@ -110,7 +110,7 @@ export const getProductColumns = ({
             header: "Quantity",
             size: 90,
             cell: (info) => {
-                const value = info.getValue().toString();
+                const value = info.getValue()?.toString();
                 const query = info.table.getState().globalFilter; // or column filter
                 return <Hightlighter text={value} query={query} />;
             },

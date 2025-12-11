@@ -61,7 +61,7 @@ const Inventory = () => {
                 variant="danger" // Keeps the red styling, but you could use 'warning' if preferred
                 icon={Trash2} // Overrides the default alert triangle with a Trash icon
             />
-            <div className="flex-1 p-2 sm:p-4 overflow-hidden flex flex-col">
+            <div className="flex-1 p-2 sm:p-4 overflow-y-scroll flex flex-col">
                 {/* top */}
                 <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3 mb-4">
                     {/* Search Section */}
