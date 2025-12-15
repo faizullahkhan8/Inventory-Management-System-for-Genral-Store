@@ -12,6 +12,7 @@ import connectDB from "./config/db.js";
 import authRouter from "./routers/auth.router.js";
 import productRouter from "./routers/product.router.js";
 import trashRouter from "./routers/trash.router.js";
+import supplierRouter from "./routers/supplier.router.js";
 import errorHandler from "./middlewares/errorhandler.middleware.js";
 
 dotenv.config();
@@ -56,6 +57,7 @@ app.use(
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/product", productRouter);
 app.use("/api/v1/trash", trashRouter);
+app.use("/api/v1/supplier", supplierRouter);
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);

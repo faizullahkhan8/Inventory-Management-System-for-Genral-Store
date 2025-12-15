@@ -4,6 +4,7 @@ import Trash from "../models/trash.model.js";
 import { TrashDto } from "../dto/trash.dto.js";
 import Inventory from "../models/inventory.model.js";
 import fs from "fs";
+import path from "path";
 
 export const getAllTrashedItems = expressAsyncHandler(
     async (req, res, next) => {

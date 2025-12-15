@@ -1,6 +1,6 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import { Button } from "../../ui/Button";
-import { Delete, Edit, Eye } from "lucide-react";
+import { Edit, Eye, Trash } from "lucide-react";
 
 export const getSupplierColumns = () => {
     const columnHelper = createColumnHelper();
@@ -38,15 +38,18 @@ export const getSupplierColumns = () => {
             cell: () => {
                 return (
                     <div className="flex gap-2">
-                        <Button variant="ghost">
+                        <Button variant="ghost" className="hover:text-blue-500">
                             <Eye size={20} />
                         </Button>
                         {/* edit */}
-                        <Button variant="ghost">
+                        <Button
+                            variant="ghost"
+                            className="hover:text-green-500"
+                        >
                             <Edit size={20} />
                         </Button>
-                        <Button variant="ghost">
-                            <Delete size={20} />
+                        <Button variant="ghost" className="hover:text-red-500">
+                            <Trash size={20} />
                         </Button>
                     </div>
                 );
