@@ -6,6 +6,7 @@ import Select from "../ui/Select";
 import { Input } from "../ui/Input";
 import ProductTable from "../components/Tables/ProductTable";
 import { getSupplierColumns } from "../components/Suppliers/SupplierColumns";
+import { Link } from "react-router-dom";
 
 const SupplierPage = () => {
     const [searchQuery, setSearchQuery] = useState("");
@@ -27,10 +28,14 @@ const SupplierPage = () => {
                     </div>
                     {/* right */}
                     <div>
-                        <Button>
-                            <Plus />
-                            <span>Add New Supplier</span>
-                        </Button>
+                        <Link
+                            to={"/suppliers/add-supplier?prevRoute=/suppliers"}
+                        >
+                            <Button>
+                                <Plus />
+                                <span>Add New Supplier</span>
+                            </Button>
+                        </Link>
                     </div>
                 </div>
 

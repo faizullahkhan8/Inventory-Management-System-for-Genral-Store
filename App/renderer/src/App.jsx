@@ -11,6 +11,7 @@ import EditProductPage from "./pages/EditProductPage.jsx";
 import TrashPage from "./pages/TrashPage.jsx";
 import SupplierPage from "./pages/SupplierPage.jsx";
 import Register from "./pages/Register.jsx";
+import AddSupplierPage from "./pages/AddSupplierPage.jsx";
 
 const router = createBrowserRouter([
     {
@@ -48,6 +49,10 @@ const router = createBrowserRouter([
             {
                 path: "/suppliers",
                 element: <SupplierPage />,
+            },
+            {
+                path: "/suppliers/add-supplier",
+                element: <AddSupplierPage />,
             },
             {
                 path: "*",
