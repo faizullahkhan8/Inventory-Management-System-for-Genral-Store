@@ -3,7 +3,10 @@ import { Eye, Pencil, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import Hightlighter from "../Tables/Highlighter";
 
-export const getSupplierColumns = () => {
+export const getSupplierColumns = ({
+    setActionedId,
+    setIsDeleteDialogOpen,
+}) => {
     const columnHelper = createColumnHelper();
 
     return [
@@ -79,16 +82,18 @@ export const getSupplierColumns = () => {
                 sticky: "right",
             },
             size: 120,
-            cell: () => {
+            cell: (info) => {
+                const data = info.row.original;
+                const id = data._id;
                 return (
                     <div className="flex items-center gap-3 justify-center">
-                        <Link>
+                        <Link to={`/suppliers/view-supplier/${id}`}>
                             <Eye
                                 className="cursor-pointer text-gray-500 hover:text-gray-900"
                                 size={18}
                             />
                         </Link>
-                        <Link>
+                        <Link to={`/suppliers/edit-supplier/${id}`}>
                             <Pencil
                                 className="cursor-pointer text-blue-500 hover:text-blue-700"
                                 size={18}
@@ -97,6 +102,10 @@ export const getSupplierColumns = () => {
                         <Trash2
                             className="cursor-pointer text-red-500 hover:text-red-700"
                             size={18}
+                            onClick={() => {
+                                setActionedId(id);
+                                setIsDeleteDialogOpen(true);
+                            }}
                         />
                     </div>
                 );

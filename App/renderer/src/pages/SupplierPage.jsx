@@ -1,4 +1,4 @@
-import { Plus, SearchIcon, Users } from "lucide-react";
+import { Plus, SearchIcon, Trash, Trash2, Users } from "lucide-react";
 import Header from "../components/Header";
 import { Button } from "../ui/Button";
 import { useMemo, useState } from "react";
@@ -8,12 +8,18 @@ import ProductTable from "../components/Tables/ProductTable";
 import { getSupplierColumns } from "../components/Suppliers/SupplierColumns";
 import { Link } from "react-router-dom";
 import { useGetAllSuppliers } from "../api/Hooks/supplier.api";
+import DialogBox from "../components/DialogBox";
 
 const SupplierPage = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [suppliersData, setSuppliersData] = useState([]);
+    const [actionedId, setActionedId] = useState(null);
+    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
-    const supplierColumns = getSupplierColumns();
+    const supplierColumns = getSupplierColumns({
+        setActionedId,
+        setIsDeleteDialogOpen,
+    });
 
     const { getAllSuppliers, loading: getAllSupplierLoading } =
         useGetAllSuppliers();
@@ -25,9 +31,24 @@ const SupplierPage = () => {
         })();
     }, []);
 
+    const onConfirmDelete = () => {
+        console.log("supplier moved to trash", actionedId);
+    };
+
     return (
         <div className="w-full h-screen flex flex-col">
             <Header title={"Suppliers"} />
+            <DialogBox
+                isOpen={isDeleteDialogOpen}
+                onClose={() => setIsDeleteDialogOpen(false)}
+                onConfirm={onConfirmDelete}
+                loading={false}
+                title="Move to Trash?"
+                message="This item will be moved to the trash bin. You can restore it later if you change your mind."
+                confirmText="Move to Trash"
+                variant="danger"
+                icon={Trash2}
+            />
             <div className="w-full flex-1 overflow-y-scroll p-4 flex flex-col gap-4">
                 <div className="w-full flex items-center justify-between gap-2 max-sm:flex-col p-4">
                     {/* left */}
