@@ -1,17 +1,29 @@
 import { Plus, SearchIcon, Users } from "lucide-react";
 import Header from "../components/Header";
 import { Button } from "../ui/Button";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Select from "../ui/Select";
 import { Input } from "../ui/Input";
 import ProductTable from "../components/Tables/ProductTable";
 import { getSupplierColumns } from "../components/Suppliers/SupplierColumns";
 import { Link } from "react-router-dom";
+import { useGetAllSuppliers } from "../api/Hooks/supplier.api";
 
 const SupplierPage = () => {
     const [searchQuery, setSearchQuery] = useState("");
+    const [suppliersData, setSuppliersData] = useState([]);
 
     const supplierColumns = getSupplierColumns();
+
+    const { getAllSuppliers, loading: getAllSupplierLoading } =
+        useGetAllSuppliers();
+
+    useMemo(() => {
+        (async () => {
+            const data = await getAllSuppliers();
+            setSuppliersData(data.suppliers);
+        })();
+    }, []);
 
     return (
         <div className="w-full h-screen flex flex-col">
@@ -58,14 +70,16 @@ const SupplierPage = () => {
                             { label: " (Reset)" },
                             { label: "Banana", value: "banana" },
                             { label: "Orange", value: "orange" },
-                            { label: "Orange", value: "orange" },
                         ]}
                     />
                 </div>
                 <div>
                     <ProductTable
                         columns={supplierColumns}
-                        data={[{ name: "some" }]}
+                        data={suppliersData}
+                        loading={getAllSupplierLoading}
+                        searchQuery={searchQuery}
+                        setSearchQuery={setSearchQuery}
                     />
                 </div>
             </div>

@@ -65,7 +65,7 @@ const supplierSchema = new Schema(
                     enum: ["cash", "bank", "online", "cheque"],
                 },
 
-                date: {
+                timestamp: {
                     type: Date,
                     default: Date.now,
                 },

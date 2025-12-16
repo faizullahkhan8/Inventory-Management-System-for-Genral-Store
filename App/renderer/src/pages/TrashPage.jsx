@@ -59,7 +59,7 @@ const TrashPage = () => {
 
         if (data) {
             setTrashedItems((prevItems) =>
-                prevItems.filter((item) => item.id !== actionedItemId)
+                prevItems.filter((item) => item._id !== actionedItemId)
             );
             setIsDeleteDialogOpen(false);
         }
@@ -72,7 +72,7 @@ const TrashPage = () => {
         const data = await restoreOneItem(actionedItemId);
         if (data) {
             setTrashedItems((prevItems) =>
-                prevItems.filter((item) => item.id !== actionedItemId)
+                prevItems.filter((item) => item._id !== actionedItemId)
             );
             setIsRestoreDialogOpen(false);
         }
@@ -87,7 +87,6 @@ const TrashPage = () => {
                 onClose={() => setIsDeleteDialogOpen(false)}
                 onConfirm={onConfirmDelete}
                 loading={deleteLoading}
-                // Permanent Delete Specifics:
                 title="Permanently Delete?"
                 message="This action cannot be undone. This item will be permanently removed from your account and servers."
                 confirmText="Delete Forever"
@@ -96,13 +95,13 @@ const TrashPage = () => {
             <DialogBox
                 isOpen={isRestoreDialogOpen}
                 onClose={() => setIsRestoreDialogOpen(false)}
-                onConfirm={onConfirmRestore} // Use your specific restore handler
+                onConfirm={onConfirmRestore}
                 loading={restoreLoading}
                 title="Restore Item"
                 message="This item will be successfully moved out of the trash and returned to its previous location."
                 confirmText="Restore"
-                variant="success" // Changes theme to green/positive
-                icon={RefreshCcw} // Icon suggesting undo or circular refresh
+                variant="success"
+                icon={RefreshCcw}
             />
             <div className="flex flex-col gap-4 p-4 overflow-y-scroll">
                 {/* top */}

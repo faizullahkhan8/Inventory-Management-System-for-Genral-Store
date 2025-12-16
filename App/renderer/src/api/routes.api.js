@@ -20,3 +20,7 @@ export const trashRoutes = {
     RESTORE_ONE_ITEM: "/trash/restore",
     DELETE_ONE_ITEM: "/trash/delete",
 };
+
+export const supplierRoutes = {
+    GET_ALL_SUPPLIERS: "/supplier/get-all",
+};

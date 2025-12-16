@@ -106,7 +106,7 @@ export const getTrashedTableColumns = ({
             },
             size: 200,
             cell: ({ row }) => {
-                const itemId = row.original.id;
+                const itemId = row.original._id;
                 return (
                     <div className="flex gap-2">
                         <Button

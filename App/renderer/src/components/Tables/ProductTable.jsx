@@ -89,7 +89,7 @@ const ProductTable = ({
                                             cell.column.columnDef.meta
                                                 ?.sticky === "right" &&
                                             "sticky right-0 bg-gray-50"
-                                        } px-4 py-1 text-sm text-gray-600`}
+                                        } px-4 py-2 text-sm text-gray-600`}
                                         style={{ width: cell.column.getSize() }}
                                     >
                                         {flexRender(

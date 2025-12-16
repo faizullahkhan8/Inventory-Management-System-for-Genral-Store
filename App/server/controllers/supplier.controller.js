@@ -1,6 +1,7 @@
 import expressAsyncHandler from "express-async-handler";
 import { ErrorResponse } from "../utils/ErrorResponse.js";
 import Supplier from "../models/supplier.model.js";
+import { SupplerDto } from "../dto/supplier.dto.js";
 
 export const createSupplier = expressAsyncHandler(async (req, res, next) => {
     try {
@@ -38,11 +39,17 @@ export const createSupplier = expressAsyncHandler(async (req, res, next) => {
 
 export const getAllSupplier = expressAsyncHandler(async (req, res, next) => {
     try {
-        const suppliers = await Supplier.find();
+        const dbSuppliers = await Supplier.find();
+
+        if (dbSuppliers.length < 1) {
+            return next(new ErrorResponse("Not found", 404));
+        }
+
+        const suppliers = dbSuppliers.map((item) => new SupplerDto(item));
 
         return res.status(200).json({
             success: true,
-            data: suppliers,
+            suppliers,
         });
     } catch (error) {
         console.log("Error in get all supplier controller : ", error.message);

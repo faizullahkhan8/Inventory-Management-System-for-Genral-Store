@@ -161,8 +161,8 @@ const Register = () => {
                 <form onSubmit={handleSubmit} className="w-full max-w-md">
                     {/* Mobile Logo */}
                     <div className="lg:hidden flex items-center justify-center gap-3 mb-6">
-                        <div className="w-14 h-14 bg-blue-600 rounded-xl flex items-center justify-center">
-                            <User className="w-7 h-7 text-white" />
+                        <div className="w-20 h-20 bg-white/10 rounded-xl flex items-center justify-center">
+                            <img src={logo} className="w-20 h-20" />
                         </div>
                         <div>
                             <h1 className="font-bold text-2xl text-blue-600">
