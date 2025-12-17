@@ -47,7 +47,7 @@ const SupplierContacts = ({ supplierData, setSupplierData }) => {
                             className="flex items-end gap-2 w-full"
                         >
                             <div className="w-full flex flex-col gap-2">
-                                <label>Type</label>
+                                <label>Contact type</label>
                                 <Select
                                     id="type"
                                     name="contact-type"
@@ -74,7 +74,7 @@ const SupplierContacts = ({ supplierData, setSupplierData }) => {
                                 />
                             </div>
                             <div className="w-full flex flex-col gap-2">
-                                <label>Number</label>
+                                <label>Contact number</label>
                                 <Input
                                     value={contact.number}
                                     onChange={(e) =>

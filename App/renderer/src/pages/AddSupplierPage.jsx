@@ -1,7 +1,8 @@
-import React from "react";
 import Header from "../components/Header";
 import { useState } from "react";
 import SupplierFrom from "../components/Suppliers/SupplierFrom";
+import { useCreateSupplier } from "../api/Hooks/supplier.api";
+import { useNavigate } from "react-router-dom";
 
 const AddSupplierPage = () => {
     const [supplierData, setSupplierData] = useState({
@@ -15,9 +16,27 @@ const AddSupplierPage = () => {
         ],
         address: "",
         email: "",
+        totalAmount: "",
+        paymentSnapshots: [
+            {
+                amount: "",
+                actionType: "",
+                paymentMethod: "",
+            },
+        ],
     });
+
+    const { createSupplier, loading: createSupplierLoading } =
+        useCreateSupplier();
+    const navigate = useNavigate();
+
     const handleAddSupplier = async (e) => {
         e.preventDefault();
+        const response = await createSupplier(supplierData);
+
+        if (response.success) {
+            navigate("/suppliers");
+        }
     };
     return (
         <div className="w-full h-screen flex flex-col">
@@ -26,7 +45,7 @@ const AddSupplierPage = () => {
                 handler={handleAddSupplier}
                 supplierData={supplierData}
                 setSupplierData={setSupplierData}
-                loading={false}
+                loading={createSupplierLoading}
             />
         </div>
     );

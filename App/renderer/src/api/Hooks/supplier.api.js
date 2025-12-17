@@ -30,3 +30,33 @@ export const useGetAllSuppliers = () => {
 
     return { loading, getAllSuppliers };
 };
+
+export const useCreateSupplier = () => {
+    const [loading, setLoading] = useState(false);
+    const createSupplier = async (supplierData) => {
+        setLoading(true);
+        try {
+            const response = await apiClient.post(
+                supplierRoutes.CREATE_SUPPLIER,
+                supplierData
+            );
+            if (response?.data || response?.status === 201) {
+                toast.success("Supplier created successfully.");
+                return response.data;
+            }
+        } catch (error) {
+            const message =
+                error?.response?.data?.error ||
+                error?.response?.data?.message ||
+                error?.message ||
+                "creating supplier failed!";
+            toast.error(message);
+            console.error("Error in creating supplier : ", message);
+            return null;
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return { loading, createSupplier };
+};

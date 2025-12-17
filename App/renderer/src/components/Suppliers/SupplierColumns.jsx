@@ -30,7 +30,7 @@ export const getSupplierColumns = ({
         }),
         columnHelper.accessor("email", {
             header: "Email Address",
-            size: 150,
+            size: 220,
             cell: (info) => {
                 const value = info.getValue().toString();
                 const query = info.table.getState().globalFilter; // or column filter
@@ -39,7 +39,7 @@ export const getSupplierColumns = ({
         }),
         columnHelper.accessor("phone", {
             header: "Phone Number",
-            size: 150,
+            size: 220,
             cell: (info) => {
                 const value = info.getValue().toString();
                 const query = info.table.getState().globalFilter; // or column filter
@@ -58,7 +58,7 @@ export const getSupplierColumns = ({
             },
         }),
         columnHelper.accessor("paidAmount", {
-            header: "Pending Amount",
+            header: "Paid Amount",
             size: 150,
             cell: (info) => {
                 const value = info.getValue().toString();
@@ -68,6 +68,15 @@ export const getSupplierColumns = ({
         }),
         columnHelper.accessor("totalAmount", {
             header: "Total Amount",
+            size: 150,
+            cell: (info) => {
+                const value = info.getValue().toString();
+                const query = info.table.getState().globalFilter; // or column filter
+                return <Hightlighter text={value} query={query} />;
+            },
+        }),
+        columnHelper.accessor("remainingAmount", {
+            header: "Remaining Amount",
             size: 150,
             cell: (info) => {
                 const value = info.getValue().toString();

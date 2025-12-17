@@ -1,7 +1,7 @@
-import { Plus, SearchIcon, Trash, Trash2, Users } from "lucide-react";
+import { Plus, SearchIcon, Trash2, Users } from "lucide-react";
 import Header from "../components/Header";
 import { Button } from "../ui/Button";
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import Select from "../ui/Select";
 import { Input } from "../ui/Input";
 import ProductTable from "../components/Tables/ProductTable";
@@ -24,7 +24,7 @@ const SupplierPage = () => {
     const { getAllSuppliers, loading: getAllSupplierLoading } =
         useGetAllSuppliers();
 
-    useMemo(() => {
+    useEffect(() => {
         (async () => {
             const data = await getAllSuppliers();
             setSuppliersData(data.suppliers);

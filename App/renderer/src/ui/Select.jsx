@@ -36,7 +36,7 @@ export default function Select({
                             <SelectPrimitive.Item
                                 key={index}
                                 value={item.value}
-                                className="relative flex items-center rounded-md py-2 pl-8 pr-2 text-sm cursor-pointer select-none hover:bg-gray-100 focus:bg-gray-300 focus:text-white outline-none data-[state=checked]:bg-blue-500 my-1 transition-colors duration-200"
+                                className="relative flex items-center rounded-md py-2 pl-8 pr-2 text-sm cursor-pointer select-none hover:bg-primary focus:bg-primary focus:text-white outline-none data-[state=checked]:bg-blue-500 my-1 transition-colors duration-200"
                             >
                                 <SelectPrimitive.ItemIndicator className="absolute left-2">
                                     <CheckIcon className="h-4 w-4" />

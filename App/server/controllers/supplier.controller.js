@@ -6,16 +6,22 @@ import { SupplerDto } from "../dto/supplier.dto.js";
 export const createSupplier = expressAsyncHandler(async (req, res, next) => {
     try {
         const data = req.body;
-        const { name, company, contacts } = data;
 
-        if (!name || !company || !contacts || contacts.length === 0) {
+        const {
+            name,
+            company,
+            contacts,
+            totalAmount,
+            paymentSnapshots = [],
+        } = data;
+
+        if (!name || !company || !contacts?.length) {
             return next(
                 new ErrorResponse("Please provide all required fields.", 400)
             );
         }
 
         const isExists = await Supplier.findOne({ name, company });
-
         if (isExists) {
             return next(
                 new ErrorResponse(
@@ -25,6 +31,29 @@ export const createSupplier = expressAsyncHandler(async (req, res, next) => {
             );
         }
 
+        let tempTotal = 0;
+        let remainingDue = Number(totalAmount) || 0;
+        let paidAmount = 0;
+
+        if (paymentSnapshots.length > 0) {
+            paymentSnapshots.forEach((item) => {
+                const amount = Number(item.amount) || 0;
+
+                if (item.actionType === "purchase") {
+                    remainingDue += amount;
+                    tempTotal += amount;
+                } else if (item.actionType === "payment") {
+                    remainingDue -= amount;
+                    paidAmount += amount;
+                }
+
+                item.remainingDueAmount = remainingDue;
+            });
+        }
+
+        data.paidAmount = paidAmount;
+        data.totalAmount = Number(totalAmount) + tempTotal;
+
         await Supplier.create(data);
 
         return res.status(201).json({
@@ -32,7 +61,7 @@ export const createSupplier = expressAsyncHandler(async (req, res, next) => {
             message: "Supplier created successfully.",
         });
     } catch (error) {
-        console.log("Error in create supplier controller : ", error.message);
+        console.log("Error in create supplier:", error);
         return next(new ErrorResponse("Internal server error", 500));
     }
 });

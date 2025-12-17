@@ -2,7 +2,8 @@ import { Link } from "react-router-dom";
 import { Input } from "../../ui/Input";
 import { Button } from "../../ui/Button";
 import SupplierContacts from "./SupplierContacts";
-import { Label } from "../../ui/Label";
+import { Loader } from "lucide-react";
+import AddPayment from "./AddPayment";
 
 const SupplierFrom = ({
     handler,
@@ -46,6 +47,7 @@ const SupplierFrom = ({
                         </label>
                         <Input
                             id="name"
+                            type="text"
                             name="supplier-name"
                             value={supplierData?.name}
                             autoComplete="supplier-name"
@@ -60,6 +62,7 @@ const SupplierFrom = ({
                         </label>
                         <Input
                             id="company"
+                            type="text"
                             name="supplier-company"
                             value={supplierData?.company}
                             autoComplete="supplier-company"
@@ -69,15 +72,13 @@ const SupplierFrom = ({
                         />
                     </div>
                     <div>
-                        <label htmlFor="address">
-                            Address <span className="text-red-500">*</span>
-                        </label>
+                        <label htmlFor="address">Address</label>
                         <Input
                             id="address"
+                            type="text"
                             name="supplier-address"
                             value={supplierData?.address}
                             autoComplete="supplier-address"
-                            required
                             placeholder="Enter supplier address..."
                             onChange={handleChange}
                         />
@@ -86,6 +87,7 @@ const SupplierFrom = ({
                         <label htmlFor="email">Email</label>
                         <Input
                             id="email"
+                            type="email"
                             name="supplier-email"
                             value={supplierData?.email}
                             autoComplete="supplier-email"
@@ -94,11 +96,32 @@ const SupplierFrom = ({
                             onChange={handleChange}
                         />
                     </div>
+                    <div>
+                        <label htmlFor="email">Total Amount</label>
+                        <Input
+                            id="totalAmount"
+                            type="number"
+                            name="supplier-totalAmount"
+                            value={supplierData?.totalAmount}
+                            autoComplete="supplier-total-amount"
+                            required
+                            placeholder="Enter total amount..."
+                            onChange={handleChange}
+                        />
+                    </div>
                 </div>
                 <div>
-                    <label>Contacts</label>
-                    <br />
+                    <label htmlFor="company">
+                        Contacts <span className="text-red-500">*</span>
+                    </label>
                     <SupplierContacts
+                        setSupplierData={setSupplierData}
+                        supplierData={supplierData}
+                    />
+                </div>
+                <div>
+                    <label>Already have payment?</label>
+                    <AddPayment
                         setSupplierData={setSupplierData}
                         supplierData={supplierData}
                     />

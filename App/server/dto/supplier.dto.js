@@ -7,6 +7,8 @@ export class SupplerDto {
         this.email = supplier.email;
         this.paidAmount = supplier.paidAmount || 0;
         this.totalAmount = supplier.totalAmount || 0;
+        this.remainingAmount =
+            Number(supplier.totalAmount) - Number(supplier.paidAmount) || 0;
         this.lastPurchaseDate =
             supplier.paymentSnapshots[
                 supplier.paymentSnapshots.length - 1
