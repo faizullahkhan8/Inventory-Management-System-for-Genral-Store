@@ -113,7 +113,7 @@ const AddPayment = ({ supplierData, setSupplierData }) => {
                                     autoComplete="payment-method"
                                     onChange={(val) =>
                                         handleFieldChange(
-                                            0,
+                                            index,
                                             "paymentMethod",
                                             val
                                         )

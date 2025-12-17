@@ -83,16 +83,6 @@ const SupplierPage = () => {
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />
                     </div>
-                    <Select
-                        placeholder="Search by category"
-                        onChange={setSearchQuery}
-                        className="w-60!"
-                        options={[
-                            { label: " (Reset)" },
-                            { label: "Banana", value: "banana" },
-                            { label: "Orange", value: "orange" },
-                        ]}
-                    />
                 </div>
                 <div>
                     <ProductTable

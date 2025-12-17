@@ -62,7 +62,6 @@ const supplierSchema = new Schema(
 
                 paymentMethod: {
                     type: String,
-                    enum: ["cash", "bank", "online", "cheque"],
                 },
 
                 timestamp: {
