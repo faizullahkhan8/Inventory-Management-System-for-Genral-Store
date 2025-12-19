@@ -120,7 +120,7 @@ const ViewProductPage = () => {
                         <Stat
                             icon={TriangleAlert}
                             subText={"Min Stock"}
-                            mainText={productData?.sellingPrice}
+                            mainText={0} // not setted yet.
                             color="rose"
                         />
                     </div>

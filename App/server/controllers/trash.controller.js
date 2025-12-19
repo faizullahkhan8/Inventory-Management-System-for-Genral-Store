@@ -3,7 +3,7 @@ import { ErrorResponse } from "../utils/ErrorResponse.js";
 import Trash from "../models/trash.model.js";
 import { TrashDto } from "../dto/trash.dto.js";
 import Inventory from "../models/inventory.model.js";
-import fs from "fs";
+import fs from "fs/promises";
 import path from "path";
 
 export const getAllTrashedItems = expressAsyncHandler(
@@ -39,24 +39,26 @@ export const deleteFromTrash = expressAsyncHandler(async (req, res, next) => {
             return next(new ErrorResponse("Trashed item not found", 404));
         }
 
-        const filename = trashedItems.data.imageUrl.split("/").pop();
+        // Delete product image if item is product
+        if (trashedItems.collectionName === "products") {
+            const filename = trashedItems.data.imageUrl.split("/").pop();
 
-        const filePath = path.join("assets/images/product-images", filename);
-
-        fs.unlink(filePath, () => {
-            return next(new ErrorResponse("failed to delete item image.", 400));
-        });
-
-        const deletedCount = await Inventory.deleteOne({
-            productId: trashedItems.data._id,
-        });
-
-        if (deletedCount.deletedCount === 0) {
-            return next(
-                new ErrorResponse("Associated inventory not found", 404)
+            const filePath = path.join(
+                process.cwd(),
+                "assets/images/product-images",
+                filename
             );
+
+            try {
+                await fs.unlink(filePath);
+            } catch (err) {
+                return next(
+                    new ErrorResponse("Failed to delete item image.", 400)
+                );
+            }
         }
 
+        // Delete trash record
         await trashedItems.deleteOne();
 
         return res.status(200).json({
@@ -64,7 +66,7 @@ export const deleteFromTrash = expressAsyncHandler(async (req, res, next) => {
             message: "Item permanently deleted from trash",
         });
     } catch (error) {
-        console.log("Error in delete from trash controller : ", error.message);
+        console.log("Error in delete from trash controller:", error.message);
         return next(new ErrorResponse("Internal server error", 500));
     }
 });

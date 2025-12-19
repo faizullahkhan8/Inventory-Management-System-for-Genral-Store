@@ -5,14 +5,11 @@ export default function Select({
     placeholder = "Select...",
     options = [],
     onChange,
-    defaultValue,
+    value,
     className = "",
 }) {
     return (
-        <SelectPrimitive.Root
-            onValueChange={onChange}
-            defaultValue={defaultValue}
-        >
+        <SelectPrimitive.Root onValueChange={onChange} value={value}>
             <SelectPrimitive.Trigger
                 className={`flex w-full items-center justify-between gap-2 rounded-md border border-gray-300 px-3 py-2 h-9 text-sm bg-white focus:ring-2 focus:ring-blue-500 outline-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
             >

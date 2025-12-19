@@ -7,7 +7,10 @@ import { Input } from "../ui/Input";
 import ProductTable from "../components/Tables/ProductTable";
 import { getSupplierColumns } from "../components/Suppliers/SupplierColumns";
 import { Link } from "react-router-dom";
-import { useGetAllSuppliers } from "../api/Hooks/supplier.api";
+import {
+    useDeleteSupplier,
+    useGetAllSuppliers,
+} from "../api/Hooks/supplier.api";
 import DialogBox from "../components/DialogBox";
 
 const SupplierPage = () => {
@@ -23,6 +26,8 @@ const SupplierPage = () => {
 
     const { getAllSuppliers, loading: getAllSupplierLoading } =
         useGetAllSuppliers();
+    const { deleteSupplier, loading: deleteSupplierLoading } =
+        useDeleteSupplier();
 
     useEffect(() => {
         (async () => {
@@ -31,8 +36,19 @@ const SupplierPage = () => {
         })();
     }, []);
 
-    const onConfirmDelete = () => {
-        console.log("supplier moved to trash", actionedId);
+    const onConfirmDelete = async () => {
+        const response = await deleteSupplier(actionedId);
+
+        if (response.success) {
+            const updatedSuppliers = suppliersData.filter(
+                (item) => item._id !== actionedId
+            );
+
+            setSuppliersData(updatedSuppliers);
+
+            setActionedId(null);
+            setIsDeleteDialogOpen(false);
+        }
     };
 
     return (
@@ -42,7 +58,7 @@ const SupplierPage = () => {
                 isOpen={isDeleteDialogOpen}
                 onClose={() => setIsDeleteDialogOpen(false)}
                 onConfirm={onConfirmDelete}
-                loading={false}
+                loading={deleteSupplierLoading}
                 title="Move to Trash?"
                 message="This item will be moved to the trash bin. You can restore it later if you change your mind."
                 confirmText="Move to Trash"

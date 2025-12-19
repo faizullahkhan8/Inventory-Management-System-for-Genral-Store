@@ -24,4 +24,7 @@ export const trashRoutes = {
 export const supplierRoutes = {
     GET_ALL_SUPPLIERS: "/supplier/get-all",
     CREATE_SUPPLIER: "/supplier/create",
+    DELETE_SUPPLIER: "/supplier/delete",
+    GET_SUPPLIER: "/supplier/get",
+    UPDATE_SUPPLIER: "/supplier/update",
 };

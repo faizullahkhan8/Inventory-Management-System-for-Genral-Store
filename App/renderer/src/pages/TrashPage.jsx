@@ -165,7 +165,7 @@ const TrashPage = () => {
                         icon={Truck}
                         mainText={
                             trashedItems.filter(
-                                (item) => item.type === "supplier"
+                                (item) => item.type === "suppliers"
                             ).length
                         }
                         subText={"Suppliers"}

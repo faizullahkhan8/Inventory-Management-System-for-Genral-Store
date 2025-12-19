@@ -65,8 +65,7 @@ const supplierSchema = new Schema(
                 },
 
                 timestamp: {
-                    type: Date,
-                    default: Date.now,
+                    type: String,
                 },
             },
         ],

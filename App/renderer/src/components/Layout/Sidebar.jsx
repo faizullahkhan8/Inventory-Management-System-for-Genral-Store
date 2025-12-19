@@ -29,6 +29,16 @@ const SidebarComponent = () => {
 
     const { loading, logout } = useLogout();
 
+    window.addEventListener("resize", () => {
+        const width = document.documentElement.clientWidth;
+
+        if (width <= 720) {
+            setIsCollapsed(true);
+        } else {
+            setIsCollapsed(false);
+        }
+    });
+
     return (
         <Sidebar
             collapsed={isCollapsed}

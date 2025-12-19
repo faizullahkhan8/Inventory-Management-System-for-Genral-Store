@@ -48,7 +48,7 @@ export const getTrashedTableColumns = ({
                             <Hightlighter text="Customer" query={query} />
                         </div>
                     );
-                } else if (type === "supplier") {
+                } else if (type === "suppliers") {
                     return (
                         <div className="bg-purple-100 text-purple-600 flex items-center gap-2 border px-4 py-1 border-gray-300 rounded-full">
                             <Truck size={18} />

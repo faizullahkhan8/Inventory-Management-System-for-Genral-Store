@@ -52,6 +52,7 @@ const SupplierContacts = ({ supplierData, setSupplierData }) => {
                                     id="type"
                                     name="contact-type"
                                     required
+                                    value={contact.type}
                                     autoComplete="contact-type"
                                     onChange={(val) =>
                                         handleFieldChange(index, "type", val)

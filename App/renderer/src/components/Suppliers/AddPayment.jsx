@@ -85,6 +85,7 @@ const AddPayment = ({ supplierData, setSupplierData }) => {
                                 id="actionType"
                                 name="supplier-payment-action-type"
                                 required
+                                value={payment.actionType}
                                 autoComplete="payment-action"
                                 onChange={(val) =>
                                     handleFieldChange(index, "actionType", val)
@@ -110,6 +111,7 @@ const AddPayment = ({ supplierData, setSupplierData }) => {
                                     id="paymentMethod"
                                     name="supplier-payment-payment-method"
                                     required
+                                    value={payment.paymentMethod}
                                     autoComplete="payment-method"
                                     onChange={(val) =>
                                         handleFieldChange(
