@@ -1,8 +1,7 @@
-import { Plus, SearchIcon, Trash2, Users } from "lucide-react";
+import { Grid, List, Plus, SearchIcon, Trash2, Users } from "lucide-react";
 import Header from "../components/Header";
 import { Button } from "../ui/Button";
 import { useEffect, useState } from "react";
-import Select from "../ui/Select";
 import { Input } from "../ui/Input";
 import ProductTable from "../components/Tables/ProductTable";
 import { getSupplierColumns } from "../components/Suppliers/SupplierColumns";
@@ -12,12 +11,14 @@ import {
     useGetAllSuppliers,
 } from "../api/Hooks/supplier.api";
 import DialogBox from "../components/DialogBox";
+import DataGrid from "../components/Suppliers/SupplierGridView";
 
 const SupplierPage = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [suppliersData, setSuppliersData] = useState([]);
     const [actionedId, setActionedId] = useState(null);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+    const [supplierView, setSupplierView] = useState("list");
 
     const supplierColumns = getSupplierColumns({
         setActionedId,
@@ -50,6 +51,8 @@ const SupplierPage = () => {
             setIsDeleteDialogOpen(false);
         }
     };
+
+    console.log(suppliersData);
 
     return (
         <div className="w-full h-screen flex flex-col">
@@ -88,7 +91,7 @@ const SupplierPage = () => {
                     </div>
                 </div>
 
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full lg:w-auto">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center max-sm:flex-col justify-between gap-2 w-full lg:w-auto">
                     <div className="relative w-full sm:w-auto">
                         <SearchIcon className="absolute left-[18px] top-[50%] -translate-x-1/2 -translate-y-1/2 text-gray-400" />
                         <Input
@@ -99,15 +102,39 @@ const SupplierPage = () => {
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />
                     </div>
+                    <div className="w-max flex items-center justify-center border rounded-full overflow-hidden">
+                        <List
+                            size={18}
+                            onClick={() => setSupplierView("list")}
+                            className={`${
+                                supplierView === "list" &&
+                                "bg-primary text-white"
+                            } w-10 h-7 px-2 py-1 transition-colors duration-300`}
+                        />
+                        <Grid
+                            size={18}
+                            onClick={() => setSupplierView("grid")}
+                            className={`${
+                                supplierView === "grid" &&
+                                "bg-primary text-white"
+                            } w-10 h-7 px-2 py-1 transition-colors duration-300`}
+                        />
+                    </div>
                 </div>
                 <div>
-                    <ProductTable
-                        columns={supplierColumns}
-                        data={suppliersData}
-                        loading={getAllSupplierLoading}
-                        searchQuery={searchQuery}
-                        setSearchQuery={setSearchQuery}
-                    />
+                    {supplierView === "list" && (
+                        <ProductTable
+                            columns={supplierColumns}
+                            data={suppliersData}
+                            loading={getAllSupplierLoading}
+                            searchQuery={searchQuery}
+                            setSearchQuery={setSearchQuery}
+                        />
+                    )}
+
+                    {supplierView === "grid" && (
+                        <DataGrid suppliers={suppliersData} />
+                    )}
                 </div>
             </div>
         </div>

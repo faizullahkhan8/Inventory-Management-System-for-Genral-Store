@@ -26,10 +26,24 @@ export const createSupplier = expressAsyncHandler(async (req, res, next) => {
         }
 
         const isExists = await Supplier.findOne({ name, company });
+
         if (isExists) {
             return next(
                 new ErrorResponse(
                     "Supplier with the same name and company already exists.",
+                    400
+                )
+            );
+        }
+        const isTrashed = await Trash.findOne({
+            "data.name": name,
+            "data.company": company,
+        });
+
+        if (isTrashed) {
+            return next(
+                new ErrorResponse(
+                    "Supplier with same name and company already exists in the trash.",
                     400
                 )
             );
@@ -47,6 +61,21 @@ export const createSupplier = expressAsyncHandler(async (req, res, next) => {
                     remainingDue += amount;
                     tempTotal += amount;
                 } else if (item.actionType === "payment") {
+                    if (!item.paymentMethod) {
+                        return next(
+                            new ErrorResponse(
+                                `Please provide payment method for amount : ${item.amount}`
+                            )
+                        );
+                    }
+                    if (amount > remainingDue) {
+                        return next(
+                            new ErrorResponse(
+                                "Amount is greater then Total.",
+                                400
+                            )
+                        );
+                    }
                     remainingDue -= amount;
                     paidAmount += amount;
                 }
@@ -207,6 +236,213 @@ export const updateSupplier = expressAsyncHandler(async (req, res, next) => {
         });
     } catch (error) {
         console.log("Error in update supplier controller:", error.message);
+        return next(new ErrorResponse("Internal server error.", 500));
+    }
+});
+
+export const addPayment = expressAsyncHandler(async (req, res, next) => {
+    try {
+        const { amount, actionType, paymentMethod, timestamp, supplierId } =
+            req.body || {};
+
+        // ✅ Basic validation
+        if (!supplierId || !amount || !actionType || !timestamp) {
+            return next(
+                new ErrorResponse("Please provide all required fields.", 400)
+            );
+        }
+
+        if (Number(amount) <= 0) {
+            return next(
+                new ErrorResponse(
+                    "Amount should be a positive non-zero number.",
+                    400
+                )
+            );
+        }
+
+        if (
+            actionType === "payment" &&
+            (!paymentMethod || paymentMethod === "")
+        ) {
+            return next(
+                new ErrorResponse(
+                    "Please provide payment method for payment.",
+                    400
+                )
+            );
+        }
+
+        // ✅ Find supplier
+        const supplier = await Supplier.findById(supplierId);
+
+        if (!supplier) {
+            return next(new ErrorResponse("Supplier not found!", 404));
+        }
+
+        let newPaidAmount = supplier.paidAmount || 0;
+        let newTotalAmount = supplier.totalAmount || 0;
+
+        // ✅ Handle PAYMENT
+        if (actionType === "payment") {
+            if (newPaidAmount + Number(amount) > newTotalAmount) {
+                return next(
+                    new ErrorResponse("Payment exceeds total amount.", 400)
+                );
+            }
+
+            newPaidAmount += Number(amount);
+        }
+
+        // ✅ Handle PURCHASE
+        if (actionType === "purchase") {
+            newTotalAmount += Number(amount);
+        }
+
+        const remainingDueAmount = Math.max(newTotalAmount - newPaidAmount, 0);
+
+        // ✅ Push history
+        supplier.paymentSnapshots.push({
+            amount: Number(amount),
+            actionType,
+            paymentMethod: actionType === "payment" ? paymentMethod : null,
+            timestamp,
+            remainingDueAmount,
+        });
+
+        // ✅ Update supplier totals
+        supplier.paidAmount = newPaidAmount;
+        supplier.totalAmount = newTotalAmount;
+
+        await supplier.save();
+
+        return res.status(201).json({
+            success: true,
+            message:
+                actionType === "payment"
+                    ? "Payment added successfully!"
+                    : "Purchase added successfully!",
+            supplier,
+        });
+    } catch (error) {
+        console.error("Add payment/purchase error:", error);
+        return next(new ErrorResponse("Internal server error.", 500));
+    }
+});
+
+export const updatePayment = expressAsyncHandler(async (req, res, next) => {
+    try {
+        const {
+            supplierId,
+            snapshotId,
+            amount,
+            actionType,
+            paymentMethod,
+            timestamp,
+        } = req.body || {};
+
+        // ✅ Basic validation
+        if (
+            !supplierId ||
+            !snapshotId ||
+            !amount ||
+            !actionType ||
+            !timestamp
+        ) {
+            return next(
+                new ErrorResponse("Please provide all required fields.", 400)
+            );
+        }
+
+        if (Number(amount) <= 0) {
+            return next(
+                new ErrorResponse(
+                    "Amount should be a positive non-zero number.",
+                    400
+                )
+            );
+        }
+
+        if (
+            actionType === "payment" &&
+            (!paymentMethod || paymentMethod === "")
+        ) {
+            return next(
+                new ErrorResponse(
+                    "Please provide payment method for payment.",
+                    400
+                )
+            );
+        }
+
+        // ✅ Find supplier
+        const supplier = await Supplier.findById(supplierId);
+
+        if (!supplier) {
+            return next(new ErrorResponse("Supplier not found!", 404));
+        }
+
+        // ✅ Find old snapshot
+        const snapshot = supplier.paymentSnapshots.id(snapshotId);
+
+        if (!snapshot) {
+            return next(new ErrorResponse("Payment record not found!", 404));
+        }
+
+        let newPaidAmount = supplier.paidAmount || 0;
+        let newTotalAmount = supplier.totalAmount || 0;
+
+        // 🔁 REVERSE OLD SNAPSHOT EFFECT
+        if (snapshot.actionType === "payment") {
+            newPaidAmount -= Number(snapshot.amount);
+        }
+
+        if (snapshot.actionType === "purchase") {
+            newTotalAmount -= Number(snapshot.amount);
+        }
+
+        // ❗ Safety
+        newPaidAmount = Math.max(newPaidAmount, 0);
+        newTotalAmount = Math.max(newTotalAmount, 0);
+
+        // ➕ APPLY NEW SNAPSHOT EFFECT
+        if (actionType === "payment") {
+            if (newPaidAmount + Number(amount) > newTotalAmount) {
+                return next(
+                    new ErrorResponse("Payment exceeds total amount.", 400)
+                );
+            }
+
+            newPaidAmount += Number(amount);
+        }
+
+        if (actionType === "purchase") {
+            newTotalAmount += Number(amount);
+        }
+
+        const remainingDueAmount = Math.max(newTotalAmount - newPaidAmount, 0);
+
+        // ✅ UPDATE SNAPSHOT
+        snapshot.amount = Number(amount);
+        snapshot.actionType = actionType;
+        snapshot.paymentMethod =
+            actionType === "payment" ? paymentMethod : null;
+        snapshot.timestamp = timestamp;
+        snapshot.remainingDueAmount = remainingDueAmount;
+
+        // ✅ UPDATE TOTALS
+        supplier.paidAmount = newPaidAmount;
+        supplier.totalAmount = newTotalAmount;
+
+        await supplier.save();
+
+        return res.status(200).json({
+            success: true,
+            message: "Payment/Purchase updated successfully!",
+            supplier,
+        });
+    } catch (error) {
+        console.error("Update payment error:", error);
         return next(new ErrorResponse("Internal server error.", 500));
     }
 });

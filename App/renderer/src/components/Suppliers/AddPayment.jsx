@@ -70,13 +70,13 @@ const AddPayment = ({ supplierData, setSupplierData }) => {
                                 autoComplete="supplier-email"
                                 required
                                 placeholder="Enter amount..."
-                                onChange={(e) =>
+                                onChange={(e) => {
                                     handleFieldChange(
                                         index,
                                         "amount",
                                         e.target.value
-                                    )
-                                }
+                                    );
+                                }}
                             />
                         </div>
                         <div>

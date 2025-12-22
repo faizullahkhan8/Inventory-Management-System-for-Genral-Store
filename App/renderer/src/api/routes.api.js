@@ -27,4 +27,6 @@ export const supplierRoutes = {
     DELETE_SUPPLIER: "/supplier/delete",
     GET_SUPPLIER: "/supplier/get",
     UPDATE_SUPPLIER: "/supplier/update",
+    CREATE_SUPPLIER_PAYMENT: "/supplier/payment/create",
+    UPDATE_SUPPLIER_PAYMENT: "/supplier/payment/update",
 };

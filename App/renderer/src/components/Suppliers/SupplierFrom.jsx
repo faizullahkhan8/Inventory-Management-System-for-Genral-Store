@@ -119,13 +119,15 @@ const SupplierFrom = ({
                         supplierData={supplierData}
                     />
                 </div>
-                <div>
-                    <label>Already have payment?</label>
-                    <AddPayment
-                        setSupplierData={setSupplierData}
-                        supplierData={supplierData}
-                    />
-                </div>
+                {!isEditing && (
+                    <div>
+                        <label>Already have payment?</label>
+                        <AddPayment
+                            setSupplierData={setSupplierData}
+                            supplierData={supplierData}
+                        />
+                    </div>
+                )}
                 <div className="w-full flex items-center justify-end">
                     <div>
                         <Link to="/suppliers?prevRoute=/suppliers/add-supplier">

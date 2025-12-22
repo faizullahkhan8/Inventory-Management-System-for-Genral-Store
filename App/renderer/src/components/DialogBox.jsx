@@ -44,7 +44,7 @@ const DialogBox = ({
 
     return (
         <div
-            className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 backdrop-blur-sm"
+            className="fixed inset-0 flex items-center justify-center z-50 bg-black/40 backdrop-blur-xs"
             onClick={onClose}
         >
             <div
