@@ -52,8 +52,6 @@ const SupplierPage = () => {
         }
     };
 
-    console.log(suppliersData);
-
     return (
         <div className="w-full h-screen flex flex-col">
             <Header title={"Suppliers"} />

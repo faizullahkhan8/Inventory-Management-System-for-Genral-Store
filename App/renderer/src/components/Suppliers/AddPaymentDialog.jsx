@@ -76,6 +76,7 @@ const AddPaymentDialog = ({
 
         if (response?.success) {
             setSupplierData(response.supplier);
+            setFormData(null);
             onClose();
         }
     };

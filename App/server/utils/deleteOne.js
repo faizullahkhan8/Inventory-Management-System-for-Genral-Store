@@ -3,17 +3,11 @@ import expressAsyncHandler from "express-async-handler";
 import { getLocalTrashModel } from "../config/localDb.js";
 import { ErrorResponse } from "./ErrorResponse.js";
 
-export const deleteOne = (ModelOrGetter) =>
+export const deleteOne = (Model) =>
     expressAsyncHandler(async (req, res, next) => {
         const { id } = req.params;
         const userId = req.session?.user?.id; // logged-in user ID
         const reason = req.body?.reason || "";
-
-        // Resolve Model (accept either a model or a getter function)
-        const Model =
-            typeof ModelOrGetter === "function" && !ModelOrGetter.modelName
-                ? ModelOrGetter()
-                : ModelOrGetter;
 
         if (!Model)
             return next(new ErrorResponse("Database not initialized.", 500));

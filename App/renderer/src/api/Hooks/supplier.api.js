@@ -214,3 +214,34 @@ export const useUpdateSupplierPayment = () => {
 
     return { loading, updateSupplierPayment };
 };
+
+export const useDeleteSupplierPayment = () => {
+    const [loading, setLoading] = useState(false);
+
+    const deleteSupplierPayment = async ({ supplierId, paymentId }) => {
+        setLoading(true);
+        try {
+            const response = await apiClient.delete(
+                `${supplierRoutes.DELETE_SUPPLIER_PAYMENT}/${supplierId}/${paymentId}`
+            );
+
+            if (response?.data || response?.status === 200) {
+                toast.success("Payment deleted successfully.");
+                return response.data;
+            }
+        } catch (error) {
+            const message =
+                error?.response?.data?.error ||
+                error?.response?.data?.message ||
+                error?.message ||
+                "Deleting payment failed!";
+            toast.error(message);
+            console.error("Error in delete payment : ", message);
+            return null;
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return { loading, deleteSupplierPayment };
+};

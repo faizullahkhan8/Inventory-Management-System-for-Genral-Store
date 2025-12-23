@@ -246,7 +246,7 @@ export const updateSupplier = expressAsyncHandler(async (req, res, next) => {
 
         return res.status(200).json({
             success: true,
-            supplier: dbSupplier,
+            supplier: new SupplerDto(dbSupplier),
             message: "Supplier updated successfully.",
         });
     } catch (error) {
@@ -340,7 +340,7 @@ export const addPayment = expressAsyncHandler(async (req, res, next) => {
                 actionType === "payment"
                     ? "Payment added successfully!"
                     : "Purchase added successfully!",
-            supplier,
+            supplier: new SupplerDto(supplier),
         });
     } catch (error) {
         console.error("Add payment/purchase error:", error);
@@ -460,10 +460,91 @@ export const updatePayment = expressAsyncHandler(async (req, res, next) => {
         return res.status(200).json({
             success: true,
             message: "Payment/Purchase updated successfully!",
-            supplier,
+            supplier: new SupplerDto(supplier),
         });
     } catch (error) {
         console.error("Update payment error:", error);
+        return next(new ErrorResponse("Internal server error.", 500));
+    }
+});
+
+export const deletePayment = expressAsyncHandler(async (req, res, next) => {
+    try {
+        const Supplier = getLocalSupplierModel();
+        if (!Supplier) {
+            return next(new ErrorResponse("Database not initialized.", 500));
+        }
+
+        const { supplierId, paymentId } = req.params || {};
+
+        // ✅ Validation
+        if (!supplierId || !paymentId) {
+            return next(
+                new ErrorResponse(
+                    "Supplier ID and Payment ID are required.",
+                    400
+                )
+            );
+        }
+
+        // ✅ Find supplier
+        const supplier = await Supplier.findById(supplierId);
+        if (!supplier) {
+            return next(new ErrorResponse("Supplier not found!", 404));
+        }
+
+        // ✅ Find snapshot
+        const payment = supplier.paymentSnapshots.find(
+            (item) => item._id.toString() === paymentId
+        );
+
+        if (!payment) {
+            return next(new ErrorResponse("Payment record not found!", 404));
+        }
+
+        let newPaidAmount = supplier.paidAmount || 0;
+        let newTotalAmount = supplier.totalAmount || 0;
+
+        // 🔁 REVERSE SNAPSHOT EFFECT
+        if (payment.actionType === "payment") {
+            newPaidAmount -= Number(payment.amount);
+        }
+
+        if (payment.actionType === "purchase") {
+            newTotalAmount -= Number(payment.amount);
+        }
+
+        // ❗ Safetyd
+        newPaidAmount = Math.max(newPaidAmount, 0);
+        newTotalAmount = Math.max(newTotalAmount, 0);
+
+        const remainingDueAmount = Math.max(newTotalAmount - newPaidAmount, 0);
+
+        // ❌ REMOVE SNAPSHOT
+        const tempPayments = supplier.paymentSnapshots.filter(
+            (item) => item._id.toString() !== paymentId
+        );
+
+        supplier.paymentSnapshots = tempPayments;
+
+        // ✅ UPDATE TOTALS
+        supplier.paidAmount = newPaidAmount;
+        supplier.totalAmount = newTotalAmount;
+
+        // (optional) update last remainingDueAmount on all snapshots
+        supplier.paymentSnapshots.forEach((snap) => {
+            snap.remainingDueAmount = remainingDueAmount;
+        });
+
+        await supplier.save();
+
+        return res.status(200).json({
+            success: true,
+            message: "Payment/Purchase deleted successfully!",
+            supplier: new SupplerDto(supplier),
+        });
+    } catch (error) {
+        console.error("Delete payment error:", error);
         return next(new ErrorResponse("Internal server error.", 500));
     }
 });

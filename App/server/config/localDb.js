@@ -4,6 +4,7 @@ import inventorySchema from "../models/inventory.model.js";
 import supplierSchema from "../models/supplier.model.js";
 import trashSchema from "../models/trash.model.js";
 import userSchema from "../models/user.model.js";
+import categorySchema from "../models/category.model.js";
 
 let localDbConnection = null;
 
@@ -12,6 +13,7 @@ let localProductModel = null;
 let localSupplierModel = null;
 let localTrashModel = null;
 let localUserModel = null;
+let localCategoryModel = null;
 
 export const createLocalConnection = async () => {
     localDbConnection = await createConnection(
@@ -29,6 +31,7 @@ export const createLocalConnection = async () => {
     localSupplierModel = localDbConnection.model("supplier", supplierSchema);
     localTrashModel = localDbConnection.model("trash", trashSchema);
     localUserModel = localDbConnection.model("user", userSchema);
+    localCategoryModel = localDbConnection.model("category", categorySchema);
 };
 
 export const getLocalInventoryModel = () => localInventoryModel || null;
@@ -36,3 +39,4 @@ export const getLocalProductModel = () => localProductModel || null;
 export const getLocalSupplierModel = () => localSupplierModel || null;
 export const getLocalTrashModel = () => localTrashModel || null;
 export const getLocalUserModel = () => localUserModel || null;
+export const getLocalCategoryModel = () => localCategoryModel || null;

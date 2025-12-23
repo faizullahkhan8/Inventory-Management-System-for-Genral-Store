@@ -58,7 +58,7 @@ const ViewPaymentDialog = ({ open, onClose, payment }) => {
                 <div className="mb-4">
                     <p className="text-xs text-gray-400">Payment Method</p>
                     <h3 className="font-semibold text-gray-700">
-                        {payment.paymentMethod || "Cash"}
+                        {payment.paymentMethod || "--"}
                     </h3>
                 </div>
 

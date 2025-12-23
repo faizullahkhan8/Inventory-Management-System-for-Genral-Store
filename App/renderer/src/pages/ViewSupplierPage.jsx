@@ -1,6 +1,16 @@
 import { useEffect, useState, useMemo } from "react";
 import { useParams } from "react-router-dom";
-import { Loader, PlusCircle, SearchIcon } from "lucide-react";
+import {
+    DollarSign,
+    Loader,
+    Mail,
+    MapPin,
+    Phone,
+    PlusCircle,
+    SearchIcon,
+    Trash2,
+    User,
+} from "lucide-react";
 
 // Components
 import Header from "../components/Header";
@@ -9,27 +19,32 @@ import { Card } from "../ui/Card"; // Assuming you have these UI components
 import Stat from "../ui/Stat";
 import ProductTable from "../components/Tables/ProductTable";
 import { Input } from "../ui/Input";
+import DialogBox from "../components/DialogBox";
 
 // Dialogs
 import ViewPaymentDialog from "../components/Suppliers/ViewPaymentDialog";
 import AddPaymentDialog from "../components/Suppliers/AddPaymentDialog";
 
 // Logic
-import { useGetSupplier } from "../api/Hooks/supplier.api";
+import {
+    useDeleteSupplierPayment,
+    useGetSupplier,
+} from "../api/Hooks/supplier.api";
 import { getSupplierPaymentAndPurchaseColumns } from "../components/Suppliers/SupplierPaymentAndPurchaseColumns";
 
 const ViewSupplierPage = () => {
     const { id: supplierId } = useParams();
+
     const { getSupplier, loading: getSupplierLoading } = useGetSupplier();
+    const { deleteSupplierPayment, loading: deleteSupplierPaymentLoading } =
+        useDeleteSupplierPayment();
 
     const [supplierData, setSupplierData] = useState(null);
     const [searchQuery, setSearchQuery] = useState("");
 
-    // Best Practice: Unified Dialog State
-    // Avoids separate booleans like isAddOpen, isEditOpen, isViewOpen
     const [dialogState, setDialogState] = useState({
-        type: null, // 'ADD' | 'EDIT' | 'VIEW' | null
-        data: null, // The payment object being acted upon
+        type: null, // 'ADD' | 'EDIT' | 'VIEW' | 'DELETE' | null
+        data: null,
     });
 
     // Fetch Data
@@ -48,6 +63,12 @@ const ViewSupplierPage = () => {
         setDialogState({ type: "VIEW", data: payment });
     const handleEdit = (payment) =>
         setDialogState({ type: "EDIT", data: payment });
+
+    const handleDelete = (paymentId) =>
+        setDialogState({
+            type: "DELETE",
+            data: { supplierId: supplierData?._id, paymentId },
+        });
     const handleAdd = () => setDialogState({ type: "ADD", data: null });
 
     // Memoize columns to prevent re-calculations on every render
@@ -56,9 +77,24 @@ const ViewSupplierPage = () => {
             getSupplierPaymentAndPurchaseColumns({
                 onView: handleView,
                 onEdit: handleEdit,
+                onDelete: handleDelete,
             }),
         []
     );
+
+    const onConfirmDelete = async () => {
+        if (dialogState.type === "DELETE" && dialogState.data) {
+            const response = await deleteSupplierPayment({
+                supplierId: dialogState.data.supplierId,
+                paymentId: dialogState.data.paymentId,
+            });
+
+            if (response.success) {
+                setSupplierData(response.supplier);
+                handleCloseDialog();
+            }
+        }
+    };
 
     if (getSupplierLoading) {
         return (
@@ -85,6 +121,20 @@ const ViewSupplierPage = () => {
                 />
             )}
 
+            {dialogState.type === "DELETE" && (
+                <DialogBox
+                    isOpen={dialogState.type === "DELETE"}
+                    onClose={handleCloseDialog}
+                    onConfirm={onConfirmDelete}
+                    loading={deleteSupplierPaymentLoading}
+                    title="Delete permanently?"
+                    message="This item cannot be restored once you delete it."
+                    confirmText="Delete Permanently"
+                    variant="danger"
+                    icon={Trash2}
+                />
+            )}
+
             {/* View Dialog */}
             <ViewPaymentDialog
                 open={dialogState.type === "VIEW"}
@@ -93,8 +143,87 @@ const ViewSupplierPage = () => {
             />
 
             <div className="flex flex-col gap-2 overflow-y-scroll p-2">
-                {/* ... (Your Top Cards/Stats Code remains the same) ... */}
-
+                {" "}
+                <Card className="flex p-4 justify-between">
+                    {" "}
+                    <div className="">
+                        {" "}
+                        <div className="flex gap-2 items-center">
+                            {" "}
+                            <User />{" "}
+                            <h2 className="text-xl">
+                                {supplierData?.name}
+                            </h2>{" "}
+                        </div>{" "}
+                        <p className="text-sm text-gray-500 ml-1">
+                            {" "}
+                            {supplierData?.company}{" "}
+                        </p>{" "}
+                    </div>{" "}
+                    <div>
+                        {" "}
+                        <span className="rounded-full! text-xs px-4 py-1 bg-primary text-white font-semibold">
+                            {" "}
+                            Active{" "}
+                        </span>{" "}
+                    </div>{" "}
+                </Card>{" "}
+                <Card className="flex p-4 gap-4 justify-between max-sm:flex-wrap">
+                    {" "}
+                    <div className="relative">
+                        {" "}
+                        <div className="absolute -left-2 bg-primary/80 w-[3px] h-full rounded" />{" "}
+                        <div className="flex gap-2">
+                            {" "}
+                            <Phone size={14} className="text-gray-500" />{" "}
+                            <p className="text-xs text-gray-500">Phone</p>{" "}
+                        </div>{" "}
+                        <h3 className="text-lg">
+                            {" "}
+                            {supplierData?.contacts[0].number}{" "}
+                        </h3>{" "}
+                    </div>{" "}
+                    <div className="relative">
+                        {" "}
+                        <div className="absolute -left-2 bg-primary/80 w-[3px] h-full rounded" />{" "}
+                        <div className="flex gap-2">
+                            {" "}
+                            <Mail size={14} className="text-gray-500" />{" "}
+                            <p className="text-xs text-gray-500">E-Mail</p>{" "}
+                        </div>{" "}
+                        <h3 className="text-lg">{supplierData?.email}</h3>{" "}
+                    </div>{" "}
+                    <div className="relative">
+                        {" "}
+                        <div className="absolute -left-2 bg-primary/80 w-[3px] h-full rounded" />{" "}
+                        <div className="flex gap-2">
+                            {" "}
+                            <MapPin size={14} className="text-gray-500" />{" "}
+                            <p className="text-xs text-gray-500">Address</p>{" "}
+                        </div>{" "}
+                        <h3 className="text-lg">{supplierData?.address}</h3>{" "}
+                    </div>{" "}
+                </Card>{" "}
+                <div className="flex gap-4 justify-between max-sm:flex-wrap">
+                    {" "}
+                    <Stat
+                        icon={DollarSign}
+                        subText={"Total Purchase"}
+                        mainText={supplierData?.totalAmount}
+                    />{" "}
+                    <Stat
+                        icon={DollarSign}
+                        subText={"Total Paid"}
+                        mainText={supplierData?.paidAmount}
+                        color="yellow"
+                    />{" "}
+                    <Stat
+                        icon={DollarSign}
+                        subText={"Pending"}
+                        mainText={supplierData?.remainingAmount}
+                        color="rose"
+                    />{" "}
+                </div>
                 {/* Table Section */}
                 <div className="flex flex-col p-4 gap-4">
                     <div className="flex justify-between gap-4">

@@ -1,9 +1,13 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import Hightlighter from "../Tables/Highlighter";
-import { CreditCard, Eye, Pencil, WalletCards } from "lucide-react";
+import { CreditCard, Eye, Pencil, Trash, WalletCards } from "lucide-react";
 
 // Best Practice: Receive generic callbacks (onView, onEdit) instead of specific setters
-export const getSupplierPaymentAndPurchaseColumns = ({ onView, onEdit }) => {
+export const getSupplierPaymentAndPurchaseColumns = ({
+    onView,
+    onEdit,
+    onDelete,
+}) => {
     const columnHelper = createColumnHelper();
 
     return [
@@ -105,6 +109,17 @@ export const getSupplierPaymentAndPurchaseColumns = ({ onView, onEdit }) => {
                         title="Edit"
                     >
                         <Pencil size={18} />
+                    </button>
+                    <button
+                        onClick={() => onDelete(row.original._id)}
+                        className="text-blue-500 hover:text-blue-700 transition-colors"
+                        title="Edit"
+                    >
+                        <Trash
+                            className="text-red-500 hover:text-red-700
+                             transition-colors"
+                            size={18}
+                        />
                     </button>
                 </div>
             ),
