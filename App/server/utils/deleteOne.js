@@ -3,14 +3,17 @@ import expressAsyncHandler from "express-async-handler";
 import { getLocalTrashModel } from "../config/localDb.js";
 import { ErrorResponse } from "./ErrorResponse.js";
 
-export const deleteOne = (Model) =>
+export const deleteOne = (modelGetter) =>
     expressAsyncHandler(async (req, res, next) => {
         const { id } = req.params;
         const userId = req.session?.user?.id; // logged-in user ID
         const reason = req.body?.reason || "";
 
+        const Model = modelGetter();
+
         if (!Model)
             return next(new ErrorResponse("Database not initialized.", 500));
+        console.log("MOdel initiated");
 
         // 1. Check if document exists
         const doc = await Model.findById(id);
@@ -22,6 +25,7 @@ export const deleteOne = (Model) =>
         const Trash = getLocalTrashModel();
         if (!Trash)
             return next(new ErrorResponse("Database not initialized.", 500));
+        console.log("Trash initiated");
 
         // 2. Check if already in Trash
         const alreadyDeleted = await Trash.findOne({

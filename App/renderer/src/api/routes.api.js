@@ -31,3 +31,7 @@ export const supplierRoutes = {
     UPDATE_SUPPLIER_PAYMENT: "/supplier/payment/update",
     DELETE_SUPPLIER_PAYMENT: "/supplier/payment/delete",
 };
+
+export const categoryRoutes = {
+    GET_ALL_CATEGORY: "/category/get-all",
+};

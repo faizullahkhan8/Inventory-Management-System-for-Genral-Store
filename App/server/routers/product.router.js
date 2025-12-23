@@ -39,10 +39,6 @@ router.put(
     updateProduct
 );
 
-router.delete(
-    "/delete/:id",
-    isAuthenticated,
-    deleteOne(getLocalProductModel())
-);
+router.delete("/delete/:id", isAuthenticated, deleteOne(getLocalProductModel));
 
 export default router;

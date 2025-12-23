@@ -4,6 +4,7 @@ import {
     createCategory,
     getAllCategories,
     updateCategory,
+    getCategory,
 } from "../controllers/category.controller.js";
 import { deleteOne } from "../utils/deleteOne.js";
 import { getLocalCategoryModel } from "../config/localDb.js";
@@ -18,11 +19,8 @@ router.get("/test", (req, res, next) =>
 
 router.post("/create", isAuthenticated, createCategory);
 router.get("/get-all", isAuthenticated, getAllCategories);
+router.get("/get/:id", isAuthenticated, getCategory);
 router.put("/update/:id", isAuthenticated, updateCategory);
-router.delete(
-    "/delete/:id",
-    isAuthenticated,
-    deleteOne(getLocalCategoryModel())
-);
+router.delete("/delete/:id", isAuthenticated, deleteOne(getLocalCategoryModel));
 
 export default router;

@@ -27,6 +27,35 @@ export const createCategory = expressAsyncHandler(async (req, res, next) => {
     }
 });
 
+export const getCategory = expressAsyncHandler(async (req, res, next) => {
+    try {
+        const categoryModel = getLocalCategoryModel();
+
+        if (!categoryModel)
+            return next(new ErrorResponse("Database not initiated.", 400));
+
+        const { id } = req.params;
+
+        if (!id) {
+            return next(new ErrorResponse("Please provide category id.", 400));
+        }
+
+        const dbCategory = await categoryModel.findById(id);
+
+        if (!dbCategory) {
+            return next(new ErrorResponse("Category not found.", 400));
+        }
+
+        res.status(200).json({
+            success: true,
+            category: dbCategory,
+        });
+    } catch (error) {
+        console.log("Error in get category controller : ", error.message);
+        return next(new ErrorResponse("Internal server error.", 500));
+    }
+});
+
 export const getAllCategories = expressAsyncHandler(async (req, res, next) => {
     try {
         const categoryModel = getLocalCategoryModel();
@@ -66,14 +95,14 @@ export const updateCategory = expressAsyncHandler(async (req, res, next) => {
             return next(new ErrorResponse("Database not initialized.", 500));
         }
 
-        const { categoryId } = req.params;
+        const { id } = req.params;
         const { name, parentId, status } = req.body;
 
-        if (!categoryId) {
+        if (!id) {
             return next(new ErrorResponse("Category ID is required.", 400));
         }
 
-        const category = await categoryModel.findById(categoryId);
+        const category = await categoryModel.findById(id);
 
         if (!category) {
             return next(new ErrorResponse("Category not found.", 404));

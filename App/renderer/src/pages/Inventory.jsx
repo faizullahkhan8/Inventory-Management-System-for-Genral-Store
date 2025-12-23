@@ -1,4 +1,4 @@
-import { SearchIcon, Trash2 } from "lucide-react";
+import { Plus, SearchIcon, Trash2 } from "lucide-react";
 import Header from "../components/Header";
 import { Button } from "../ui/Button";
 import Select from "../ui/Select";
@@ -12,20 +12,31 @@ import {
 } from "../api/Hooks/product.api";
 import { Link } from "react-router-dom";
 import DialogBox from "../components/DialogBox";
+import CategoriesDropdown from "../components/ProductView/CategoriesDropdown";
+import { useGetAllCategories } from "../api/Hooks/category.api";
 
 const Inventory = () => {
     const [productData, setProductData] = useState([]);
+    const [categoryData, setCategoryData] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [deletingProductId, setDeletingProductId] = useState("");
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const { loading, getAllProductsForTable } = useGetAllProductsForTable();
+
+    const { loading: getAllProductForTableLoading, getAllProductsForTable } =
+        useGetAllProductsForTable();
     const { deleteProduct, loading: deleteLoading } = useDeleteProduct();
+    const { getAllCategories, loading: getAllCategoriesLoading } =
+        useGetAllCategories();
 
     useEffect(() => {
         (async () => {
-            const response = await getAllProductsForTable();
-            if (response) {
-                setProductData(response.Products);
+            const productResponse = await getAllProductsForTable();
+            const categoryResponse = await getAllCategories();
+            if (productResponse) {
+                setProductData(productResponse.Products);
+            }
+            if (categoryData) {
+                setCategoryData(categoryResponse.categories);
             }
         })();
     }, []);
@@ -100,6 +111,15 @@ const Inventory = () => {
                         <Button className="w-full sm:w-auto">
                             Add Multiple Product
                         </Button>
+                        <div className="flex items-center justify-between gap-2 w-full">
+                            <CategoriesDropdown
+                                categories={categoryData}
+                                loading={getAllCategoriesLoading}
+                            />
+                            <Button>
+                                <Plus size={18} />
+                            </Button>
+                        </div>
                     </div>
                 </div>
 
@@ -108,7 +128,7 @@ const Inventory = () => {
                     <ProductTable
                         columns={ProductColumns}
                         data={productData}
-                        loading={loading}
+                        loading={getAllProductForTableLoading}
                         searchQuery={searchQuery}
                         setSearchQuery={setSearchQuery}
                     />

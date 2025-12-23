@@ -62,13 +62,14 @@ app.use("/api/v1/trash", trashRouter);
 app.use("/api/v1/supplier", supplierRouter);
 app.use("/api/v1/category", categoryRouter);
 
+try {
+    await createLocalConnection();
+} catch (err) {
+    console.error("Failed to create local DB connection:", err);
+}
+
 app.listen(PORT, async () => {
     console.log(`Server is running on http://localhost:${PORT}`);
-    try {
-        await createLocalConnection();
-    } catch (err) {
-        console.error("Failed to create local DB connection:", err);
-    }
 });
 
 app.use(errorHandler);
