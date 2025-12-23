@@ -27,6 +27,4 @@ const inventorySchema = new Schema(
     }
 );
 
-const Inventory = model("Inventory", inventorySchema);
-
-export default Inventory;
+export default inventorySchema;

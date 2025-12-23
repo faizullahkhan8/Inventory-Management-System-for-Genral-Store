@@ -1,11 +1,15 @@
 // utils/restoreOne.js
 import expressAsyncHandler from "express-async-handler";
-import Trash from "../models/trash.model.js";
+import { getLocalTrashModel } from "../config/localDb.js";
 import { ErrorResponse } from "./ErrorResponse.js";
 import { modelMap } from "./modelMap.js";
 
 export const restoreFromTrash = expressAsyncHandler(async (req, res, next) => {
     const { trashId } = req.params; // ID of trash record
+    const Trash = getLocalTrashModel();
+    if (!Trash)
+        return next(new ErrorResponse("Database not initialized.", 500));
+
     const trashDoc = await Trash.findById(trashId);
 
     if (!trashDoc) {
@@ -13,7 +17,8 @@ export const restoreFromTrash = expressAsyncHandler(async (req, res, next) => {
     }
 
     const { collectionName, data } = trashDoc;
-    const Model = modelMap[collectionName];
+    const getter = modelMap[collectionName];
+    const Model = typeof getter === "function" ? getter() : getter;
 
     if (!Model) {
         return next(

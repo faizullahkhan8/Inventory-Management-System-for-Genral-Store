@@ -1,10 +1,13 @@
 import asyncHandler from "express-async-handler";
 import { ErrorResponse } from "../utils/ErrorResponse.js";
-import User from "../models/user.model.js";
+import { getLocalUserModel } from "../config/localDb.js";
 import UserDTO from "../dto/user.dto.js";
 
 export const registerUser = asyncHandler(async (req, res, next) => {
     try {
+        const User = getLocalUserModel();
+        if (!User)
+            return next(new ErrorResponse("Database not initialized.", 500));
         if (!req.body)
             return next(new ErrorResponse("Request body is null", 400));
         const { fullname, username, contactNo, password, developerSecret } =
@@ -47,6 +50,9 @@ export const registerUser = asyncHandler(async (req, res, next) => {
 
 export const loginUser = asyncHandler(async (req, res, next) => {
     try {
+        const User = getLocalUserModel();
+        if (!User)
+            return next(new ErrorResponse("Database not initialized.", 500));
         const { username, password } = req.body;
         if ((!username, !password)) {
             return next(

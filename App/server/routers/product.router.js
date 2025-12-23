@@ -10,7 +10,7 @@ import {
 } from "../controllers/product.controller.js";
 import { uploadProductImage } from "../middlewares/multer.middleware.js";
 import { deleteOne } from "../utils/deleteOne.js";
-import Product from "../models/product.model.js";
+import { getLocalProductModel } from "../config/localDb.js";
 
 const router = Router();
 
@@ -39,6 +39,6 @@ router.put(
     updateProduct
 );
 
-router.delete("/delete/:id", isAuthenticated, deleteOne(Product));
+router.delete("/delete/:id", isAuthenticated, deleteOne(getLocalProductModel));
 
 export default router;

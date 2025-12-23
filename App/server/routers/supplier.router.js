@@ -9,7 +9,7 @@ import {
     updatePayment,
 } from "../controllers/supplier.controller.js";
 import { deleteOne } from "../utils/deleteOne.js";
-import Supplier from "../models/supplier.model.js";
+import { getLocalSupplierModel } from "../config/localDb.js";
 
 const router = Router();
 
@@ -19,7 +19,7 @@ router.get("/test", (req, res) => {
 
 router.post("/create", isAuthenticated, createSupplier);
 router.get("/get-all", isAuthenticated, getAllSupplier);
-router.delete("/delete/:id", isAuthenticated, deleteOne(Supplier));
+router.delete("/delete/:id", isAuthenticated, deleteOne(getLocalSupplierModel));
 router.get("/get/:id", isAuthenticated, getSupplier);
 router.put("/update/:id", isAuthenticated, updateSupplier);
 

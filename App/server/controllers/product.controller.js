@@ -2,14 +2,20 @@ import AsyncHandler from "express-async-handler";
 import { ErrorResponse } from "../utils/ErrorResponse.js";
 import fs from "fs";
 
-import Product from "../models/product.model.js";
-import Inventory from "../models/inventory.model.js";
+import {
+    getLocalProductModel,
+    getLocalInventoryModel,
+} from "../config/localDb.js";
 import ProductDto from "../dto/product.dto.js";
 import mongoose from "mongoose";
 import path from "path";
 
 export const createProduct = AsyncHandler(async (req, res, next) => {
     try {
+        const Product = getLocalProductModel();
+        const Inventory = getLocalInventoryModel();
+        if (!Product || !Inventory)
+            return next(new ErrorResponse("Database not initialized.", 500));
         const data = JSON.parse(req.body.data);
 
         if (!data) {
@@ -81,6 +87,9 @@ export const createProduct = AsyncHandler(async (req, res, next) => {
 
 export const getAllProducts = AsyncHandler(async (req, res, next) => {
     try {
+        const Product = getLocalProductModel();
+        if (!Product)
+            return next(new ErrorResponse("Database not initialized.", 500));
         const allProducts = await Product.find({});
 
         if (allProducts.length < 1)
@@ -102,6 +111,9 @@ export const getAllProducts = AsyncHandler(async (req, res, next) => {
 
 export const getProduct = AsyncHandler(async (req, res, next) => {
     try {
+        const Product = getLocalProductModel();
+        if (!Product)
+            return next(new ErrorResponse("Database not initialized.", 500));
         const productId = req.params.id;
 
         if (!productId || !mongoose.Types.ObjectId.isValid(productId)) {
@@ -133,6 +145,9 @@ export const getProduct = AsyncHandler(async (req, res, next) => {
 
 export const getProductForEdit = AsyncHandler(async (req, res, next) => {
     try {
+        const Product = getLocalProductModel();
+        if (!Product)
+            return next(new ErrorResponse("Database not initialized.", 500));
         const productId = req.params.id;
 
         const dbProduct = await Product.findById(productId).populate([
@@ -160,6 +175,9 @@ export const getProductForEdit = AsyncHandler(async (req, res, next) => {
 
 export const updateProduct = AsyncHandler(async (req, res, next) => {
     try {
+        const Product = getLocalProductModel();
+        if (!Product)
+            return next(new ErrorResponse("Database not initialized.", 500));
         const productId = req.params.id;
         const dbProduct = await Product.findById(productId);
 

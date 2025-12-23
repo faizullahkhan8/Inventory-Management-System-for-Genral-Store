@@ -73,6 +73,4 @@ const supplierSchema = new Schema(
     { timestamps: true }
 );
 
-const Supplier = model("Supplier", supplierSchema);
-
-export default Supplier;
+export default supplierSchema;

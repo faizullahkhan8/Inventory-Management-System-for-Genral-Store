@@ -1,14 +1,23 @@
 import expressAsyncHandler from "express-async-handler";
 import { ErrorResponse } from "../utils/ErrorResponse.js";
-import Trash from "../models/trash.model.js";
 import { TrashDto } from "../dto/trash.dto.js";
-import Inventory from "../models/inventory.model.js";
+import {
+    getLocalTrashModel,
+    getLocalInventoryModel,
+} from "../config/localDb.js";
 import fs from "fs/promises";
 import path from "path";
 
 export const getAllTrashedItems = expressAsyncHandler(
     async (req, res, next) => {
         try {
+            const Trash = getLocalTrashModel();
+            const Inventory = getLocalInventoryModel();
+            if (!Trash)
+                return next(
+                    new ErrorResponse("Database not initialized.", 500)
+                );
+
             const allTrashedItems = await Trash.find()
                 .sort({ deletedAt: -1 })
                 .populate(["deletedBy"]);
@@ -32,6 +41,10 @@ export const getAllTrashedItems = expressAsyncHandler(
 export const deleteFromTrash = expressAsyncHandler(async (req, res, next) => {
     try {
         const { trashId } = req.params;
+
+        const Trash = getLocalTrashModel();
+        if (!Trash)
+            return next(new ErrorResponse("Database not initialized.", 500));
 
         const trashedItems = await Trash.findById(trashId);
 

@@ -21,6 +21,4 @@ const trashSchema = new Schema(
     { timestamps: true }
 );
 
-const Trash = model("Trash", trashSchema);
-
-export default Trash;
+export default trashSchema;

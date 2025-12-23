@@ -1,12 +1,18 @@
 import expressAsyncHandler from "express-async-handler";
 import { ErrorResponse } from "../utils/ErrorResponse.js";
-import Supplier from "../models/supplier.model.js";
+import {
+    getLocalSupplierModel,
+    getLocalTrashModel,
+} from "../config/localDb.js";
 import { SupplerDto } from "../dto/supplier.dto.js";
 import { Types } from "mongoose";
-import Trash from "../models/trash.model.js";
 
 export const createSupplier = expressAsyncHandler(async (req, res, next) => {
     try {
+        const Supplier = getLocalSupplierModel();
+        const Trash = getLocalTrashModel();
+        if (!Supplier || !Trash)
+            return next(new ErrorResponse("Database not initialized.", 500));
         const data = req.body;
 
         const {
@@ -101,6 +107,9 @@ export const createSupplier = expressAsyncHandler(async (req, res, next) => {
 
 export const getAllSupplier = expressAsyncHandler(async (req, res, next) => {
     try {
+        const Supplier = getLocalSupplierModel();
+        if (!Supplier)
+            return next(new ErrorResponse("Database not initialized.", 500));
         const dbSuppliers = await Supplier.find();
 
         if (dbSuppliers.length < 1) {
@@ -121,6 +130,9 @@ export const getAllSupplier = expressAsyncHandler(async (req, res, next) => {
 
 export const getSupplier = expressAsyncHandler(async (req, res, next) => {
     try {
+        const Supplier = getLocalSupplierModel();
+        if (!Supplier)
+            return next(new ErrorResponse("Database not initialized.", 500));
         const id = req.params.id;
 
         if (!id) {
@@ -147,6 +159,9 @@ export const getSupplier = expressAsyncHandler(async (req, res, next) => {
 
 export const updateSupplier = expressAsyncHandler(async (req, res, next) => {
     try {
+        const Supplier = getLocalSupplierModel();
+        if (!Supplier)
+            return next(new ErrorResponse("Database not initialized.", 500));
         const { id: supplierId } = req.params;
         const data = req.body;
 
@@ -242,6 +257,9 @@ export const updateSupplier = expressAsyncHandler(async (req, res, next) => {
 
 export const addPayment = expressAsyncHandler(async (req, res, next) => {
     try {
+        const Supplier = getLocalSupplierModel();
+        if (!Supplier)
+            return next(new ErrorResponse("Database not initialized.", 500));
         const { amount, actionType, paymentMethod, timestamp, supplierId } =
             req.body || {};
 
@@ -332,6 +350,9 @@ export const addPayment = expressAsyncHandler(async (req, res, next) => {
 
 export const updatePayment = expressAsyncHandler(async (req, res, next) => {
     try {
+        const Supplier = getLocalSupplierModel();
+        if (!Supplier)
+            return next(new ErrorResponse("Database not initialized.", 500));
         const {
             supplierId,
             snapshotId,

@@ -6,7 +6,7 @@ import MongoStore from "connect-mongo";
 import dotenv from "dotenv";
 
 // configs
-import connectDB from "./config/db.js";
+import { createLocalConnection } from "./config/localDb.js";
 
 // routers
 import authRouter from "./routers/auth.router.js";
@@ -59,10 +59,13 @@ app.use("/api/v1/product", productRouter);
 app.use("/api/v1/trash", trashRouter);
 app.use("/api/v1/supplier", supplierRouter);
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
     console.log(`Server is running on http://localhost:${PORT}`);
+    try {
+        await createLocalConnection();
+    } catch (err) {
+        console.error("Failed to create local DB connection:", err);
+    }
 });
-
-connectDB();
 
 app.use(errorHandler);
