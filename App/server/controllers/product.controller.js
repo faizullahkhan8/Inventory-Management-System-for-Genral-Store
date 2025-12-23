@@ -92,9 +92,6 @@ export const getAllProducts = AsyncHandler(async (req, res, next) => {
             return next(new ErrorResponse("Database not initialized.", 500));
         const allProducts = await Product.find({});
 
-        if (allProducts.length < 1)
-            return next(new ErrorResponse("No product added yet.", 400));
-
         const FilteredProducts = allProducts.map(
             (item) => new ProductDto(item)
         );
