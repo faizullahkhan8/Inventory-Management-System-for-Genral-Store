@@ -4,7 +4,7 @@ const inventorySchema = new Schema(
     {
         productId: {
             type: mongoose.SchemaTypes.ObjectId,
-            ref: "Product",
+            ref: "product",
             required: true,
         },
         quantity: {

@@ -13,7 +13,7 @@ export const createCategory = expressAsyncHandler(async (req, res, next) => {
 
         const dbCategory = await cateogryModel.create({
             name,
-            parentId,
+            parentId: parentId ? parentId : null,
         });
 
         return res.status(201).json({

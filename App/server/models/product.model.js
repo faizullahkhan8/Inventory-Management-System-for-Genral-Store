@@ -29,7 +29,7 @@ const productSchema = new Schema(
         },
         inventoryId: {
             type: mongoose.SchemaTypes.ObjectId,
-            ref: "Inventory",
+            ref: "inventory",
             required: true,
         },
         mfgDate: {
@@ -40,11 +40,11 @@ const productSchema = new Schema(
         },
         supplierId: {
             type: mongoose.SchemaTypes.ObjectId,
-            ref: "Supplier",
+            ref: "supplier",
         },
         categoryId: {
             type: mongoose.SchemaTypes.ObjectId,
-            ref: "Category",
+            ref: "category",
             required: true,
         },
         imageUrl: {

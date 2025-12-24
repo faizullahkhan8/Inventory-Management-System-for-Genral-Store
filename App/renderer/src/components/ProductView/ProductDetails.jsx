@@ -13,14 +13,16 @@ const ProductDetails = ({ productData }) => {
                         <div className="flex flex-col">
                             <p className="text-sm text-gray-400">Name</p>
                             <h3 className="font-semibold text-gray-600">
-                                {productData.name ? productData.name : "---"}
+                                {productData?.name ? productData?.name : "---"}
                             </h3>
                         </div>
                         <div className="flex flex-col gap-2">
                             <div className="flex flex-col">
                                 <p className="text-sm text-gray-400">SKU</p>
                                 <h3 className="font-semibold text-gray-600">
-                                    {productData.sku ? productData.sku : "---"}
+                                    {productData?.sku
+                                        ? productData?.sku
+                                        : "---"}
                                 </h3>
                             </div>
                         </div>
@@ -30,9 +32,9 @@ const ProductDetails = ({ productData }) => {
                                     Mfg Date
                                 </p>
                                 <h3 className="font-semibold text-gray-600">
-                                    {productData.mfgDate
+                                    {productData?.mfgDate
                                         ? new Date(
-                                              productData.mfgDate
+                                              productData?.mfgDate
                                           ).toLocaleDateString()
                                         : "---"}
                                 </h3>
@@ -46,8 +48,8 @@ const ProductDetails = ({ productData }) => {
                                     Category
                                 </p>
                                 <h3 className="font-semibold text-gray-600">
-                                    {productData.category
-                                        ? productData.category
+                                    {productData?.category
+                                        ? productData?.category
                                         : "---"}
                                 </h3>
                             </div>
@@ -72,9 +74,9 @@ const ProductDetails = ({ productData }) => {
                                     Exp Date
                                 </p>
                                 <h3 className="font-semibold text-gray-600">
-                                    {productData.expDate
+                                    {productData?.expDate
                                         ? new Date(
-                                              productData.expDate
+                                              productData?.expDate
                                           ).toLocaleDateString()
                                         : "---"}
                                 </h3>
@@ -87,8 +89,8 @@ const ProductDetails = ({ productData }) => {
                     <div className="flex flex-col">
                         <p className="text-sm text-gray-400">Description</p>
                         <h3 className="font-semibold">
-                            {productData.description
-                                ? productData.description
+                            {productData?.description
+                                ? productData?.description
                                 : "---"}
                         </h3>
                     </div>

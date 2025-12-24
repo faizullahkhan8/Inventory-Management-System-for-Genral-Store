@@ -90,7 +90,7 @@ export const getAllProducts = AsyncHandler(async (req, res, next) => {
         const Product = getLocalProductModel();
         if (!Product)
             return next(new ErrorResponse("Database not initialized.", 500));
-        const allProducts = await Product.find({});
+        const allProducts = await Product.find({}).populate(["inventoryId"]);
 
         const FilteredProducts = allProducts.map(
             (item) => new ProductDto(item)

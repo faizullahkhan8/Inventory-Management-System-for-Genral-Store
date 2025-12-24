@@ -34,4 +34,7 @@ export const supplierRoutes = {
 
 export const categoryRoutes = {
     GET_ALL_CATEGORY: "/category/get-all",
+    ADD_CATEGORY: "/category/create",
+    UPDATE_CATEGORY: "/category/update",
+    DELETE_CATEGORY: "/category/delete",
 };

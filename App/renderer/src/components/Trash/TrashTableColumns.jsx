@@ -34,7 +34,7 @@ export const getTrashedTableColumns = ({
                             <Hightlighter text="Product" query={query} />
                         </div>
                     );
-                } else if (type === "category") {
+                } else if (type === "categories") {
                     return (
                         <div className="bg-emerald-100 text-emerald-600 flex items-center gap-2 border px-4 py-1 border-gray-300 rounded-full">
                             <BoxesIcon size={18} />

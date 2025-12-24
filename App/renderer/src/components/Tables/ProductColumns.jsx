@@ -90,9 +90,12 @@ export const getProductColumns = ({
             header: "Mfg Date",
             size: 110,
             cell: (info) => {
-                const value = new Date(info.getValue()).toLocaleDateString();
-                if (value === "Invalid Date") return "---";
-                const query = info.table.getState().globalFilter;
+                const value = info.getValue()
+                    ? new Date(info.getValue()).toLocaleDateString()
+                    : null;
+                if (!value) return "---";
+                console.log(value);
+                const query = info.table.getState().globalFilter; // or column filter
                 return <Hightlighter text={value} query={query} />;
             },
         }),
@@ -100,8 +103,11 @@ export const getProductColumns = ({
             header: "Expiry Date",
             size: 110,
             cell: (info) => {
-                const value = new Date(info.getValue()).toLocaleDateString();
-                if (value === "Invalid Date") return "---";
+                const value = info.getValue()
+                    ? new Date(info.getValue()).toLocaleDateString()
+                    : null;
+                if (!value) return "---";
+                console.log(value);
                 const query = info.table.getState().globalFilter; // or column filter
                 return <Hightlighter text={value} query={query} />;
             },

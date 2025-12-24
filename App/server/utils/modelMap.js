@@ -4,6 +4,7 @@ import {
     getLocalInventoryModel,
     getLocalUserModel,
     getLocalSupplierModel,
+    getLocalCategoryModel,
 } from "../config/localDb.js";
 
 export const modelMap = {
@@ -11,4 +12,5 @@ export const modelMap = {
     inventories: getLocalInventoryModel,
     users: getLocalUserModel,
     suppliers: getLocalSupplierModel,
+    categories: getLocalCategoryModel,
 };

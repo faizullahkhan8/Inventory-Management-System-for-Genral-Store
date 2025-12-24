@@ -13,7 +13,11 @@ import {
 import { Link } from "react-router-dom";
 import DialogBox from "../components/DialogBox";
 import CategoriesDropdown from "../components/ProductView/CategoriesDropdown";
-import { useGetAllCategories } from "../api/Hooks/category.api";
+import {
+    useDeleteCategory,
+    useGetAllCategories,
+} from "../api/Hooks/category.api";
+import ManageCategory from "../components/ProductView/ManageCategory";
 
 const Inventory = () => {
     const [productData, setProductData] = useState([]);
@@ -21,6 +25,10 @@ const Inventory = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [deletingProductId, setDeletingProductId] = useState("");
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [isAddCategoryOpen, setIsAddCategoryOpen] = useState(false);
+    const [isEditCategoryOpen, setIsEditCategoryOpen] = useState(false);
+    const [isDeletingCategoryOpen, setIsDeletingCatgoryOpen] = useState(false);
+    const [actionedData, setActionedData] = useState();
 
     const { loading: getAllProductForTableLoading, getAllProductsForTable } =
         useGetAllProductsForTable();
@@ -28,14 +36,19 @@ const Inventory = () => {
     const { getAllCategories, loading: getAllCategoriesLoading } =
         useGetAllCategories();
 
+    const { deleteCategory, loading: deleteCategoryLoading } =
+        useDeleteCategory();
+
     useEffect(() => {
         (async () => {
             const productResponse = await getAllProductsForTable();
             const categoryResponse = await getAllCategories();
+
             if (productResponse) {
                 setProductData(productResponse.Products);
             }
-            if (categoryData) {
+
+            if (categoryResponse) {
                 setCategoryData(categoryResponse.categories);
             }
         })();
@@ -47,7 +60,7 @@ const Inventory = () => {
         setIsDialogOpen,
     });
 
-    const onConfirmDelete = async () => {
+    const onConfirmDeleteProduct = async () => {
         const data = await deleteProduct(deletingProductId);
         if (data?.success) {
             setProductData((prevData) =>
@@ -57,20 +70,79 @@ const Inventory = () => {
         }
     };
 
+    const handleCategoryEdit = (cat) => {
+        setIsEditCategoryOpen(true);
+        setActionedData(cat);
+    };
+    const handleCategoryDelete = (cat) => {
+        setIsDeletingCatgoryOpen(true);
+        setActionedData(cat);
+    };
+    const onDeleteCategoryConfirm = async () => {
+        if (isDeletingCategoryOpen && actionedData) {
+            const response = await deleteCategory(actionedData._id);
+
+            if (response.success) {
+                const tempCategories = categoryData.filter(
+                    (item) => item._id.toString() !== actionedData._id
+                );
+
+                setCategoryData(tempCategories);
+            }
+        }
+    };
+
     return (
         <div className="w-full h-screen flex flex-col">
             <Header title={"Inventory"} />
+            {isAddCategoryOpen && (
+                <ManageCategory
+                    open={true}
+                    onClose={() => setIsAddCategoryOpen(false)}
+                    categoryData={categoryData}
+                    setCategoryData={setCategoryData}
+                />
+            )}
+            {isEditCategoryOpen && (
+                <ManageCategory
+                    open={true}
+                    onClose={() => {
+                        setIsEditCategoryOpen(false);
+                        setActionedData(null);
+                    }}
+                    categoryData={categoryData}
+                    setCategoryData={setCategoryData}
+                    isEditing={true}
+                    selectedCategory={actionedData}
+                />
+            )}
+
+            {isDeletingCategoryOpen && (
+                <DialogBox
+                    isOpen={isDeletingCategoryOpen}
+                    onClose={() => {
+                        setIsDeletingCatgoryOpen(false);
+                        setActionedData(null);
+                    }}
+                    onConfirm={onDeleteCategoryConfirm}
+                    loading={deleteCategoryLoading}
+                    title="Move to Trash?"
+                    message="This item will be moved to the trash bin. You can restore it later if you change your mind."
+                    confirmText="Move to Trash"
+                    variant="danger"
+                    icon={Trash2}
+                />
+            )}
             <DialogBox
                 isOpen={isDialogOpen}
-                onClose={() => setIsDialogOpen(false)} // Maps to the 'onClose' prop of the reusable component
-                onConfirm={onConfirmDelete}
+                onClose={() => setIsDialogOpen(false)}
+                onConfirm={onConfirmDeleteProduct}
                 loading={deleteLoading}
-                // Soft Delete Specifics:
                 title="Move to Trash?"
                 message="This item will be moved to the trash bin. You can restore it later if you change your mind."
                 confirmText="Move to Trash"
-                variant="danger" // Keeps the red styling, but you could use 'warning' if preferred
-                icon={Trash2} // Overrides the default alert triangle with a Trash icon
+                variant="danger"
+                icon={Trash2}
             />
             <div className="flex-1 p-2 sm:p-4 overflow-y-scroll flex flex-col">
                 {/* top */}
@@ -90,12 +162,12 @@ const Inventory = () => {
                         <Select
                             placeholder="Search by category"
                             onChange={setSearchQuery}
-                            options={[
-                                { label: " (Reset)" },
-                                { label: "Banana", value: "banana" },
-                                { label: "Orange", value: "orange" },
-                                { label: "Orange", value: "orange" },
-                            ]}
+                            options={categoryData.map((cat) => {
+                                return {
+                                    label: cat.name,
+                                    value: cat.name,
+                                };
+                            })}
                         />
                     </div>
 
@@ -108,15 +180,15 @@ const Inventory = () => {
                                 Add Product
                             </Button>
                         </Link>
-                        <Button className="w-full sm:w-auto">
-                            Add Multiple Product
-                        </Button>
+
                         <div className="flex items-center justify-between gap-2 w-full">
                             <CategoriesDropdown
                                 categories={categoryData}
                                 loading={getAllCategoriesLoading}
+                                onEdit={handleCategoryEdit}
+                                onDelete={handleCategoryDelete}
                             />
-                            <Button>
+                            <Button onClick={() => setIsAddCategoryOpen(true)}>
                                 <Plus size={18} />
                             </Button>
                         </div>

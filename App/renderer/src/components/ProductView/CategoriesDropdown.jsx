@@ -31,14 +31,20 @@ const CategoryDropdown = ({ categories = [], onEdit, onDelete, loading }) => {
 
                     <div className="flex gap-2">
                         <button
-                            onClick={() => onEdit(cat)}
+                            onClick={() => {
+                                onEdit(cat);
+                                setOpen(false);
+                            }}
                             className="text-blue-500 hover:text-blue-700"
                         >
                             <Pencil size={16} />
                         </button>
 
                         <button
-                            onClick={() => onDelete(cat)}
+                            onClick={() => {
+                                onDelete(cat);
+                                setOpen(false);
+                            }}
                             className="text-red-500 hover:text-red-700"
                         >
                             <Trash2 size={16} />

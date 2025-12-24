@@ -12,7 +12,7 @@ const trashSchema = new Schema(
         },
         deletedBy: {
             type: Schema.Types.ObjectId,
-            ref: "User",
+            ref: "user",
         },
         reason: {
             type: String,
