@@ -43,18 +43,19 @@ export const deleteFromTrash = expressAsyncHandler(async (req, res, next) => {
         const { trashId } = req.params;
 
         const Trash = getLocalTrashModel();
+        const Inventory = getLocalInventoryModel();
         if (!Trash)
             return next(new ErrorResponse("Database not initialized.", 500));
 
-        const trashedItems = await Trash.findById(trashId);
+        const trashedItem = await Trash.findById(trashId);
 
-        if (!trashedItems) {
+        if (!trashedItem) {
             return next(new ErrorResponse("Trashed item not found", 404));
         }
 
         // Delete product image if item is product
-        if (trashedItems.collectionName === "products") {
-            const filename = trashedItems.data.imageUrl.split("/").pop();
+        if (trashedItem.collectionName === "products") {
+            const filename = trashedItem.data.imageUrl.split("/").pop();
 
             const filePath = path.join(
                 process.cwd(),
@@ -69,10 +70,12 @@ export const deleteFromTrash = expressAsyncHandler(async (req, res, next) => {
                     new ErrorResponse("Failed to delete item image.", 400)
                 );
             }
+
+            await Inventory.deleteOne({ productId: trashedItem.data._id });
         }
 
         // Delete trash record
-        await trashedItems.deleteOne();
+        await trashedItem.deleteOne();
 
         return res.status(200).json({
             success: true,

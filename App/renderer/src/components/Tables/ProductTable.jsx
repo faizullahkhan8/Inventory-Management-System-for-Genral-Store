@@ -53,7 +53,7 @@ const ProductTable = ({
 
     return (
         <>
-            <div className="w-full lg:max-h-[60vh] max-h-[70vh] overflow-auto border border-gray-200 rounded-lg">
+            <div className="w-full lg:max-h-[60vh] max-h-[70vh] overflow-auto border border-gray-200 rounded-lg flex-1">
                 <table className="w-full table-fixed">
                     <thead className="bg-gray-50 sticky z-10 top-0">
                         {TableInstance.getHeaderGroups().map((headerGroup) => (

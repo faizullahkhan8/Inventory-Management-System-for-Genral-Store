@@ -39,16 +39,22 @@ const CustomFieldsComponent = ({ productData, setProductData }) => {
     const customFields = productData.customFields || [];
 
     return (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-6 w-full">
             {customFields.length > 0 && (
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-4">
                     {customFields.map((field, index) => (
                         <div
                             key={index}
-                            className="flex items-end gap-2 w-full"
+                            // Mobile: Flex col with border/bg for card look
+                            // Desktop: Grid layout with 12 columns, no border
+                            className="flex flex-col gap-3 p-4 border rounded-lg bg-gray-50/50 
+                     md:grid md:grid-cols-12 md:gap-4 md:items-end md:p-0 md:border-0 md:bg-transparent"
                         >
-                            <div className="w-full flex flex-col gap-2">
-                                <Label>Field Name</Label>
+                            {/* Field Name Input - Takes up 5/12 columns on desktop */}
+                            <div className="flex flex-col gap-1.5 md:col-span-5">
+                                <Label className="text-sm font-medium">
+                                    Field Name
+                                </Label>
                                 <Input
                                     value={field.fieldKey}
                                     onChange={(e) =>
@@ -58,11 +64,16 @@ const CustomFieldsComponent = ({ productData, setProductData }) => {
                                             e.target.value
                                         )
                                     }
-                                    placeholder="Enter field name..."
+                                    placeholder="e.g. Color"
+                                    className="w-full"
                                 />
                             </div>
-                            <div className="w-full flex flex-col gap-2">
-                                <Label>Field Value</Label>
+
+                            {/* Field Value Input - Takes up 6/12 columns on desktop */}
+                            <div className="flex flex-col gap-1.5 md:col-span-6">
+                                <Label className="text-sm font-medium">
+                                    Field Value
+                                </Label>
                                 <Input
                                     value={field.fieldValue}
                                     onChange={(e) =>
@@ -72,27 +83,44 @@ const CustomFieldsComponent = ({ productData, setProductData }) => {
                                             e.target.value
                                         )
                                     }
-                                    placeholder="Enter field value..."
+                                    placeholder="e.g. Red"
+                                    className="w-full"
                                 />
                             </div>
-                            <div className="pb-2">
-                                <Trash
-                                    size={20}
-                                    className="cursor-pointer hover:text-red-500 transition-colors duration-200"
+
+                            {/* Delete Action - Takes up 1/12 column on desktop */}
+                            <div className="flex justify-end md:justify-center md:pb-2 md:col-span-1">
+                                {/* Tooltip or button wrapper recommended here for accessibility.
+                Added 'text-red-500' hover state and padding for hit area.
+             */}
+                                <button
+                                    type="button"
                                     onClick={() => handleRemoveField(index)}
-                                />
+                                    className="text-gray-500 hover:text-red-600 hover:bg-red-50 p-2 rounded-md transition-all"
+                                    aria-label="Remove field"
+                                >
+                                    <Trash size={20} />
+                                </button>
                             </div>
                         </div>
                     ))}
                 </div>
             )}
-            <div className="flex items-center gap-2">
-                <p className="text-sm text-primary hover:text-shadow-primary-hover">
-                    Want to add custom fields?{" "}
-                </p>
-                <span className="hover:bg-blue-500 hover:text-white cursor-pointer rounded-full transition-colors duration-200">
-                    <PlusCircle size={25} onClick={handleAddField} />
-                </span>
+
+            {/* Add Field Button Area */}
+            <div className="flex items-center gap-3 pt-2">
+                <button
+                    onClick={handleAddField}
+                    type="button" // Prevent form submission
+                    className="flex items-center gap-2 group cursor-pointer"
+                >
+                    <span className="text-blue-600 bg-blue-100 p-1 rounded-full transition-colors duration-200 group-hover:bg-blue-600 group-hover:text-white">
+                        <PlusCircle size={24} />
+                    </span>
+                    <p className="text-sm font-medium text-gray-600 group-hover:text-blue-700 transition-colors">
+                        Add custom field
+                    </p>
+                </button>
             </div>
         </div>
     );

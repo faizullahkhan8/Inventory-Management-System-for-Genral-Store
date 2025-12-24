@@ -6,7 +6,6 @@ import {
     useUpdateProduct,
 } from "../api/Hooks/product.api";
 import { useNavigate, useParams } from "react-router-dom";
-import toast from "react-hot-toast";
 
 const EditProductPage = () => {
     const productId = useParams().id;
@@ -42,23 +41,14 @@ const EditProductPage = () => {
     const handleUpdate = async (e) => {
         e.preventDefault();
 
-        try {
-            const productFormData = new FormData();
-            productFormData.append("productImage", selectedImage);
-            productFormData.append("data", JSON.stringify(productData));
+        const productFormData = new FormData();
+        productFormData.append("productImage", selectedImage);
+        productFormData.append("data", JSON.stringify(productData));
 
-            const productResponse = await updateProduct(
-                productFormData,
-                productId
-            );
+        const productResponse = await updateProduct(productFormData, productId);
 
-            if (productResponse?.success) {
-                toast.success("Product updated successfully");
-                navigate("/inventory");
-            }
-        } catch (error) {
-            console.error("Error in handleUpdateProduct:", error);
-            toast.error("Failed to update product. Please try again.");
+        if (productResponse?.success) {
+            navigate("/inventory");
         }
     };
 

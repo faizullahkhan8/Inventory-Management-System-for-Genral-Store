@@ -119,7 +119,7 @@ const SupplierPage = () => {
                         />
                     </div>
                 </div>
-                <div>
+                <div className="flex flex-col flex-1">
                     {supplierView === "list" && (
                         <ProductTable
                             columns={supplierColumns}

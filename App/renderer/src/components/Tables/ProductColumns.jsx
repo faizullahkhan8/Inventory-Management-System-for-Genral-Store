@@ -94,7 +94,6 @@ export const getProductColumns = ({
                     ? new Date(info.getValue()).toLocaleDateString()
                     : null;
                 if (!value) return "---";
-                console.log(value);
                 const query = info.table.getState().globalFilter; // or column filter
                 return <Hightlighter text={value} query={query} />;
             },
@@ -107,7 +106,6 @@ export const getProductColumns = ({
                     ? new Date(info.getValue()).toLocaleDateString()
                     : null;
                 if (!value) return "---";
-                console.log(value);
                 const query = info.table.getState().globalFilter; // or column filter
                 return <Hightlighter text={value} query={query} />;
             },
@@ -121,7 +119,7 @@ export const getProductColumns = ({
                 return <Hightlighter text={value} query={query} />;
             },
         }),
-        columnHelper.accessor("supplier", {
+        columnHelper.accessor("supplierName", {
             header: "Supplier",
             size: 150,
             cell: (info) => {
@@ -130,7 +128,7 @@ export const getProductColumns = ({
                 return <Hightlighter text={value} query={query} />;
             },
         }),
-        columnHelper.accessor("category", {
+        columnHelper.accessor("categoryName", {
             header: "Category",
             size: 120,
             cell: (info) => {

@@ -218,13 +218,15 @@ const TrashPage = () => {
                                 ]}
                             />
                         </div>
-                        <ProductTable
-                            columns={TrashTableColumns}
-                            data={trashedItems}
-                            loading={trashLoading}
-                            searchQuery={searchQuery}
-                            setSearchQuery={setSearchQuery}
-                        />
+                        <div className="flex flex-col flex-1">
+                            <ProductTable
+                                columns={TrashTableColumns}
+                                data={trashedItems}
+                                loading={trashLoading}
+                                searchQuery={searchQuery}
+                                setSearchQuery={setSearchQuery}
+                            />
+                        </div>
                     </div>
                 </Card>
             </div>

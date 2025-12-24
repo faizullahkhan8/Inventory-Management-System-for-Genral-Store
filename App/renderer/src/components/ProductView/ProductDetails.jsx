@@ -48,8 +48,8 @@ const ProductDetails = ({ productData }) => {
                                     Category
                                 </p>
                                 <h3 className="font-semibold text-gray-600">
-                                    {productData?.category
-                                        ? productData?.category
+                                    {productData?.categoryName
+                                        ? productData?.categoryName
                                         : "---"}
                                 </h3>
                             </div>

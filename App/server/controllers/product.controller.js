@@ -69,8 +69,6 @@ export const createProduct = AsyncHandler(async (req, res, next) => {
         });
 
         newProduct.inventoryId = newInventory._id;
-        newProduct.supplierId = "69066452cc22a72016e30125"; // this is temporary
-        newProduct.categoryId = "69066452cc22a72016e30125"; // this is temporary
 
         await newProduct.save({ validateModifiedOnly: true });
 
@@ -90,7 +88,10 @@ export const getAllProducts = AsyncHandler(async (req, res, next) => {
         const Product = getLocalProductModel();
         if (!Product)
             return next(new ErrorResponse("Database not initialized.", 500));
-        const allProducts = await Product.find({}).populate(["inventoryId"]);
+        const allProducts = await Product.find({})
+            .populate("inventoryId")
+            .populate("categoryId")
+            .populate("supplierId");
 
         const FilteredProducts = allProducts.map(
             (item) => new ProductDto(item)
@@ -117,11 +118,10 @@ export const getProduct = AsyncHandler(async (req, res, next) => {
             return next(new ErrorResponse("Null or invalid product id.", 400));
         }
 
-        const dbProduct = await Product.findById(productId).populate([
-            "inventoryId",
-            // "supplierId",
-            // "categoryId",
-        ]);
+        const dbProduct = await Product.findById(productId)
+            .populate("inventoryId")
+            .populate("categoryId")
+            .populate("supplierId");
 
         if (!dbProduct) {
             return next(new ErrorResponse("Product not found!.", 404));
@@ -147,11 +147,10 @@ export const getProductForEdit = AsyncHandler(async (req, res, next) => {
             return next(new ErrorResponse("Database not initialized.", 500));
         const productId = req.params.id;
 
-        const dbProduct = await Product.findById(productId).populate([
-            "inventoryId",
-            // "supplierId",
-            // "categoryId",
-        ]);
+        const dbProduct = await Product.findById(productId)
+            .populate("inventoryId")
+            .populate("categoryId")
+            .populate("supplierId");
 
         if (!dbProduct) {
             return next(new ErrorResponse("Product not found!", 404));

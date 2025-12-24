@@ -196,7 +196,7 @@ const Inventory = () => {
                 </div>
 
                 {/* Table */}
-                <div className="flex-1 overflow-hidden">
+                <div className="flex-1 overflow-hidden flex flex-col">
                     <ProductTable
                         columns={ProductColumns}
                         data={productData}

@@ -64,11 +64,15 @@ const ViewSupplierPage = () => {
     const handleEdit = (payment) =>
         setDialogState({ type: "EDIT", data: payment });
 
-    const handleDelete = (paymentId) =>
+    const handleDelete = (payment) => {
         setDialogState({
             type: "DELETE",
-            data: { supplierId: supplierData?._id, paymentId },
+            data: {
+                supplierId: supplierData._id,
+                paymentId: payment,
+            },
         });
+    };
     const handleAdd = () => setDialogState({ type: "ADD", data: null });
 
     // Memoize columns to prevent re-calculations on every render
@@ -79,7 +83,7 @@ const ViewSupplierPage = () => {
                 onEdit: handleEdit,
                 onDelete: handleDelete,
             }),
-        []
+        [supplierData]
     );
 
     const onConfirmDelete = async () => {

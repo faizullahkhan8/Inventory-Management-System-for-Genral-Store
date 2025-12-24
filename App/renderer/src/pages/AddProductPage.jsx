@@ -18,39 +18,37 @@ const AddProductPage = () => {
         quantity: "",
         mfgDate: "",
         expDate: "",
-        supplierRef: "",
-        category: "",
+        supplierId: "",
+        categoryId: "",
         imageUrl: "",
         customFields: [],
     });
 
     const handleAddProduct = async (e) => {
         e.preventDefault();
-        try {
-            if (!selectedImage) {
-                toast.error("Please select a product image");
-                return;
-            }
 
-            // First upload the image
-            const productFormData = new FormData();
-            productFormData.append("productImage", selectedImage);
-            productFormData.append("data", JSON.stringify(productData));
+        if (!selectedImage) {
+            toast.error("Please select a product image");
+            return;
+        }
 
-            const productResponse = await createProduct(
-                productFormData,
-                productData.name
-            );
+        // First upload the image
+        const productFormData = new FormData();
+        productFormData.append("productImage", selectedImage);
+        productFormData.append("data", JSON.stringify(productData));
 
-            if (productResponse.success) {
-                setSelectedImage(null);
-                setProductData({});
-            }
-        } catch (error) {
-            console.error("Error in handleAddProduct:", error);
-            toast.error("Failed to create product with image");
+        const productResponse = await createProduct(
+            productFormData,
+            productData.name
+        );
+
+        if (productResponse.success) {
+            setSelectedImage(null);
+            setProductData({});
         }
     };
+
+    console.log(productData);
 
     return (
         <div className="w-full h-screen flex flex-col">

@@ -1,14 +1,17 @@
-import { Loader, PlusCircle, XCircle } from "lucide-react";
+import { Loader, Plus, PlusCircle, XCircle } from "lucide-react";
 import { Input } from "../ui/Input";
 import { Button } from "../ui/Button";
 import Select from "../ui/Select";
 import { Card } from "../ui/Card";
 import { toast } from "react-hot-toast";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import CustomFieldsComponent from "./Tables/CustomFields";
 import { Label } from "../ui/Label";
 import { Link } from "react-router-dom";
+import { useGetAllCategories } from "../api/Hooks/category.api";
+import ManageCategory from "./ProductView/ManageCategory";
+import { useGetAllSuppliers } from "../api/Hooks/supplier.api";
 
 const AddProductFrom = ({
     setProductData,
@@ -18,9 +21,39 @@ const AddProductFrom = ({
     loading,
     isEditing,
 }) => {
-    const [selectedImageUrl, setSelectedImageUrl] = useState(
-        productData.imageUrl
-    );
+    const [categoryData, setCategoryData] = useState([]);
+    const [supplierData, setSupplierData] = useState([]);
+    const [isAddCategoryOpen, setIsAddCategoryOpen] = useState(false);
+
+    // Initialize preview URL state
+    const [selectedImageUrl, setSelectedImageUrl] = useState("");
+
+    const { getAllCategories, loading: getAllCategoriesLoading } =
+        useGetAllCategories();
+    const { getAllSuppliers, loading: getAllSupplierLoading } =
+        useGetAllSuppliers();
+
+    // FIX 1: Sync Image Preview when productData loads (Important for Editing)
+    useEffect(() => {
+        if (productData?.imageUrl) {
+            setSelectedImageUrl(productData.imageUrl);
+        }
+    }, [productData.imageUrl]);
+
+    useEffect(() => {
+        (async () => {
+            const categoryResponse = await getAllCategories();
+            const supplierResponse = await getAllSuppliers();
+
+            if (categoryResponse.success) {
+                setCategoryData(categoryResponse.categories);
+            }
+
+            if (supplierResponse.success) {
+                setSupplierData(supplierResponse.suppliers);
+            }
+        })();
+    }, []);
 
     const handleFormDataChange = (e) => {
         setProductData({
@@ -63,12 +96,16 @@ const AddProductFrom = ({
         if (fileInput) {
             fileInput.value = "";
         }
-
-        // Clean up the object URL to prevent memory leaks
-        if (selectedImageUrl) {
-            URL.revokeObjectURL(selectedImageUrl);
-        }
     };
+
+    useEffect(() => {
+        (async () => {
+            const response = await getAllCategories();
+            if (response.success) {
+                setCategoryData(response.categories);
+            }
+        })();
+    }, []);
 
     if (loading) {
         return (
@@ -80,6 +117,14 @@ const AddProductFrom = ({
 
     return (
         <div className="h-screen w-full p-4 transform transition-transform duration-300 overflow-y-scroll">
+            {isAddCategoryOpen && (
+                <ManageCategory
+                    open={true}
+                    onClose={() => setIsAddCategoryOpen(false)}
+                    categoryData={categoryData}
+                    setCategoryData={setCategoryData}
+                />
+            )}
             <div className="mb-4 relative">
                 <h1 className="text-primary font-bold text-xl">
                     {isEditing ? "Edit Product" : "Add Product"}
@@ -100,7 +145,7 @@ const AddProductFrom = ({
                 onSubmit={handler}
                 className="flex flex-col gap-4 justify-center"
             >
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-2 gap-2 max-sm:grid-cols-1">
                     <div>
                         <label htmlFor="name">
                             Name <span className="text-red-500">*</span>
@@ -133,21 +178,38 @@ const AddProductFrom = ({
                         <label className="mb-2">
                             Category <span className="text-red-500">*</span>
                         </label>
-                        <Select
-                            id="category"
-                            name="category"
-                            required
-                            autoComplete="category"
-                            onChange={(val) =>
-                                handleSelectFieldValue(val, "category")
-                            }
-                            placeholder="Select category"
-                            options={[
-                                { label: "Apple", value: "apple" },
-                                { label: "Banana", value: "banana" },
-                                { label: "Orange", value: "orange" },
-                            ]}
-                        />
+                        <div className="flex items-center gap-2 ">
+                            <Select
+                                id="categoryId"
+                                name="categoryId"
+                                required
+                                autoComplete="categoryId"
+                                value={productData.categoryId}
+                                onChange={(val) =>
+                                    handleSelectFieldValue(val, "categoryId")
+                                }
+                                placeholder={`${
+                                    getAllCategoriesLoading ? (
+                                        <Loader
+                                            size={18}
+                                            className="animate-spin"
+                                        />
+                                    ) : (
+                                        "Select category"
+                                    )
+                                }`}
+                                options={categoryData.map((cat) => ({
+                                    label: cat.name,
+                                    value: cat._id,
+                                }))}
+                            />
+                            <Button
+                                type="button"
+                                onClick={() => setIsAddCategoryOpen(true)}
+                            >
+                                <Plus />
+                            </Button>
+                        </div>
                     </div>
                     <div>
                         <label className="mb-2">
@@ -158,19 +220,28 @@ const AddProductFrom = ({
                             name="supplier"
                             required
                             autoComplete="supplier"
+                            value={productData.supplierId}
                             onChange={(val) =>
                                 handleSelectFieldValue(val, "supplier")
                             }
-                            placeholder="Select Supplier"
-                            options={[
-                                { label: "Apple", value: "apple" },
-                                { label: "Banana", value: "banana" },
-                                { label: "Orange", value: "orange" },
-                            ]}
+                            placeholder={`${
+                                getAllSupplierLoading ? (
+                                    <Loader
+                                        size={18}
+                                        className="animate-spin"
+                                    />
+                                ) : (
+                                    "Select supplier"
+                                )
+                            }`}
+                            options={supplierData.map((sup) => ({
+                                label: sup.name,
+                                value: sup._id,
+                            }))}
                         />
                     </div>
                 </div>
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-3 gap-2 max-sm:grid-cols-1">
                     <div>
                         <label htmlFor="purchasePrice">
                             Purchased Price{" "}
@@ -219,7 +290,7 @@ const AddProductFrom = ({
                         />
                     </div>
                 </div>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-2 gap-2 max-sm:grid-cols-1">
                     <div>
                         <label htmlFor="mfgDate">Mfg Date</label>
                         <Input
@@ -277,7 +348,7 @@ const AddProductFrom = ({
                         />
                     </div>
                 </div>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-2 gap-2 max-sm:grid-cols-1">
                     <Card className="p-2 gap-y-1">
                         <label htmlFor="image">Image</label>
                         <Input

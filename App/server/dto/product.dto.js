@@ -1,5 +1,6 @@
 export default class ProductDto {
     constructor(product) {
+        console.log(product);
         this._id = product._id;
         this.name = product.name;
         this.sku = product.sku;
@@ -15,8 +16,10 @@ export default class ProductDto {
         this.quantity = product.inventoryId.quantity;
         this.minStock = product.inventoryId.threshold;
         this.maxStock = product.inventoryId.reservedQuantity;
-        // this.supplierName = product.supplierId.name;
-        // this.category = product.categoryId.name;
+        this.supplierName = product.supplierId.name;
+        this.supplierId = product.supplierId._id;
+        this.categoryName = product.categoryId.name;
+        this.categoryId = product.categoryId._id;
         this.lastUpdatd = product.updatedAt;
     }
 }
