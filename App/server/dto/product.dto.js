@@ -1,6 +1,5 @@
 export default class ProductDto {
     constructor(product) {
-        console.log(product);
         this._id = product._id;
         this.name = product.name;
         this.sku = product.sku;

@@ -88,6 +88,7 @@ const Inventory = () => {
                 );
 
                 setCategoryData(tempCategories);
+                setIsDeletingCatgoryOpen(false);
             }
         }
     };

@@ -5,18 +5,15 @@ import { Link, useNavigate } from "react-router-dom";
 import {
     LayoutDashboard,
     Package,
-    Receipt,
-    FileText,
-    TrendingUp,
     BarChart3,
     Users,
     Settings,
-    User,
     LogOut,
     SidebarIcon,
     Loader,
     BoxesIcon,
     Trash,
+    DollarSign,
 } from "lucide-react";
 import { useState } from "react";
 import { useLogout } from "../../api/Hooks/auth.api";
@@ -143,23 +140,29 @@ const SidebarComponent = () => {
                     Inventory
                 </MenuItem>
                 <MenuItem
+                    icon={<DollarSign width={20} />}
+                    component={<Link to="/billing" />}
+                >
+                    Billing
+                </MenuItem>
+                {/* <MenuItem
                     icon={<Receipt width={20} />}
                     component={<Link to="/dues" />}
                 >
                     Dues
-                </MenuItem>
-                <MenuItem
+                </MenuItem> */}
+                {/* <MenuItem
                     icon={<FileText width={20} />}
                     component={<Link to="/billings" />}
                 >
                     Billings
-                </MenuItem>
-                <MenuItem
+                </MenuItem> */}
+                {/* <MenuItem
                     icon={<TrendingUp width={20} />}
                     component={<Link to="/profitloss" />}
                 >
                     Profit & Loss
-                </MenuItem>
+                </MenuItem> */}
                 <MenuItem
                     icon={<BarChart3 width={20} />}
                     component={<Link to="/reports" />}
@@ -196,12 +199,6 @@ const SidebarComponent = () => {
                     component={<Link to="/settings" />}
                 >
                     Settings
-                </MenuItem>
-                <MenuItem
-                    icon={<User width={20} />}
-                    component={<Link to="/settings" />}
-                >
-                    Account
                 </MenuItem>
                 <MenuItem
                     rootStyles={{

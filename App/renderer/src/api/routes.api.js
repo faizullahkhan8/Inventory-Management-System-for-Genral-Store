@@ -38,3 +38,9 @@ export const categoryRoutes = {
     UPDATE_CATEGORY: "/category/update",
     DELETE_CATEGORY: "/category/delete",
 };
+
+export const billRoutes = {
+    ADD_BILL: "/bill/create",
+    GET_ALL_BILLS: "/bill/get-all",
+    GET_SINGLE_BILL: "/bill/get",
+};

@@ -14,6 +14,7 @@ import productRouter from "./routers/product.router.js";
 import trashRouter from "./routers/trash.router.js";
 import supplierRouter from "./routers/supplier.router.js";
 import categoryRouter from "./routers/category.router.js";
+import billRouter from "./routers/bill.router.js";
 
 import errorHandler from "./middlewares/errorhandler.middleware.js";
 
@@ -61,6 +62,7 @@ app.use("/api/v1/product", productRouter);
 app.use("/api/v1/trash", trashRouter);
 app.use("/api/v1/supplier", supplierRouter);
 app.use("/api/v1/category", categoryRouter);
+app.use("/api/v1/bill", billRouter);
 
 try {
     await createLocalConnection();

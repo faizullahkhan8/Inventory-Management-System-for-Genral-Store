@@ -14,6 +14,9 @@ import Register from "./pages/Register.jsx";
 import AddSupplierPage from "./pages/AddSupplierPage.jsx";
 import ViewSupplierPage from "./pages/ViewSupplierPage.jsx";
 import EditSupplierPage from "./pages/EditSupplierPage.jsx";
+import BillingPage from "./pages/BillingPage.jsx";
+import AddBillPage from "./pages/AddBill.jsx";
+import EditBill from "./pages/EditBill.jsx";
 
 const router = createBrowserRouter([
     {
@@ -63,6 +66,18 @@ const router = createBrowserRouter([
             {
                 path: "/suppliers/edit-supplier/:id",
                 element: <EditSupplierPage />,
+            },
+            {
+                path: "/billing",
+                element: <BillingPage />,
+            },
+            {
+                path: "/billing/add-bill",
+                element: <AddBillPage />,
+            },
+            {
+                path: "/billing/edit-bill/:id",
+                element: <EditBill />,
             },
             {
                 path: "*",
