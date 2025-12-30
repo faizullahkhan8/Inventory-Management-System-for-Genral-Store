@@ -51,7 +51,6 @@ html {
     mix-blend-mode: screen;
     pointer-events: none;
     opacity: 0.9;
-    animation: floatGlow 12s ease-in-out infinite alternate;
 }
 
 /* Blob 1 — Red (top-left) */
@@ -61,6 +60,14 @@ html {
     top: -200px;
     left: -220px;
     background: radial-gradient(circle, #ff0e0e 0%, transparent 45%);
+}
+
+.blob-blue {
+    width: 650px;
+    height: 650px;
+    top: -200px;
+    left: -220px;
+    background: radial-gradient(circle, #6935fa 0%, transparent 45%);
 }
 
 /* Blob 2 — Purple (bottom-right) */

@@ -62,9 +62,9 @@ const Login = () => {
 
     return (
         <div className="neon-bg min-h-screen flex bg-gray-50/60!">
-            <div className="neon-blob blob-red"></div>
+            <div className="neon-blob blob-blue"></div>
             <div className="neon-blob blob-purple"></div>
-            <div className="neon-blob blob-cryn"></div>
+            <div className="neon-blob blob-cyan"></div>
             <div className="neon-blob blob-orange"></div>
             {/* ---------------- LEFT SIDE PANEL ---------------- */}
             <div className="hidden lg:flex lg:w-1/2 p-12 flex-col ">
@@ -246,7 +246,7 @@ const Login = () => {
                                 type="button"
                                 onClick={handleSubmit}
                                 disabled={loading}
-                                className="w-full bg-linear-to-r from-blue-600 to-purple-600 text-white py-2.5 hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                                className="w-full"
                             >
                                 {loading ? (
                                     <>

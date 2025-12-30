@@ -21,7 +21,9 @@ export const getProductColumns = ({
                         to={`/inventory/view-product/${item._id}?prevRoute=/inventory`}
                     >
                         <img
-                            src={item.imageUrl}
+                            src={`${import.meta.env.VITE_API_URL}/${
+                                item.imageUrl
+                            }`}
                             alt="Product"
                             loading="lazy"
                             className="w-[70px] h-[70px] object-cover rounded-md shadow-sm border cursor-pointer"

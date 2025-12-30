@@ -43,4 +43,6 @@ export const billRoutes = {
     ADD_BILL: "/bill/create",
     GET_ALL_BILLS: "/bill/get-all",
     GET_SINGLE_BILL: "/bill/get",
+    UPDATE_BILL: "/bill/update",
+    DELETE_BILL: "/bill/delete",
 };

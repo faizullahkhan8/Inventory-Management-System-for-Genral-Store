@@ -12,7 +12,7 @@ import {
 } from "../api/Hooks/product.api";
 import { Link } from "react-router-dom";
 import DialogBox from "../components/DialogBox";
-import CategoriesDropdown from "../components/ProductView/CategoriesDropdown";
+import DropdownWithAction from "../components/DropdownWithAction";
 import {
     useDeleteCategory,
     useGetAllCategories,
@@ -174,6 +174,19 @@ const Inventory = () => {
 
                     {/* Button Section */}
                     <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full lg:w-auto">
+                        <DropdownWithAction
+                            data={categoryData}
+                            placeholder="Manage Categories"
+                            loading={getAllCategoriesLoading}
+                            onEdit={handleCategoryEdit}
+                            onDelete={handleCategoryDelete}
+                            onAdd={() => setIsAddCategoryOpen(true)}
+                            actions={{
+                                edit: true,
+                                delete: true,
+                                add: true,
+                            }}
+                        />
                         <Link
                             to={`/inventory/add-product?prevRoute=${document.location.pathname}`}
                         >
@@ -181,18 +194,6 @@ const Inventory = () => {
                                 Add Product
                             </Button>
                         </Link>
-
-                        <div className="flex items-center justify-between gap-2 w-full">
-                            <CategoriesDropdown
-                                categories={categoryData}
-                                loading={getAllCategoriesLoading}
-                                onEdit={handleCategoryEdit}
-                                onDelete={handleCategoryDelete}
-                            />
-                            <Button onClick={() => setIsAddCategoryOpen(true)}>
-                                <Plus size={18} />
-                            </Button>
-                        </div>
                     </div>
                 </div>
 

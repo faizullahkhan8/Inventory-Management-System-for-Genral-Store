@@ -1,6 +1,5 @@
 import {
     Calendar,
-    Wallet,
     Package,
     FileText,
     CreditCard,
@@ -8,11 +7,17 @@ import {
     Trash2,
     Eye,
     Pencil,
+    Truck,
 } from "lucide-react";
 import { Card } from "../../ui/Card";
 import { Link } from "react-router-dom";
 
-const BillGrid = ({ bills = [], loading = false, setSelectedBill }) => {
+const BillGrid = ({
+    bills = [],
+    loading = false,
+    setSelectedBill,
+    setIsDeleteDialogOpen,
+}) => {
     /* ---------- Empty State ---------- */
     if (!bills.length) {
         return (
@@ -41,7 +46,10 @@ const BillGrid = ({ bills = [], loading = false, setSelectedBill }) => {
                         <Eye
                             size={18}
                             onClick={() => {
-                                setSelectedBill(bill);
+                                setSelectedBill({
+                                    type: "view",
+                                    data: bill,
+                                });
                             }}
                             className="text-green-500 hover:text-green-700 transition-colors duration-100 cursor-pointer"
                         />
@@ -53,6 +61,13 @@ const BillGrid = ({ bills = [], loading = false, setSelectedBill }) => {
                             />
                         </Link>
                         <Trash2
+                            onClick={() => {
+                                setSelectedBill({
+                                    type: "delete",
+                                    data: bill,
+                                });
+                                setIsDeleteDialogOpen(true);
+                            }}
                             size={18}
                             className="text-red-500 hover:text-red-700 transition-colors duration-100 cursor-pointer"
                         />
@@ -60,7 +75,7 @@ const BillGrid = ({ bills = [], loading = false, setSelectedBill }) => {
                     {/* Header */}
                     <div className="flex items-start justify-between gap-4 flex-col">
                         <div>
-                            <h3 className="text-sm font-semibold text-gray-700 truncate w-40">
+                            <h3 className="text-sm font-semibold text-gray-700 truncate w-30">
                                 Bill #{bill._id}
                             </h3>
 
@@ -87,6 +102,11 @@ const BillGrid = ({ bills = [], loading = false, setSelectedBill }) => {
 
                     {/* Meta */}
                     <div className="flex flex-col gap-2 text-xs text-gray-600">
+                        <div className="flex items-center gap-2">
+                            <Truck size={14} />
+                            {bill.supplierId?.name || "N/A"}
+                        </div>
+
                         <div className="flex items-center gap-2">
                             <CreditCard size={14} />
                             {bill.paymentType || "N/A"}

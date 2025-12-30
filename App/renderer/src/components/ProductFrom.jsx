@@ -222,7 +222,7 @@ const AddProductFrom = ({
                             autoComplete="supplier"
                             value={productData.supplierId}
                             onChange={(val) =>
-                                handleSelectFieldValue(val, "supplier")
+                                handleSelectFieldValue(val, "supplierId")
                             }
                             placeholder={`${
                                 getAllSupplierLoading ? (

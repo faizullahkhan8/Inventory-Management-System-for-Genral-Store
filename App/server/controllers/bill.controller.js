@@ -176,6 +176,15 @@ export const updateBill = expressAsyncHandler(async (req, res, next) => {
             bill.dueAmount = bill.total - paidAmount;
         }
 
+        // ===== AUTO STATUS UPDATE =====
+        if (bill.paidAmount >= bill.total) {
+            bill.status = "paid";
+        } else if (bill.paidAmount > 0) {
+            bill.status = "partial";
+        } else {
+            bill.status = "unpaid";
+        }
+
         await bill.save();
 
         return res.status(200).json({

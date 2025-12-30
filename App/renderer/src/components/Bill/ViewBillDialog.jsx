@@ -1,4 +1,4 @@
-import { X, Calendar, CreditCard, Package, FileText } from "lucide-react";
+import { X, Calendar, CreditCard, Package, FileText, User } from "lucide-react";
 import { Card } from "../../ui/Card";
 import { Button } from "../../ui/Button";
 
@@ -55,6 +55,10 @@ const ViewBillDialog = ({ bill, onClose }) => {
                 {/* Meta */}
                 <div className="space-y-2 text-xs text-gray-600 mb-4">
                     <div className="flex items-center gap-2">
+                        <User size={14} />
+                        Supplier: {bill.supplierId?.name || "N/A"}
+                    </div>
+                    <div className="flex items-center gap-2">
                         <CreditCard size={14} />
                         Payment: {bill.paymentType || "N/A"}
                     </div>
@@ -73,8 +77,9 @@ const ViewBillDialog = ({ bill, onClose }) => {
                 </div>
 
                 {/* Items List */}
-                <div className="border border-gray-300 rounded-md max-h-44 overflow-y-auto">
-                    <div className="grid grid-cols-4 gap-2 bg-gray-50 px-3 py-2 text-xs font-semibold text-gray-600">
+                {/* Items List */}
+                <div className="border border-gray-300 rounded-md max-h-44 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+                    <div className="grid grid-cols-4 gap-2 bg-gray-50 px-3 py-2 text-xs font-semibold text-gray-600 sticky top-0">
                         <span className="col-span-2">Item</span>
                         <span className="text-center">Qty</span>
                         <span className="text-right">Total</span>
@@ -106,7 +111,6 @@ const ViewBillDialog = ({ bill, onClose }) => {
                         </div>
                     )}
                 </div>
-
                 {/* Amounts */}
                 <div className="grid grid-cols-3 gap-3 border-t border-gray-200 mt-4 pt-4 text-sm">
                     <AmountItem label="Total" value={bill.total} />

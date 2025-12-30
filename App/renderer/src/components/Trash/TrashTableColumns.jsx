@@ -62,6 +62,13 @@ export const getTrashedTableColumns = ({
                             <Hightlighter text="Invoice" query={query} />
                         </div>
                     );
+                } else if (type === "bills") {
+                    return (
+                        <div className="bg-pink-100 text-pink-600 flex items-center gap-2 border px-4 py-1 border-gray-300 rounded-full">
+                            <Clipboard size={18} />
+                            <Hightlighter text="Bill" query={query} />
+                        </div>
+                    );
                 } else {
                     return (
                         <div className="bg-rose-100 text-rose-600 flex items-center gap-2 border px-4 py-1 border-gray-300 rounded-full">

@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { useGetSingleBill } from "../api/Hooks/bill.api";
-import { useParams } from "react-router-dom";
+import { useGetSingleBill, useUpdateBill } from "../api/Hooks/bill.api";
+import { useNavigate, useParams } from "react-router-dom";
 import BillForm from "../components/Bill/BillForm";
 import Header from "../components/Header";
 
 const EditBill = () => {
     const [billData, setBillData] = useState(null);
     const billId = useParams().id;
+    const navigate = useNavigate();
 
     const { getSingleBill, loading: getSingleBillLoading } = useGetSingleBill();
+    const { updateBill, loading: updateBillLoading } = useUpdateBill();
 
     useEffect(() => {
         (async () => {
@@ -20,12 +22,14 @@ const EditBill = () => {
         })();
     }, []);
 
-    const handleEditBill = async (e) => {
+    const handleEditBill = async (e, data) => {
         e.preventDefault();
-        // Implement edit bill logic here
-    };
+        const response = await updateBill(billId, data);
 
-    console.log(billData, getSingleBillLoading, billId);
+        if (response && response.success && !updateBillLoading) {
+            navigate("/billing");
+        }
+    };
 
     return (
         <div>

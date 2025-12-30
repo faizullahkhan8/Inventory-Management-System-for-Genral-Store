@@ -97,3 +97,72 @@ export const useGetSingleBill = () => {
 
     return { loading, getSingleBill };
 };
+
+export const useUpdateBill = () => {
+    const [loading, setLoading] = useState(false);
+
+    const updateBill = async (billId, data) => {
+        if (!billId) return null;
+
+        setLoading(true);
+        try {
+            const response = await apiClient.put(
+                `${billRoutes.UPDATE_BILL}/${billId}`,
+                data
+            );
+
+            if (response?.data) {
+                toast.success("Bill updated successfully!");
+                return response.data;
+            }
+        } catch (error) {
+            const message =
+                error?.response?.data?.error ||
+                error?.response?.data?.message ||
+                error?.message ||
+                "Updating bill failed!";
+
+            toast.error(message);
+            console.error("Error in updating bill:", message);
+            return null;
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return { loading, updateBill };
+};
+
+export const useDeleteBill = () => {
+    const [loading, setLoading] = useState(false);
+
+    const deleteBill = async (billId) => {
+        if (!billId) return null;
+
+        setLoading(true);
+        try {
+            const response = await apiClient.delete(
+                `${billRoutes.DELETE_BILL}/${billId}`
+            );
+
+            if (response?.data) {
+                toast.success("Bill deleted successfully!");
+                return response.data;
+            }
+        } catch (error) {
+            const message =
+                error?.response?.data?.error ||
+                error?.response?.data?.message ||
+                error?.message ||
+                "Deleting bill failed!";
+
+            toast.error(message);
+            console.error("Error in deleting bill:", message);
+            return null;
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return { loading, deleteBill };
+};

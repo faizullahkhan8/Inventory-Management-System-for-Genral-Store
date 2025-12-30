@@ -133,7 +133,9 @@ const ViewProductPage = () => {
                         <Card className="flex flex-col gap-1 w-full p-4 relative group">
                             <h3>Product Image</h3>
                             <img
-                                src={productData?.imageUrl}
+                                src={`${import.meta.env.VITE_API_URL}/${
+                                    productData?.imageUrl
+                                }`}
                                 alt="product-image"
                                 className="w-full h-full rounded-xl object-contain group-hover:cursor-pointer group-hover:opacity-20 transition-opacity duration-100"
                                 onClick={() => setImageVisible(true)}
@@ -149,7 +151,9 @@ const ViewProductPage = () => {
                                 onClose={() => setImageVisible(false)}
                                 images={[
                                     {
-                                        src: productData?.imageUrl,
+                                        src: `${import.meta.env.VITE_API_URL}/${
+                                            productData?.imageUrl
+                                        }`,
                                         alt: "product-image",
                                     },
                                 ]}

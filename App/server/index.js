@@ -27,7 +27,12 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json({ limit: "10mb" }));
 app.use(
     cors({
-        origin: process.env.CLIENT_URL || "http://localhost:5173",
+        origin: [
+            process.env.LOCAL_CLIENT_URL || "http://localhost:5173",
+            process.env.HOST_CLIENT_URL || "http://stockpilot.local:5173",
+            "http://localhost:5173",
+        ],
+        origin: (origin, cb) => cb(null, origin),
         methods: ["GET", "POST", "PUT", "DELETE"],
         credentials: true,
     })
@@ -70,7 +75,7 @@ try {
     console.error("Failed to create local DB connection:", err);
 }
 
-app.listen(PORT, async () => {
+app.listen(PORT, process.env.IS_HOSTED ? "0.0.0.0" : "localhost", async () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
 

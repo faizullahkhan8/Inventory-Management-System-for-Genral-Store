@@ -11,14 +11,14 @@ export default class ProductDto {
         this.isActive = product.isActive;
         this.imageUrl = product.imageUrl;
         this.customFields = product.customFields;
-        this.inventoryId = product.inventoryId._id;
-        this.quantity = product.inventoryId.quantity;
-        this.minStock = product.inventoryId.threshold;
-        this.maxStock = product.inventoryId.reservedQuantity;
-        this.supplierName = product.supplierId.name;
-        this.supplierId = product.supplierId._id;
-        this.categoryName = product.categoryId.name;
-        this.categoryId = product.categoryId._id;
+        this.inventoryId = product.inventoryId?._id;
+        this.quantity = product.inventoryId?.quantity;
+        this.minStock = product.inventoryId?.threshold;
+        this.maxStock = product.inventoryId?.reservedQuantity;
+        this.supplierName = product.supplierId?.name;
+        this.supplierId = product.supplierId?._id;
+        this.categoryName = product.categoryId?.name;
+        this.categoryId = product.categoryId?._id;
         this.lastUpdatd = product.updatedAt;
     }
 }

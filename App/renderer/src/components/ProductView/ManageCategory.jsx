@@ -17,10 +17,9 @@ const ManageCategory = ({
     isEditing,
     selectedCategory,
 }) => {
-    console.log(selectedCategory);
     const [formData, setFormData] = useState({
         name: isEditing ? selectedCategory.name : "",
-        parentId: isEditing ? selectedCategory.parentId : null,
+        parentId: isEditing ? selectedCategory?.parentId : null,
         status: isEditing ? selectedCategory.status : true,
     });
 
@@ -64,6 +63,8 @@ const ManageCategory = ({
     };
 
     if (!open) return null;
+
+    console.log(categoryData);
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -111,7 +112,7 @@ const ManageCategory = ({
                             </label>
                             <Select
                                 placeholder={"Select parent category"}
-                                value={formData.parentId || ""}
+                                value={formData.parentId}
                                 onChange={(val) =>
                                     handleChange("parentId", val)
                                 }
