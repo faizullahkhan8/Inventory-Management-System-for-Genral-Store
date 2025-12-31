@@ -1,41 +1,38 @@
-import { Label } from "@radix-ui/react-select";
-import React from "react";
 import { Input } from "../../ui/Input";
 import { PlusCircle, Trash } from "lucide-react";
 import Select from "../../ui/Select";
 
 const SupplierContacts = ({ supplierData, setSupplierData }) => {
     const handleAddField = () => {
-        setSupplierData({
-            ...supplierData,
-            contacts: [
-                ...(supplierData.contacts || []),
-                { type: "", number: "" },
-            ],
-        });
+        setSupplierData((prev) => ({
+            ...prev,
+            contacts: [...(prev.contacts || []), { type: "", number: "" }],
+        }));
     };
 
     const handleRemoveField = (index) => {
-        const updatedFields = supplierData.contacts.filter(
-            (_, i) => i !== index
-        );
-        setSupplierData({
-            ...supplierData,
-            contacts: updatedFields,
-        });
+        setSupplierData((prev) => ({
+            ...prev,
+            contacts: prev.contacts.filter((_, i) => i !== index),
+        }));
     };
 
     const handleFieldChange = (index, fieldName, value) => {
-        const updatedFields = [...(supplierData.contacts || [])];
-        updatedFields[index] = {
-            ...updatedFields[index],
-            [fieldName]: value,
-        };
-        setSupplierData({
-            ...supplierData,
-            contacts: updatedFields,
+        setSupplierData((prev) => {
+            const updatedContacts = [...(prev.contacts || [])];
+
+            updatedContacts[index] = {
+                ...updatedContacts[index],
+                [fieldName]: value,
+            };
+
+            return {
+                ...prev,
+                contacts: updatedContacts,
+            };
         });
     };
+
 
     return (
         <div className="flex flex-col gap-2">

@@ -4,17 +4,6 @@ export class SupplerDto {
         this.name = supplier.name;
         this.company = supplier.company;
         this.address = supplier.address;
-        this.phone = supplier.contacts[0].number;
-        this.email = supplier.email;
-        this.paidAmount = supplier.paidAmount || 0;
-        this.totalAmount = supplier.totalAmount || 0;
         this.contacts = supplier.contacts;
-        this.paymentSnapshots = supplier.paymentSnapshots;
-        this.remainingAmount =
-            Number(supplier.totalAmount) - Number(supplier.paidAmount) || 0;
-        this.lastPurchaseDate =
-            supplier.paymentSnapshots[
-                supplier.paymentSnapshots.length - 1
-            ]?.timestamp;
     }
 }

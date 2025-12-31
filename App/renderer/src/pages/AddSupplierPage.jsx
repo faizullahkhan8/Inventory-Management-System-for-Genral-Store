@@ -1,8 +1,8 @@
 import Header from "../components/Header";
 import { useState } from "react";
-import SupplierFrom from "../components/Suppliers/SupplierFrom";
 import { useCreateSupplier } from "../api/Hooks/supplier.api";
 import { useNavigate } from "react-router-dom";
+import SupplierForm from "../components/Bill/SupplierFrom";
 
 const AddSupplierPage = () => {
     const [supplierData, setSupplierData] = useState({
@@ -41,7 +41,7 @@ const AddSupplierPage = () => {
     return (
         <div className="w-full h-screen flex flex-col">
             <Header title={"Add Supplier"} />
-            <SupplierFrom
+            <SupplierForm
                 handler={handleAddSupplier}
                 supplierData={supplierData}
                 setSupplierData={setSupplierData}

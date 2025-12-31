@@ -26,49 +26,6 @@ const supplierSchema = new Schema(
         ],
 
         address: { type: String },
-
-        totalAmount: {
-            type: Number,
-            default: 0,
-        },
-
-        paidAmount: {
-            type: Number,
-            default: 0,
-        },
-
-        lastPurchase: {
-            type: Date,
-            default: null,
-        },
-
-        paymentSnapshots: [
-            {
-                amount: {
-                    type: Number,
-                    required: true,
-                },
-
-                remainingDueAmount: {
-                    type: Number,
-                    required: true,
-                },
-
-                actionType: {
-                    type: String,
-                    enum: ["purchase", "payment"],
-                    required: true,
-                },
-
-                paymentMethod: {
-                    type: String,
-                },
-
-                timestamp: {
-                    type: String,
-                },
-            },
-        ],
     },
     { timestamps: true }
 );
