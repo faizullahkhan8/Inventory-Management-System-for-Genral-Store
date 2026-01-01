@@ -82,7 +82,7 @@ const BillingPage = () => {
         }
     };
 
-    console.log(selectedSupplier)
+    console.log(selectedSupplier);
 
     /* -------------------- UI -------------------- */
 
@@ -90,25 +90,32 @@ const BillingPage = () => {
         <div className="w-full h-screen flex flex-col overflow-hidden">
             <Header title="Billing" />
 
-            {/* View Supplier */}
             {selectedSupplier?.type === "view" && (
                 <ViewSupplierDialog
                     supplier={selectedSupplier.data}
-                    onClose={() => setSelectedSupplier({ type: "", data: null })}
+                    onClose={() =>
+                        setSelectedSupplier({ type: "", data: null })
+                    }
                 />
             )}
 
-            {/* Add / Edit Supplier */}
             <ManageSupplierDialog
-                open={Boolean(selectedSupplier.type === "add" || selectedSupplier.type === "edit")}
+                open={Boolean(
+                    selectedSupplier.type === "add" ||
+                        selectedSupplier.type === "edit"
+                )}
                 onClose={() => {
                     setSelectedSupplier({ type: "", data: null });
                 }}
-                supplierData={Boolean(selectedSupplier.type === "edit") && selectedSupplier.data}
+                selectedSupplierData={
+                    Boolean(selectedSupplier.type === "edit") &&
+                    selectedSupplier.data
+                }
+                setSupplierData={setSupplierData}
+                // supplierData={supplierData}
                 isEditing={Boolean(selectedSupplier.type === "edit")}
             />
 
-            {/* Delete Supplier Dialog */}
             {Boolean(selectedSupplier.type === "delete") && (
                 <DialogBox
                     isOpen={Boolean(selectedSupplier.type === "delete")}
@@ -125,7 +132,6 @@ const BillingPage = () => {
                 />
             )}
 
-            {/* Delete Bill Dialog */}
             {Boolean(selectedBill.type === "delete") && (
                 <DialogBox
                     isOpen={Boolean(selectedBill.type === "delete")}
@@ -142,9 +148,7 @@ const BillingPage = () => {
                 />
             )}
 
-            {/* Content */}
             <div className="flex-1 flex flex-col overflow-y-auto">
-                {/* Top Bar */}
                 <div className="p-4 flex justify-between gap-4 max-sm:flex-col">
                     <div className="relative w-full sm:w-80">
                         <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -152,9 +156,7 @@ const BillingPage = () => {
                             placeholder="Search bills..."
                             className="pl-10"
                             value={searchQuery}
-                            onChange={(e) =>
-                                setSearchQuery(e.target.value)
-                            }
+                            onChange={(e) => setSearchQuery(e.target.value)}
                         />
                     </div>
 
@@ -170,16 +172,28 @@ const BillingPage = () => {
                                 delete: true,
                             }}
                             onAdd={() => {
-                                setSelectedSupplier({ type: "add", data: null });
+                                setSelectedSupplier({
+                                    type: "add",
+                                    data: null,
+                                });
                             }}
                             onEdit={(item) => {
-                                setSelectedSupplier({ type: "edit", data: item });
+                                setSelectedSupplier({
+                                    type: "edit",
+                                    data: item,
+                                });
                             }}
                             onDelete={(item) => {
-                                setSelectedSupplier({ type: "delete", data: item });
+                                setSelectedSupplier({
+                                    type: "delete",
+                                    data: item,
+                                });
                             }}
                             onView={(item) => {
-                                setSelectedSupplier({ type: "view", data: item });
+                                setSelectedSupplier({
+                                    type: "view",
+                                    data: item,
+                                });
                             }}
                         />
 
@@ -200,7 +214,9 @@ const BillingPage = () => {
                 {selectedBill?.type === "view" && (
                     <ViewBillDialog
                         bill={selectedBill.data}
-                        onClose={() => setSelectedBill({ type: "", data: null })}
+                        onClose={() =>
+                            setSelectedBill({ type: "", data: null })
+                        }
                     />
                 )}
             </div>

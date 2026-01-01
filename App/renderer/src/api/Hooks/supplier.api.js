@@ -123,7 +123,7 @@ export const useGetSupplier = () => {
 export const useUpdateSupplier = () => {
     const [loading, setLoading] = useState(false);
     const updateSupplier = async ({ supplierId, supplierData }) => {
-        console.log(supplierData);
+        console.log(supplierData, supplierId);
         setLoading(true);
         try {
             const response = await apiClient.put(
@@ -150,98 +150,4 @@ export const useUpdateSupplier = () => {
     };
 
     return { loading, updateSupplier };
-};
-
-export const useCreateSupplierPayment = () => {
-    const [loading, setLoading] = useState(false);
-    const createSupplierPayment = async (paymentData) => {
-        setLoading(true);
-        try {
-            const response = await apiClient.post(
-                supplierRoutes.CREATE_SUPPLIER_PAYMENT,
-                paymentData
-            );
-
-            if (response?.data || response?.status === 201) {
-                toast.success("Payment added successfully.");
-                return response.data;
-            }
-        } catch (error) {
-            const message =
-                error?.response?.data?.error ||
-                error?.response?.data?.message ||
-                error?.message ||
-                "Creating payment failed!";
-            toast.error(message);
-            console.error("Error in creating payment : ", message);
-            return null;
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    return { loading, createSupplierPayment };
-};
-
-export const useUpdateSupplierPayment = () => {
-    const [loading, setLoading] = useState(false);
-
-    const updateSupplierPayment = async (paymentData) => {
-        setLoading(true);
-        try {
-            const response = await apiClient.put(
-                supplierRoutes.UPDATE_SUPPLIER_PAYMENT,
-                paymentData
-            );
-
-            if (response?.data || response?.status === 200) {
-                toast.success("Payment updated successfully.");
-                return response.data;
-            }
-        } catch (error) {
-            const message =
-                error?.response?.data?.error ||
-                error?.response?.data?.message ||
-                error?.message ||
-                "Updating payment failed!";
-            toast.error(message);
-            console.error("Error in updating payment : ", message);
-            return null;
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    return { loading, updateSupplierPayment };
-};
-
-export const useDeleteSupplierPayment = () => {
-    const [loading, setLoading] = useState(false);
-
-    const deleteSupplierPayment = async ({ supplierId, paymentId }) => {
-        setLoading(true);
-        try {
-            const response = await apiClient.delete(
-                `${supplierRoutes.DELETE_SUPPLIER_PAYMENT}/${supplierId}/${paymentId}`
-            );
-
-            if (response?.data || response?.status === 200) {
-                toast.success("Payment deleted successfully.");
-                return response.data;
-            }
-        } catch (error) {
-            const message =
-                error?.response?.data?.error ||
-                error?.response?.data?.message ||
-                error?.message ||
-                "Deleting payment failed!";
-            toast.error(message);
-            console.error("Error in delete payment : ", message);
-            return null;
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    return { loading, deleteSupplierPayment };
 };

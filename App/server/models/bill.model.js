@@ -38,7 +38,7 @@ export const billSchema = new Schema(
             required: true,
         },
         note: {
-            type: Number,
+            type: String,
         },
         items: [
             {

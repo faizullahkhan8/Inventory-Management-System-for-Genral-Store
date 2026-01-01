@@ -5,9 +5,6 @@ import {
     getAllSupplier,
     getSupplier,
     updateSupplier,
-    addPayment,
-    updatePayment,
-    deletePayment,
 } from "../controllers/supplier.controller.js";
 import { deleteOne } from "../utils/deleteOne.js";
 import { getLocalSupplierModel } from "../config/localDb.js";
@@ -23,13 +20,5 @@ router.get("/get-all", isAuthenticated, getAllSupplier);
 router.delete("/delete/:id", isAuthenticated, deleteOne(getLocalSupplierModel));
 router.get("/get/:id", isAuthenticated, getSupplier);
 router.put("/update/:id", isAuthenticated, updateSupplier);
-
-router.post("/payment/create", isAuthenticated, addPayment);
-router.put("/payment/update", isAuthenticated, updatePayment);
-router.delete(
-    "/payment/delete/:supplierId/:paymentId",
-    isAuthenticated,
-    deletePayment
-);
 
 export default router;

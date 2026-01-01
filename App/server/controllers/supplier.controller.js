@@ -4,7 +4,6 @@ import {
     getLocalSupplierModel,
     getLocalTrashModel,
 } from "../config/localDb.js";
-// import { SupplerDto } from "../dto/supplier.dto.js";
 
 export const createSupplier = expressAsyncHandler(async (req, res, next) => {
     try {
@@ -51,7 +50,7 @@ export const createSupplier = expressAsyncHandler(async (req, res, next) => {
         return res.status(201).json({
             success: true,
             message: "Supplier created successfully.",
-            supplier
+            supplier,
         });
     } catch (error) {
         console.log("Error in create supplier:", error);
@@ -66,15 +65,9 @@ export const getAllSupplier = expressAsyncHandler(async (req, res, next) => {
             return next(new ErrorResponse("Database not initialized.", 500));
         const dbSuppliers = await Supplier.find();
 
-        if (dbSuppliers.length < 1) {
-            return next(new ErrorResponse("Not found", 404));
-        }
-
-        const suppliers = dbSuppliers.map((item) => item);
-
         return res.status(200).json({
             success: true,
-            suppliers,
+            suppliers: dbSuppliers,
         });
     } catch (error) {
         console.log("Error in get all supplier controller : ", error.message);
@@ -117,6 +110,8 @@ export const updateSupplier = expressAsyncHandler(async (req, res, next) => {
         if (!Supplier)
             return next(new ErrorResponse("Database not initialized.", 500));
         const { id: supplierId } = req.params;
+
+        console.log(supplierId);
         const data = req.body;
 
         const dbSupplier = await Supplier.findById(supplierId);
@@ -177,5 +172,3 @@ export const updateSupplier = expressAsyncHandler(async (req, res, next) => {
         return next(new ErrorResponse("Internal server error.", 500));
     }
 });
-
-

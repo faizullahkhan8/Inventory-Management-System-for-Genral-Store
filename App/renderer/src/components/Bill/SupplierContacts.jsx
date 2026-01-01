@@ -18,6 +18,8 @@ const SupplierContacts = ({ supplierData, setSupplierData }) => {
     };
 
     const handleFieldChange = (index, fieldName, value) => {
+        if (fieldName === "type" && !value) return;
+
         setSupplierData((prev) => {
             const updatedContacts = [...(prev.contacts || [])];
 
@@ -32,7 +34,6 @@ const SupplierContacts = ({ supplierData, setSupplierData }) => {
             };
         });
     };
-
 
     return (
         <div className="flex flex-col gap-2">

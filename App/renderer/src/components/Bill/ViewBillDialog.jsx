@@ -14,7 +14,7 @@ const ViewBillDialog = ({ bill, onClose }) => {
             />
 
             {/* Dialog */}
-            <Card className="bg-white relative w-[95%] max-w-md p-6 z-10 animate-in fade-in zoom-in-95 duration-200">
+            <Card className="bg-white relative w-[95%] max-w-lg p-6 z-10 animate-in fade-in zoom-in-95 duration-200">
                 {/* Header */}
                 <div className="flex items-start justify-between mb-4">
                     <div className="min-w-0">
@@ -77,24 +77,33 @@ const ViewBillDialog = ({ bill, onClose }) => {
                 </div>
 
                 {/* Items List */}
-                {/* Items List */}
                 <div className="border border-gray-300 rounded-md max-h-44 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-                    <div className="grid grid-cols-4 gap-2 bg-gray-50 px-3 py-2 text-xs font-semibold text-gray-600 sticky top-0">
+                    <div className="grid grid-cols-6 gap-2 bg-gray-50 px-3 py-2 text-xs font-semibold text-gray-600 sticky top-0">
                         <span className="col-span-2">Item</span>
+                        <span className="text-center">Price</span>
                         <span className="text-center">Qty</span>
+                        <span className="text-center">Discount</span>
                         <span className="text-right">Total</span>
                     </div>
 
                     {bill.items?.map((item, index) => (
                         <div
                             key={index}
-                            className="grid grid-cols-4 gap-2 px-3 py-2 text-xs border-t border-gray-200 items-center"
+                            className="grid grid-cols-6 gap-2 px-3 py-2 text-xs border-t border-gray-200 items-center"
                         >
                             <div className="col-span-2 truncate">
                                 {item.productId?.name || "Product"}
                             </div>
 
+                            <div className="text-center font-medium">
+                                Rs {item.price?.toLocaleString() || "0"}
+                            </div>
+
                             <div className="text-center">{item.quantity}</div>
+
+                            <div className="text-center font-medium">
+                                Rs {item.discount?.toLocaleString() || "0"}
+                            </div>
 
                             <div className="text-right font-medium">
                                 Rs{" "}

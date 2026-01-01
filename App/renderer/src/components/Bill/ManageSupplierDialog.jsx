@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { Card } from "../../ui/Card";
 import AddSupplierForm from "./SupplierFrom";
+import {
+    useCreateSupplier,
+    useUpdateSupplier,
+} from "../../api/Hooks/supplier.api";
 
 const INITIAL_FORM_STATE = {
     name: "",
@@ -19,9 +23,17 @@ const ManageSupplierDialog = ({
     open,
     onClose,
     isEditing,
-    supplierData,
+    // supplierData,
+    selectedSupplierData,
+    setSupplierData,
 }) => {
     const [formData, setFormData] = useState(INITIAL_FORM_STATE);
+
+    const { createSupplier, loading: createSupplierLoading } =
+        useCreateSupplier();
+
+    const { updateSupplier, loading: updateSupplierLoading } =
+        useUpdateSupplier();
 
     useEffect(() => {
         if (open && !isEditing) {
@@ -29,17 +41,38 @@ const ManageSupplierDialog = ({
         }
 
         if (open && isEditing) {
-            setFormData(supplierData);
+            setFormData(selectedSupplierData);
         }
-    }, [open, isEditing, supplierData]);
+    }, [open, isEditing, selectedSupplierData]);
 
     if (!open) return null;
 
-    const handleAddSupplier = () => {
+    const handleAddSupplier = async () => {
         if (isEditing) {
-            console.log("Update supplier:", formData);
+            console.log(selectedSupplierData._id);
+            console.log(formData);
+            const response = await updateSupplier({
+                supplierId: selectedSupplierData._id,
+                supplierData: formData,
+            });
+
+            if (response) {
+                setSupplierData((prev) =>
+                    prev.map((supplier) =>
+                        supplier._id === response.supplier._id
+                            ? response.supplier
+                            : supplier
+                    )
+                );
+                onClose();
+            }
         } else {
-            console.log("Add supplier:", formData);
+            const response = await createSupplier(formData);
+
+            if (response) {
+                setSupplierData((prev) => [response.supplier, ...prev]);
+                onClose();
+            }
         }
     };
 
@@ -55,7 +88,7 @@ const ManageSupplierDialog = ({
             <Card className="relative z-10 w-full max-w-xl bg-white p-6 animate-in fade-in zoom-in-95 duration-200">
                 <AddSupplierForm
                     handler={handleAddSupplier}
-                    loading={false}
+                    loading={createSupplierLoading || updateSupplierLoading}
                     isEditing={isEditing}
                     supplierData={formData}
                     setSupplierData={setFormData}

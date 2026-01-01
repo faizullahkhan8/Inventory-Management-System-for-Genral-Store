@@ -1,6 +1,6 @@
 import { Input } from "../../ui/Input";
 import { Button } from "../../ui/Button";
-import SupplierContacts from "../Suppliers/SupplierContacts";
+import SupplierContacts from "./SupplierContacts";
 import { Loader } from "lucide-react";
 
 const SupplierForm = ({
@@ -118,11 +118,7 @@ const SupplierForm = ({
 
                 {/* Actions */}
                 <div className="flex justify-end gap-2 pt-4">
-                    <Button
-                        type="button"
-                        variant="danger"
-                        onClick={onClose}
-                    >
+                    <Button type="button" variant="danger" onClick={onClose}>
                         Cancel
                     </Button>
                     <Button type="submit">

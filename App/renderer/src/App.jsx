@@ -9,11 +9,7 @@ import AddProductPage from "./pages/AddProductPage.jsx";
 import ViewProductPage from "./pages/ViewProductPage.jsx";
 import EditProductPage from "./pages/EditProductPage.jsx";
 import TrashPage from "./pages/TrashPage.jsx";
-import SupplierPage from "./pages/SupplierPage.jsx";
 import Register from "./pages/Register.jsx";
-import AddSupplierPage from "./pages/AddSupplierPage.jsx";
-import ViewSupplierPage from "./pages/ViewSupplierPage.jsx";
-// import EditSupplierPage from "./pages/EditSupplierPage.jsx";
 import BillingPage from "./pages/BillingPage.jsx";
 import AddBillPage from "./pages/AddBill.jsx";
 import EditBill from "./pages/EditBill.jsx";
@@ -51,22 +47,6 @@ const router = createBrowserRouter([
                 path: "/trash",
                 element: <TrashPage />,
             },
-            {
-                path: "/suppliers",
-                element: <SupplierPage />,
-            },
-            {
-                path: "/suppliers/add-supplier",
-                element: <AddSupplierPage />,
-            },
-            {
-                path: "/suppliers/view-supplier/:id",
-                element: <ViewSupplierPage />,
-            },
-            // {
-            //     path: "/suppliers/edit-supplier/:id",
-            //     element: <EditSupplierPage />,
-            // },
             {
                 path: "/billing",
                 element: <BillingPage />,
