@@ -16,6 +16,7 @@ const inventorySchema = new Schema(
         },
         threshold: {
             type: Number,
+            default: 10,
         },
         reservedQuantity: {
             type: Number,

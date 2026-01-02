@@ -6,41 +6,13 @@ const productSchema = new Schema(
             type: String,
             required: true,
         },
-        sku: {
-            type: String,
-            required: true,
-            unique: true,
-        },
         description: {
             type: String,
-            required: true,
-        },
-        purchasedPrice: {
-            type: Number,
-            required: true,
-            min: 0,
-            default: 0,
-        },
-        sellingPrice: {
-            type: Number,
-            required: true,
-            min: 0,
-            default: 0,
         },
         inventoryId: {
             type: mongoose.SchemaTypes.ObjectId,
             ref: "inventory",
             required: true,
-        },
-        mfgDate: {
-            type: Date,
-        },
-        expDate: {
-            type: Date,
-        },
-        supplierId: {
-            type: mongoose.SchemaTypes.ObjectId,
-            ref: "supplier",
         },
         categoryId: {
             type: mongoose.SchemaTypes.ObjectId,

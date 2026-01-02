@@ -1,4 +1,4 @@
-import { Loader, Plus, PlusCircle, XCircle } from "lucide-react";
+import { Loader, Plus, PlusCircle, Upload, XCircle } from "lucide-react";
 import { Input } from "../ui/Input";
 import { Button } from "../ui/Button";
 import Select from "../ui/Select";
@@ -11,7 +11,6 @@ import { Label } from "../ui/Label";
 import { Link } from "react-router-dom";
 import { useGetAllCategories } from "../api/Hooks/category.api";
 import ManageCategory from "./ProductView/ManageCategory";
-import { useGetAllSuppliers } from "../api/Hooks/supplier.api";
 
 const AddProductFrom = ({
     setProductData,
@@ -22,7 +21,6 @@ const AddProductFrom = ({
     isEditing,
 }) => {
     const [categoryData, setCategoryData] = useState([]);
-    const [supplierData, setSupplierData] = useState([]);
     const [isAddCategoryOpen, setIsAddCategoryOpen] = useState(false);
 
     // Initialize preview URL state
@@ -30,8 +28,6 @@ const AddProductFrom = ({
 
     const { getAllCategories, loading: getAllCategoriesLoading } =
         useGetAllCategories();
-    const { getAllSuppliers, loading: getAllSupplierLoading } =
-        useGetAllSuppliers();
 
     // FIX 1: Sync Image Preview when productData loads (Important for Editing)
     useEffect(() => {
@@ -43,14 +39,9 @@ const AddProductFrom = ({
     useEffect(() => {
         (async () => {
             const categoryResponse = await getAllCategories();
-            const supplierResponse = await getAllSuppliers();
 
             if (categoryResponse.success) {
                 setCategoryData(categoryResponse.categories);
-            }
-
-            if (supplierResponse.success) {
-                setSupplierData(supplierResponse.suppliers);
             }
         })();
     }, []);
@@ -162,20 +153,6 @@ const AddProductFrom = ({
                     </div>
                     <div>
                         <label className="mb-2">
-                            SKU <span className="text-red-500">*</span>
-                        </label>
-                        <Input
-                            placeholder="Enter product SKU..."
-                            required
-                            value={productData.sku}
-                            name="sku"
-                            id="sku"
-                            autoComplete="sku"
-                            onChange={handleFormDataChange}
-                        />
-                    </div>
-                    <div>
-                        <label className="mb-2">
                             Category <span className="text-red-500">*</span>
                         </label>
                         <div className="flex items-center gap-2 ">
@@ -211,190 +188,99 @@ const AddProductFrom = ({
                             </Button>
                         </div>
                     </div>
-                    <div>
-                        <label className="mb-2">
-                            Supplier <span className="text-red-500">*</span>
-                        </label>
-                        <Select
-                            id="supplier"
-                            name="supplier"
-                            required
-                            autoComplete="supplier"
-                            value={productData.supplierId}
-                            onChange={(val) =>
-                                handleSelectFieldValue(val, "supplierId")
-                            }
-                            placeholder={`${
-                                getAllSupplierLoading ? (
-                                    <Loader
-                                        size={18}
-                                        className="animate-spin"
-                                    />
-                                ) : (
-                                    "Select supplier"
-                                )
-                            }`}
-                            options={supplierData.map((sup) => ({
-                                label: sup.name,
-                                value: sup._id,
-                            }))}
-                        />
-                    </div>
                 </div>
-                <div className="grid grid-cols-3 gap-2 max-sm:grid-cols-1">
-                    <div>
-                        <label htmlFor="purchasePrice">
-                            Purchased Price{" "}
-                            <span className="text-red-500">*</span>
+                <div className="grid grid-cols-2 gap-4 max-sm:grid-cols-1">
+                    {/* Description */}
+                    <div className="flex flex-col">
+                        <label
+                            htmlFor="description"
+                            className="mb-1 font-medium"
+                        >
+                            Description
                         </label>
-                        <Input
-                            id="purchasedPrice"
-                            name="purchasedPrice"
-                            value={productData.purchasedPrice}
-                            required
-                            autoComplete="purchasedPrice"
-                            onChange={handleFormDataChange}
-                            type="number"
-                            placeholder="Enter product purchased price..."
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="sellingPrice">
-                            Selling Price{" "}
-                            <span className="text-red-500">*</span>
-                        </label>
-                        <Input
-                            id="sellingPrice"
-                            name="sellingPrice"
-                            value={productData.sellingPrice}
-                            onChange={handleFormDataChange}
-                            required
-                            autoComplete="sellingPrice"
-                            type="number"
-                            placeholder="Enter product sellilng price..."
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="quantity">
-                            Quantity <span className="text-red-500">*</span>
-                        </label>
-                        <Input
-                            id="quantity"
-                            name="quantity"
-                            value={productData.quantity}
-                            onChange={handleFormDataChange}
-                            required
-                            autoComplete="quantity"
-                            type="number"
-                            placeholder="Enter product quantity in stock..."
-                        />
-                    </div>
-                </div>
-                <div className="grid grid-cols-2 gap-2 max-sm:grid-cols-1">
-                    <div>
-                        <label htmlFor="mfgDate">Mfg Date</label>
-                        <Input
-                            id="mfgDate"
-                            name="mfgDate"
-                            value={
-                                productData.mfgDate
-                                    ? productData.mfgDate.split("T")[0]
-                                    : ""
-                            }
-                            onChange={handleFormDataChange}
-                            autoComplete="mfgDate"
-                            type="date"
-                            placeholder="Enter mfg date for the product..."
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="expDate">Expiry Date</label>
-                        <Input
-                            id="expDate"
-                            name="expDate"
-                            value={
-                                productData.expDate
-                                    ? productData.expDate.split("T")[0]
-                                    : ""
-                            }
-                            onChange={handleFormDataChange}
-                            autoComplete="expDate"
-                            type="date"
-                            placeholder="Enter mfg date for the product..."
-                        />
-                    </div>
-                </div>
-                <div className="gird grid-cols-1">
-                    <div>
-                        <label htmlFor="description">
-                            Description <span className="text-red-500">*</span>
-                        </label>
-                        <br />
+
                         <textarea
                             id="description"
                             value={productData.description}
                             name="description"
-                            required
                             onChange={handleFormDataChange}
                             autoComplete="description"
-                            type="text"
-                            className="flex w-full min-w-0 h-20 rounded-md border border-input bg-input-background
-    px-3 py-2 text-base md:text-sm text-foreground placeholder:text-muted-foreground
-    focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 outline-none
-    disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50
-    aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40
-    dark:bg-input/30 transition-all duration-200"
-                            placeholder="Enter the words that best describe the product..."
+                            placeholder="Describe the product clearly for customers…"
+                            className="border border-gray-300 rounded-md p-2 h-32 resize-none focus:outline-none focus:ring-3 focus:ring-primary transition-all"
                         />
                     </div>
-                </div>
-                <div className="grid grid-cols-2 gap-2 max-sm:grid-cols-1">
-                    <Card className="p-2 gap-y-1">
-                        <label htmlFor="image">Image</label>
-                        <Input
-                            type="file"
-                            id="image"
-                            name="image"
-                            accept="image/*"
-                            onChange={handleImageChange}
-                        />
-                        <ul className="text-xs list-disc pl-4 text-gray-500">
-                            <li>Use a square image (1:1 ratio).</li>
-                            <li>
-                                Center the product with a clean and white
-                                background.
-                            </li>
-                            <li>Minimum size: 1000 * 1000 px.</li>
-                            <li>max size ≤ 5 MB JPEG format preferred.</li>
-                        </ul>
-                    </Card>
-                    <Card className="relative p-2 gap-y-2">
-                        {selectedImageUrl && (
-                            <XCircle
-                                onClick={handleClearImage}
-                                className="absolute top-2 right-2 cursor-pointer hover:text-red-500 transition-colors duration-200 z-10"
-                                size={20}
+
+                    {/* Image Section */}
+                    <Card className="p-4 grid grid-cols-2 gap-4 max-sm:grid-cols-1">
+                        {/* Upload */}
+                        <div className="flex flex-col gap-2">
+                            <label className="font-medium">Product Image</label>
+
+                            <label
+                                htmlFor="image"
+                                className="flex items-center justify-center gap-2 cursor-pointer
+                border border-dashed border-gray-300 rounded-md
+                py-4 text-sm font-medium text-gray-600
+                hover:border-primary hover:text-primary transition-colors"
+                            >
+                                <Upload size={18} />
+                                Upload Image
+                            </label>
+
+                            <Input
+                                type="file"
+                                id="image"
+                                name="image"
+                                accept="image/*"
+                                onChange={handleImageChange}
+                                className="hidden"
                             />
-                        )}
-                        <label>
-                            Preview{" "}
-                            <span className="italic text-sm text-gray-500">
-                                {!selectedImageUrl && "(no image selected)"}
-                            </span>
-                        </label>
-                        {!selectedImageUrl ? (
-                            <div className="text-gray-400 text-sm">
-                                No image selected yet!
+
+                            <ul className="text-xs text-gray-500 list-disc pl-4 space-y-1">
+                                <li>Square image (1:1)</li>
+                                <li>Min 1000 × 1000 px</li>
+                                <li>Max 5 MB (JPEG preferred)</li>
+                            </ul>
+                        </div>
+
+                        {/* Preview */}
+                        <div className="flex flex-col gap-2">
+                            <div className="flex items-center justify-between">
+                                <label className="font-medium">
+                                    Preview
+                                    {!selectedImageUrl && (
+                                        <span className="italic text-sm text-gray-400 ml-1">
+                                            (no image)
+                                        </span>
+                                    )}
+                                </label>
+
+                                {selectedImageUrl && (
+                                    <XCircle
+                                        onClick={handleClearImage}
+                                        className="cursor-pointer hover:text-red-500 transition-colors"
+                                        size={20}
+                                    />
+                                )}
                             </div>
-                        ) : (
-                            <img
-                                src={selectedImageUrl}
-                                alt="select image preview"
-                                className="w-full h-auto max-h-48 object-contain rounded-lg"
-                            />
-                        )}
+
+                            <div className="flex items-center justify-center min-h-[180px] border border-gray-300 rounded-md">
+                                {!selectedImageUrl ? (
+                                    <p className="text-gray-400 text-sm">
+                                        Image preview will appear here
+                                    </p>
+                                ) : (
+                                    <img
+                                        src={selectedImageUrl}
+                                        alt="Product preview"
+                                        className="max-h-44 object-contain"
+                                    />
+                                )}
+                            </div>
+                        </div>
                     </Card>
                 </div>
+
                 <div>
                     <Label>Custom Fields</Label>
                     <br />

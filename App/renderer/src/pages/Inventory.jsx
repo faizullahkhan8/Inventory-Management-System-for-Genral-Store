@@ -6,10 +6,7 @@ import { Input } from "../ui/Input";
 import { useEffect, useState } from "react";
 import ProductTable from "../components/Tables/ProductTable";
 import { getProductColumns } from "../components/Tables/ProductColumns";
-import {
-    useDeleteProduct,
-    useGetAllProductsForTable,
-} from "../api/Hooks/product.api";
+import { useDeleteProduct, useGetAllProducts } from "../api/Hooks/product.api";
 import { Link } from "react-router-dom";
 import DialogBox from "../components/DialogBox";
 import DropdownWithAction from "../components/DropdownWithAction";
@@ -30,8 +27,8 @@ const Inventory = () => {
     const [isDeletingCategoryOpen, setIsDeletingCatgoryOpen] = useState(false);
     const [actionedData, setActionedData] = useState();
 
-    const { loading: getAllProductForTableLoading, getAllProductsForTable } =
-        useGetAllProductsForTable();
+    const { loading: getAllProductForTableLoading, getAllProducts } =
+        useGetAllProducts();
     const { deleteProduct, loading: deleteLoading } = useDeleteProduct();
     const { getAllCategories, loading: getAllCategoriesLoading } =
         useGetAllCategories();
@@ -41,7 +38,7 @@ const Inventory = () => {
 
     useEffect(() => {
         (async () => {
-            const productResponse = await getAllProductsForTable();
+            const productResponse = await getAllProducts();
             const categoryResponse = await getAllCategories();
 
             if (productResponse) {

@@ -6,7 +6,6 @@ import {
     getLocalProductModel,
     getLocalInventoryModel,
 } from "../config/localDb.js";
-import ProductDto from "../dto/product.dto.js";
 import mongoose from "mongoose";
 import path from "path";
 
@@ -22,36 +21,19 @@ export const createProduct = AsyncHandler(async (req, res, next) => {
             return next(new ErrorResponse("In-complete product data.", 400));
         }
 
-        const {
-            name,
-            description,
-            sellingPrice,
-            purchasedPrice,
-            sku,
-            quantity,
-        } = data;
+        const { name } = data;
 
-        if (
-            !name ||
-            !description ||
-            !sellingPrice ||
-            !purchasedPrice ||
-            !sku ||
-            !quantity
-        ) {
+        if (!name) {
             return next(
                 new ErrorResponse("Please provide required fields.", 400)
             );
         }
 
-        const isExist = await Product.findOne({ $or: [{ name }, { sku }] });
+        const isExist = await Product.findOne({ $or: [{ name }] });
 
         if (isExist) {
             return next(
-                new ErrorResponse(
-                    "Product with sku and name is already exists",
-                    400
-                )
+                new ErrorResponse("Product with name is already exists", 400)
             );
         }
 
@@ -63,9 +45,7 @@ export const createProduct = AsyncHandler(async (req, res, next) => {
         const newInventory = await Inventory.create({
             productId: newProduct._id,
             lastUpdate: Date.now(),
-            quantity: data.quantity || 0,
-            reservedQuantity: data?.reservedQuantity || 0,
-            threshold: data?.threshold || 10,
+            quantity: 0,
         });
 
         newProduct.inventoryId = newInventory._id;
@@ -90,16 +70,11 @@ export const getAllProducts = AsyncHandler(async (req, res, next) => {
             return next(new ErrorResponse("Database not initialized.", 500));
         const allProducts = await Product.find({})
             .populate("inventoryId")
-            .populate("categoryId")
-            .populate("supplierId");
-
-        const FilteredProducts = allProducts.map(
-            (item) => new ProductDto(item)
-        );
+            .populate("categoryId");
 
         return res.status(200).json({
             success: true,
-            Products: FilteredProducts,
+            Products: allProducts,
         });
     } catch (error) {
         console.log("Error in get all products controller: ", error.message);
@@ -120,8 +95,7 @@ export const getProduct = AsyncHandler(async (req, res, next) => {
 
         const dbProduct = await Product.findById(productId)
             .populate("inventoryId")
-            .populate("categoryId")
-            .populate("supplierId");
+            .populate("categoryId");
 
         if (!dbProduct) {
             return next(new ErrorResponse("Product not found!.", 404));
@@ -129,40 +103,11 @@ export const getProduct = AsyncHandler(async (req, res, next) => {
 
         return res.status(200).json({
             success: true,
-            product: new ProductDto(dbProduct),
+            product: dbProduct,
         });
     } catch (error) {
         console.log(
             "Error in get products for view controller: ",
-            error.message
-        );
-        return next(new ErrorResponse("Internal server error.", 500));
-    }
-});
-
-export const getProductForEdit = AsyncHandler(async (req, res, next) => {
-    try {
-        const Product = getLocalProductModel();
-        if (!Product)
-            return next(new ErrorResponse("Database not initialized.", 500));
-        const productId = req.params.id;
-
-        const dbProduct = await Product.findById(productId)
-            .populate("inventoryId")
-            .populate("categoryId")
-            .populate("supplierId");
-
-        if (!dbProduct) {
-            return next(new ErrorResponse("Product not found!", 404));
-        }
-
-        return res.status(200).json({
-            success: true,
-            product: new ProductDto(dbProduct),
-        });
-    } catch (error) {
-        console.log(
-            "Error in get products for edit controller: ",
             error.message
         );
         return next(new ErrorResponse("Internal server error.", 500));

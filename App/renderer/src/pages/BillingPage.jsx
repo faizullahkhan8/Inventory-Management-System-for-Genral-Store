@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Header from "../components/Header";
-import { CloudCog, SearchIcon, Trash2 } from "lucide-react";
+import { SearchIcon, Trash2 } from "lucide-react";
 import { Input } from "../ui/Input";
 import { Button } from "../ui/Button";
 import { Link } from "react-router-dom";

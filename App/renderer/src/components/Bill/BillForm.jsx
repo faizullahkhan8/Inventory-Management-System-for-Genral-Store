@@ -9,7 +9,7 @@ import { toast } from "react-hot-toast";
 import { Link } from "react-router-dom";
 
 import { useGetAllSuppliers } from "../../api/Hooks/supplier.api";
-import { useGetAllProductsForTable } from "../../api/Hooks/product.api";
+import { useGetAllProducts } from "../../api/Hooks/product.api";
 
 const BillForm = ({
     handler,
@@ -22,14 +22,13 @@ const BillForm = ({
     const [productData, setProductData] = useState([]);
 
     const { getAllSuppliers, loading: supplierLoading } = useGetAllSuppliers();
-    const { getAllProductsForTable, loading: productLoading } =
-        useGetAllProductsForTable();
+    const { getAllProducts, loading: productLoading } = useGetAllProducts();
 
     /* ================= FETCH DATA ================= */
     useEffect(() => {
         (async () => {
             const supplierRes = await getAllSuppliers();
-            const productRes = await getAllProductsForTable();
+            const productRes = await getAllProducts();
 
             if (supplierRes?.success) {
                 setSupplierData(supplierRes.suppliers);

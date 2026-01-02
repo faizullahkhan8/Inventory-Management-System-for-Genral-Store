@@ -5,7 +5,6 @@ import {
     createProduct,
     getAllProducts,
     getProduct,
-    getProductForEdit,
     updateProduct,
 } from "../controllers/product.controller.js";
 import { uploadProductImage } from "../middlewares/multer.middleware.js";
@@ -28,12 +27,11 @@ router.post(
     createProduct
 );
 
-router.get("/get-all-for-table", isAuthenticated, getAllProducts);
+router.get("/get-all", isAuthenticated, getAllProducts);
 
-router.get("/get-product-for-view/:id", isAuthenticated, getProduct);
-router.get("/get-product-for-edit/:id", isAuthenticated, getProductForEdit);
+router.get("/get/:id", isAuthenticated, getProduct);
 router.put(
-    "/update-product/:id",
+    "/update/:id",
     isAuthenticated,
     uploadProductImage.single("productImage"),
     updateProduct

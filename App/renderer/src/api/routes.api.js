@@ -7,10 +7,9 @@ export const authRoutes = {
 export const productRoutes = {
     ADD_PRODUCT: "/product/create",
     UPLOAD_IMAGE: "/product/upload-image",
-    GET_ALL_FOR_TABLE: "/product/get-all-for-table",
-    GET_SINGLE_FOR_VIEW: "/product/get-product-for-view",
-    GET_SINGLE_FOR_EDIT: "/product/get-product-for-edit",
-    UPDATE_PRODUCT: "/product/update-product",
+    GET_ALL: "/product/get-all",
+    GET_SINGLE: "/product/get",
+    UPDATE_PRODUCT: "/product/update",
     DELETE_PRODUCT: "/product/delete",
     RESTORE_PRODUCT: "/product/restore",
 };

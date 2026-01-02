@@ -42,15 +42,13 @@ export const useCreateProduct = () => {
     return { loading, createProduct };
 };
 
-export const useGetAllProductsForTable = () => {
+export const useGetAllProducts = () => {
     const [loading, setLoading] = useState(false);
 
-    const getAllProductsForTable = async () => {
+    const getAllProducts = async () => {
         setLoading(true);
         try {
-            const response = await apiClient.get(
-                productRoutes.GET_ALL_FOR_TABLE
-            );
+            const response = await apiClient.get(productRoutes.GET_ALL);
 
             if (response?.data || response?.status === 200) {
                 return response.data;
@@ -70,7 +68,7 @@ export const useGetAllProductsForTable = () => {
         }
     };
 
-    return { loading, getAllProductsForTable };
+    return { loading, getAllProducts };
 };
 
 export const useGetSingleProduct = () => {
