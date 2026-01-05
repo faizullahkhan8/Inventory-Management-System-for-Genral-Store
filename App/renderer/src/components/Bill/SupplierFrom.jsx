@@ -91,9 +91,7 @@ const SupplierForm = ({
                     </div>
 
                     <div>
-                        <label htmlFor="email">
-                            Email <span className="text-red-500">*</span>
-                        </label>
+                        <label htmlFor="email">Email</label>
                         <Input
                             id="email"
                             type="email"

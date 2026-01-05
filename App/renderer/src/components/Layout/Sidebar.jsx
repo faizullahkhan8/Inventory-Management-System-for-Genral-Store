@@ -19,7 +19,7 @@ import { useState } from "react";
 import { useLogout } from "../../api/Hooks/auth.api";
 
 const SidebarComponent = () => {
-    const [isCollapsed, setIsCollapsed] = useState(false);
+    const [isCollapsed, setIsCollapsed] = useState(true);
     const [showSidebarIcon, setShowSidebarIcon] = useState(false);
 
     const navigate = useNavigate();

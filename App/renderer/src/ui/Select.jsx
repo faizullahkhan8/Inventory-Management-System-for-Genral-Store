@@ -40,7 +40,9 @@ export default function Select({
                                 </SelectPrimitive.ItemIndicator>
 
                                 <SelectPrimitive.ItemText>
-                                    {item.label}
+                                    <span className="truncate">
+                                        {item.label}
+                                    </span>
                                 </SelectPrimitive.ItemText>
                             </SelectPrimitive.Item>
                         ))}

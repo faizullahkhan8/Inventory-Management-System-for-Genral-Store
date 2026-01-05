@@ -23,7 +23,6 @@ const ManageSupplierDialog = ({
     open,
     onClose,
     isEditing,
-    // supplierData,
     selectedSupplierData,
     setSupplierData,
 }) => {
@@ -49,8 +48,6 @@ const ManageSupplierDialog = ({
 
     const handleAddSupplier = async () => {
         if (isEditing) {
-            console.log(selectedSupplierData._id);
-            console.log(formData);
             const response = await updateSupplier({
                 supplierId: selectedSupplierData._id,
                 supplierData: formData,

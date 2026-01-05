@@ -8,6 +8,7 @@ import {
 } from "../config/localDb.js";
 import mongoose from "mongoose";
 import path from "path";
+import ProductDto from "../dto/product.dto.js";
 
 export const createProduct = AsyncHandler(async (req, res, next) => {
     try {
@@ -15,6 +16,7 @@ export const createProduct = AsyncHandler(async (req, res, next) => {
         const Inventory = getLocalInventoryModel();
         if (!Product || !Inventory)
             return next(new ErrorResponse("Database not initialized.", 500));
+
         const data = JSON.parse(req.body.data);
 
         if (!data) {
@@ -55,7 +57,7 @@ export const createProduct = AsyncHandler(async (req, res, next) => {
         return res.status(201).json({
             success: true,
             message: "Product created successfully.",
-            product: newProduct,
+            product: new ProductDto(newProduct),
         });
     } catch (error) {
         console.log("Error in create product controller.", error.message);
@@ -72,9 +74,11 @@ export const getAllProducts = AsyncHandler(async (req, res, next) => {
             .populate("inventoryId")
             .populate("categoryId");
 
+        const filtered = allProducts.map((product) => new ProductDto(product));
+
         return res.status(200).json({
             success: true,
-            Products: allProducts,
+            Products: filtered,
         });
     } catch (error) {
         console.log("Error in get all products controller: ", error.message);
@@ -103,7 +107,7 @@ export const getProduct = AsyncHandler(async (req, res, next) => {
 
         return res.status(200).json({
             success: true,
-            product: dbProduct,
+            product: new ProductDto(dbProduct),
         });
     } catch (error) {
         console.log(
@@ -120,7 +124,9 @@ export const updateProduct = AsyncHandler(async (req, res, next) => {
         if (!Product)
             return next(new ErrorResponse("Database not initialized.", 500));
         const productId = req.params.id;
-        const dbProduct = await Product.findById(productId);
+        const dbProduct = await Product.findById(productId)
+            .populate("inventoryId")
+            .populate("categoryId");
 
         const data = JSON.parse(req.body.data);
 
@@ -144,14 +150,7 @@ export const updateProduct = AsyncHandler(async (req, res, next) => {
 
         const fields = [
             "name",
-            "sku",
             "description",
-            "purchasedPrice",
-            "sellingPrice",
-            "inventoryId",
-            "mfgDate",
-            "expDate",
-            "supplierId",
             "categoryId",
             "isActive",
             "customFields",
@@ -187,7 +186,7 @@ export const updateProduct = AsyncHandler(async (req, res, next) => {
 
         return res.status(201).json({
             success: true,
-            product: dbProduct,
+            product: new ProductDto(dbProduct),
         });
     } catch (error) {
         console.log("Error in update product controller: ", error.message);

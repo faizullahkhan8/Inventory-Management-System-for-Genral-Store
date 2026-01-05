@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import ProductFrom from "../components/ProductFrom";
 import Header from "../components/Header";
 import {
-    useGetSingleProductForEdit,
+    useGetSingleProduct,
     useUpdateProduct,
 } from "../api/Hooks/product.api";
 import { useNavigate, useParams } from "react-router-dom";
@@ -26,13 +26,13 @@ const EditProductPage = () => {
         customFields: [],
     });
 
-    const { getSingleProductForEdit, loading: getProductLoading } =
-        useGetSingleProductForEdit();
+    const { getSingleProduct, loading: getProductLoading } =
+        useGetSingleProduct();
     const { updateProduct, loading: updateLoading } = useUpdateProduct();
 
     useMemo(() => {
         (async () => {
-            const data = await getSingleProductForEdit(productId);
+            const data = await getSingleProduct(productId);
 
             setProductData(data?.product);
         })();

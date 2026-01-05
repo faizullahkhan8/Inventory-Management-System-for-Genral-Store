@@ -1,11 +1,13 @@
 import toast from "react-hot-toast";
 import Header from "../components/Header";
 import BillForm from "../components/Bill/BillForm";
+import SplitBillForm from "../components/Bill/SplitBillForm";
 import { useState } from "react";
 import { useAddBill } from "../api/Hooks/bill.api";
 import { useNavigate } from "react-router-dom";
 
 const AddBillPage = () => {
+    const [billLayout, setBillLayout] = useState("split");
     const [billData, setBillData] = useState({
         supplierId: "",
         purchaseDate: "",
@@ -65,12 +67,45 @@ const AddBillPage = () => {
         <div className="w-full h-screen flex flex-col">
             <Header title="Add Bill" />
 
-            <BillForm
-                handler={handleAddBill}
-                loading={addBillLoading}
-                billData={billData}
-                setBillData={setBillData}
-            />
+            {/* bill layout toggle button */}
+            <div className="flex justify-center items-center mt-2">
+                <button
+                    onClick={() => setBillLayout("split")}
+                    className={`px-3 py-1 rounded-l-md max-w-22 text-xs ${
+                        billLayout === "split"
+                            ? "bg-blue-600 text-white"
+                            : "bg-gray-200 text-gray-800"
+                    }`}
+                >
+                    Split Bill
+                </button>
+                <button
+                    onClick={() => setBillLayout("combined")}
+                    className={`px-3 py-1 rounded-r-md max-w-22 text-xs ${
+                        billLayout === "combined"
+                            ? "bg-blue-600 text-white"
+                            : "bg-gray-200 text-gray-800"
+                    }`}
+                >
+                    Single Bill
+                </button>
+            </div>
+
+            {billLayout === "combined" ? (
+                <BillForm
+                    handler={handleAddBill}
+                    loading={addBillLoading}
+                    billData={billData}
+                    setBillData={setBillData}
+                />
+            ) : (
+                <SplitBillForm
+                    handler={handleAddBill}
+                    loading={addBillLoading}
+                    billData={billData}
+                    setBillData={setBillData}
+                />
+            )}
         </div>
     );
 };

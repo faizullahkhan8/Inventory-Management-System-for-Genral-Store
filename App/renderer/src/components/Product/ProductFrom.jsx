@@ -1,22 +1,23 @@
 import { Loader, Plus, PlusCircle, Upload, XCircle } from "lucide-react";
-import { Input } from "../ui/Input";
-import { Button } from "../ui/Button";
-import Select from "../ui/Select";
-import { Card } from "../ui/Card";
+import { Input } from "../../ui/Input";
+import { Button } from "../../ui/Button";
+import Select from "../../ui/Select";
+import { Card } from "../../ui/Card";
 import { toast } from "react-hot-toast";
 import { useEffect, useState } from "react";
 
-import CustomFieldsComponent from "./Tables/CustomFields";
-import { Label } from "../ui/Label";
+import CustomFieldsComponent from "../Tables/CustomFields";
+import { Label } from "../../ui/Label";
 import { Link } from "react-router-dom";
-import { useGetAllCategories } from "../api/Hooks/category.api";
-import ManageCategory from "./ProductView/ManageCategory";
+import { useGetAllCategories } from "../../api/Hooks/category.api";
+import ManageCategoryDialog from "./ManageCategoryDialog";
 
-const AddProductFrom = ({
+const ProductForm = ({
     setProductData,
+    setProductState,
+    setSelectedImage,
     productData,
     handler,
-    setSelectedImage,
     loading,
     isEditing,
 }) => {
@@ -29,13 +30,6 @@ const AddProductFrom = ({
     const { getAllCategories, loading: getAllCategoriesLoading } =
         useGetAllCategories();
 
-    // FIX 1: Sync Image Preview when productData loads (Important for Editing)
-    useEffect(() => {
-        if (productData?.imageUrl) {
-            setSelectedImageUrl(productData.imageUrl);
-        }
-    }, [productData.imageUrl]);
-
     useEffect(() => {
         (async () => {
             const categoryResponse = await getAllCategories();
@@ -44,7 +38,15 @@ const AddProductFrom = ({
                 setCategoryData(categoryResponse.categories);
             }
         })();
-    }, []);
+
+        if (isEditing && productData?.imageUrl) {
+            setSelectedImageUrl(
+                `${import.meta.env.VITE_API_URL}/${productData.imageUrl}`
+            );
+        } else {
+            setSelectedImageUrl("");
+        }
+    }, [productData.imageUrl]);
 
     const handleFormDataChange = (e) => {
         setProductData({
@@ -89,15 +91,6 @@ const AddProductFrom = ({
         }
     };
 
-    useEffect(() => {
-        (async () => {
-            const response = await getAllCategories();
-            if (response.success) {
-                setCategoryData(response.categories);
-            }
-        })();
-    }, []);
-
     if (loading) {
         return (
             <div className="w-full h-screen flex items-center justify-center">
@@ -107,26 +100,19 @@ const AddProductFrom = ({
     }
 
     return (
-        <div className="h-screen w-full p-4 transform transition-transform duration-300 overflow-y-scroll">
+        <div className="w-full max-h-[calc(100vh-100px)] px-2 transform transition-transform duration-300 overflow-y-auto">
             {isAddCategoryOpen && (
-                <ManageCategory
+                <ManageCategoryDialog
                     open={true}
                     onClose={() => setIsAddCategoryOpen(false)}
                     categoryData={categoryData}
                     setCategoryData={setCategoryData}
                 />
             )}
-            <div className="mb-4 relative">
+            <div className="mb-4 sticky top-0 bg-white border-b border-gray-200 pb-2">
                 <h1 className="text-primary font-bold text-xl">
                     {isEditing ? "Edit Product" : "Add Product"}
                 </h1>
-                {isEditing ? (
-                    <p>Edit the existing detials.</p>
-                ) : (
-                    <p>
-                        Fill the detials to add new product to your inventory.
-                    </p>
-                )}
                 <p>
                     <span className="text-red-500">* </span>
                     is required fields
@@ -134,7 +120,7 @@ const AddProductFrom = ({
             </div>
             <form
                 onSubmit={handler}
-                className="flex flex-col gap-4 justify-center"
+                className="flex flex-col gap-2 justify-center"
             >
                 <div className="grid grid-cols-2 gap-2 max-sm:grid-cols-1">
                     <div>
@@ -161,7 +147,7 @@ const AddProductFrom = ({
                                 name="categoryId"
                                 required
                                 autoComplete="categoryId"
-                                value={productData.categoryId}
+                                value={productData.categoryId || ""}
                                 onChange={(val) =>
                                     handleSelectFieldValue(val, "categoryId")
                                 }
@@ -189,7 +175,7 @@ const AddProductFrom = ({
                         </div>
                     </div>
                 </div>
-                <div className="grid grid-cols-2 gap-4 max-sm:grid-cols-1">
+                <div className="grid grid-cols-1 gap-2 max-sm:grid-cols-1">
                     {/* Description */}
                     <div className="flex flex-col">
                         <label
@@ -206,7 +192,7 @@ const AddProductFrom = ({
                             onChange={handleFormDataChange}
                             autoComplete="description"
                             placeholder="Describe the product clearly for customers…"
-                            className="border border-gray-300 rounded-md p-2 h-32 resize-none focus:outline-none focus:ring-3 focus:ring-primary transition-all"
+                            className="border border-gray-300 rounded-md p-2 h-18 resize-none focus:outline-none focus:ring-3 focus:ring-primary transition-all"
                         />
                     </div>
 
@@ -289,13 +275,18 @@ const AddProductFrom = ({
                         setProductData={setProductData}
                     />
                 </div>
-                <div className="flex items-center justify-end">
+                <div className="flex items-center justify-end sticky bottom-0 bg-white pt-4 mt-4 border-t border-gray-200">
                     <div>
-                        <Link to="/inventory">
-                            <Button variant="danger" className="mr-2">
-                                Cancel
-                            </Button>
-                        </Link>
+                        <Button
+                            onClick={() =>
+                                setProductState({ type: "", data: null })
+                            }
+                            variant="danger"
+                            className="mr-2"
+                        >
+                            Cancel
+                        </Button>
+
                         <Button type="submit">
                             {isEditing ? "Update Product" : "Add Product"}
                         </Button>
@@ -306,4 +297,4 @@ const AddProductFrom = ({
     );
 };
 
-export default AddProductFrom;
+export default ProductForm;

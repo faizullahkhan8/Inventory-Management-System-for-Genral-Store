@@ -5,11 +5,7 @@ import { Link } from "react-router-dom";
 
 const columnHelper = createColumnHelper();
 
-export const getProductColumns = ({
-    products,
-    setIsDialogOpen,
-    setDeletingProductId,
-}) => {
+export const getProductColumns = ({ products, setProductState }) => {
     const columns = [
         columnHelper.accessor("imageUrl", {
             header: "Image",
@@ -17,28 +13,23 @@ export const getProductColumns = ({
             cell: ({ row }) => {
                 const item = row.original;
                 return (
-                    <Link
-                        to={`/inventory/view-product/${item._id}?prevRoute=/inventory`}
-                    >
-                        <img
-                            src={`${import.meta.env.VITE_API_URL}/${
-                                item.imageUrl
-                            }`}
-                            alt="Product"
-                            loading="lazy"
-                            className="w-[70px] h-[70px] object-cover rounded-md shadow-sm border cursor-pointer"
-                        />
-                    </Link>
+                    <img
+                        src={`${import.meta.env.VITE_API_URL}/${item.imageUrl}`}
+                        onClick={() =>
+                            setProductState({ type: "view", data: item })
+                        }
+                        alt="Product"
+                        loading="lazy"
+                        className="w-[70px] h-[70px] object-cover rounded-md shadow-sm border cursor-pointer"
+                    />
                 );
             },
         }),
         columnHelper.accessor("name", {
             header: "Name",
-            size: 200,
+            size: 120,
             cell: (info) => {
-                const row = info.row.original;
                 const name = info.getValue();
-                const description = row.description;
                 const query = info.table.getState().globalFilter;
 
                 return (
@@ -47,67 +38,15 @@ export const getProductColumns = ({
                         <span className="inline">
                             <Hightlighter text={name} query={query} />
                         </span>
-
-                        {/* Description */}
-                        {description && (
-                            <span className="text-sm text-gray-500 mt-1 inline">
-                                <Hightlighter
-                                    text={description}
-                                    query={query}
-                                />
-                            </span>
-                        )}
                     </div>
                 );
             },
         }),
-        columnHelper.accessor("sku", {
-            header: "SKU",
-            size: 120,
+        columnHelper.accessor("description", {
+            header: "Description",
+            size: 200,
             cell: (info) => {
                 const value = info.getValue();
-                const query = info.table.getState().globalFilter; // or column filter
-                return <Hightlighter text={value} query={query} />;
-            },
-        }),
-        columnHelper.accessor("purchasedPrice", {
-            header: "Purchased Price",
-            size: 140,
-            cell: (info) => {
-                const value = `Rs: ${info.getValue()}`;
-                const query = info.table.getState().globalFilter; // or column filter
-                return <Hightlighter text={value} query={query} />;
-            },
-        }),
-        columnHelper.accessor("sellingPrice", {
-            header: "Selling Price",
-            size: 120,
-            cell: (info) => {
-                const value = `Rs: ${info.getValue()}`;
-                const query = info.table.getState().globalFilter; // or column filter
-                return <Hightlighter text={value} query={query} />;
-            },
-        }),
-        columnHelper.accessor("mfgDate", {
-            header: "Mfg Date",
-            size: 110,
-            cell: (info) => {
-                const value = info.getValue()
-                    ? new Date(info.getValue()).toLocaleDateString()
-                    : null;
-                if (!value) return "---";
-                const query = info.table.getState().globalFilter; // or column filter
-                return <Hightlighter text={value} query={query} />;
-            },
-        }),
-        columnHelper.accessor("expDate", {
-            header: "Expiry Date",
-            size: 110,
-            cell: (info) => {
-                const value = info.getValue()
-                    ? new Date(info.getValue()).toLocaleDateString()
-                    : null;
-                if (!value) return "---";
                 const query = info.table.getState().globalFilter; // or column filter
                 return <Hightlighter text={value} query={query} />;
             },
@@ -117,15 +56,6 @@ export const getProductColumns = ({
             size: 90,
             cell: (info) => {
                 const value = info.getValue()?.toString();
-                const query = info.table.getState().globalFilter; // or column filter
-                return <Hightlighter text={value} query={query} />;
-            },
-        }),
-        columnHelper.accessor("supplierName", {
-            header: "Supplier",
-            size: 150,
-            cell: (info) => {
-                const value = info.getValue();
                 const query = info.table.getState().globalFilter; // or column filter
                 return <Hightlighter text={value} query={query} />;
             },
@@ -195,28 +125,27 @@ export const getProductColumns = ({
 
                 return (
                     <div className="flex items-center gap-3 justify-center">
-                        <Link
-                            to={`/inventory/view-product/${item._id}?prevRoute=/inventory`}
-                        >
-                            <Eye
-                                className="cursor-pointer text-gray-500 hover:text-gray-900"
-                                size={18}
-                            />
-                        </Link>
-                        <Link
-                            to={`/inventory/edit-product/${item._id}?prevRoute=/inventory`}
-                        >
-                            <Pencil
-                                className="cursor-pointer text-blue-500 hover:text-blue-700"
-                                size={18}
-                            />
-                        </Link>
+                        <Eye
+                            className="cursor-pointer text-gray-500 hover:text-gray-900"
+                            onClick={() =>
+                                setProductState({ type: "view", data: item })
+                            }
+                            size={18}
+                        />
+
+                        <Pencil
+                            className="cursor-pointer text-blue-500 hover:text-blue-700"
+                            onClick={() => {
+                                setProductState({ type: "edit", data: item });
+                            }}
+                            size={18}
+                        />
+
                         <Trash2
                             className="cursor-pointer text-red-500 hover:text-red-700"
                             size={18}
                             onClick={() => {
-                                setIsDialogOpen(true);
-                                setDeletingProductId(item._id);
+                                setProductState({ type: "delete", data: item });
                             }}
                         />
                     </div>

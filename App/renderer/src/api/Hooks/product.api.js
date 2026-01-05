@@ -78,7 +78,7 @@ export const useGetSingleProduct = () => {
         setLoading(true);
         try {
             const response = await apiClient.get(
-                `${productRoutes.GET_SINGLE_FOR_VIEW}/${productId}`
+                `${productRoutes.GET_SINGLE}/${productId}`
             );
 
             if (response?.data || response?.status === 200) {
@@ -100,37 +100,6 @@ export const useGetSingleProduct = () => {
     };
 
     return { loading, getSingleProduct };
-};
-
-export const useGetSingleProductForEdit = () => {
-    const [loading, setLoading] = useState(false);
-
-    const getSingleProductForEdit = async (productId) => {
-        setLoading(true);
-        try {
-            const response = await apiClient.get(
-                `${productRoutes.GET_SINGLE_FOR_EDIT}/${productId}`
-            );
-
-            if (response?.data || response?.status === 200) {
-                return response.data;
-            }
-        } catch (error) {
-            const message =
-                error?.response?.data?.error ||
-                error?.response?.data?.message ||
-                error?.message ||
-                "fetching product failed!";
-
-            toast.error(message);
-            console.error("Error in fetching product:", message);
-            return null;
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    return { loading, getSingleProductForEdit };
 };
 
 export const useUpdateProduct = () => {

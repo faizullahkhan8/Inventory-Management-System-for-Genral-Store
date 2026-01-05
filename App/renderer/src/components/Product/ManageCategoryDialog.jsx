@@ -9,7 +9,7 @@ import {
     useUpdateCategory,
 } from "../../api/Hooks/category.api";
 
-const ManageCategory = ({
+const ManageCategoryDialog = ({
     open,
     onClose,
     categoryData,
@@ -63,8 +63,6 @@ const ManageCategory = ({
     };
 
     if (!open) return null;
-
-    console.log(categoryData);
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -175,4 +173,4 @@ const ManageCategory = ({
     );
 };
 
-export default ManageCategory;
+export default ManageCategoryDialog;
