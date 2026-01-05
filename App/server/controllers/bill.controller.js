@@ -13,7 +13,6 @@ export const createBill = expressAsyncHandler(async (req, res, next) => {
         const {
             supplierId,
             purchaseDate,
-            status,
             paymentType,
             paidAmount,
             note,
@@ -37,6 +36,7 @@ export const createBill = expressAsyncHandler(async (req, res, next) => {
         });
 
         const dueAmount = total - (paidAmount || 0);
+        const status = total === paidAmount ? "paid" : "partial";
 
         const bill = await billModel.create({
             supplierId,

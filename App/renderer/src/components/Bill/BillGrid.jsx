@@ -12,11 +12,7 @@ import {
 import { Card } from "../../ui/Card";
 import { Link } from "react-router-dom";
 
-const BillGrid = ({
-    bills = [],
-    loading = false,
-    setSelectedBill,
-}) => {
+const BillGrid = ({ bills = [], loading = false, setSelectedBill }) => {
     /* ---------- Empty State ---------- */
     if (!bills.length) {
         return (
@@ -84,14 +80,15 @@ const BillGrid = ({
                         </div>
 
                         <span
-                            className={`text-xs px-2 py-1 rounded-xl font-semibold capitalize ${bill.status === "paid"
-                                ? "bg-green-100 text-green-700"
-                                : bill.status === "partial"
+                            className={`text-xs px-2 py-1 rounded-xl font-semibold capitalize ${
+                                bill.status === "paid"
+                                    ? "bg-green-100 text-green-700"
+                                    : bill.status === "partial"
                                     ? "bg-yellow-100 text-yellow-700"
                                     : bill.status === "cancelled"
-                                        ? "bg-red-100 text-red-700"
-                                        : "bg-gray-100 text-gray-700"
-                                }`}
+                                    ? "bg-red-100 text-red-700"
+                                    : "bg-gray-100 text-gray-700"
+                            }`}
                         >
                             {bill.status}
                         </span>

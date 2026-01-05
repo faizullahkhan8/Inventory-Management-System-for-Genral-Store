@@ -71,7 +71,7 @@ const AddBillPage = () => {
             <div className="flex justify-center items-center mt-2">
                 <button
                     onClick={() => setBillLayout("split")}
-                    className={`px-3 py-1 rounded-l-md max-w-22 text-xs ${
+                    className={`px-3 py-1 rounded-l-md max-w-20 w-20 text-xs ${
                         billLayout === "split"
                             ? "bg-blue-600 text-white"
                             : "bg-gray-200 text-gray-800"
@@ -81,7 +81,7 @@ const AddBillPage = () => {
                 </button>
                 <button
                     onClick={() => setBillLayout("combined")}
-                    className={`px-3 py-1 rounded-r-md max-w-22 text-xs ${
+                    className={`px-3 py-1 rounded-r-md max-w-20 w-20 text-xs ${
                         billLayout === "combined"
                             ? "bg-blue-600 text-white"
                             : "bg-gray-200 text-gray-800"

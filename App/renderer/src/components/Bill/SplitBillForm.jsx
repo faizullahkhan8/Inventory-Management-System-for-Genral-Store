@@ -1,78 +1,26 @@
-import { Search, ShoppingCart, X, Minus, Plus } from "lucide-react";
-import { useState } from "react";
+import { Search, ShoppingCart, X, Minus, Plus, Loader } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { Card } from "../../ui/Card";
 import Select from "../../ui/Select";
 import { Input } from "../../ui/Input";
 import { Button } from "../../ui/Button";
-
-// Mock Data
-const mockProducts = [
-    {
-        _id: "1",
-        name: "Wireless Mouse",
-        price: 25.99,
-        stock: 45,
-        image: "https://images.unsplash.com/photo-1527814050087-3793815479db?w=200&h=200&fit=crop",
-    },
-    {
-        _id: "2",
-        name: "USB-C Cable",
-        price: 12.5,
-        stock: 120,
-        image: "https://images.unsplash.com/photo-1590738927009-d8b6fc0ba756?w=200&h=200&fit=crop",
-    },
-    {
-        _id: "3",
-        name: "Laptop Stand",
-        price: 45.0,
-        stock: 30,
-        image: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=200&h=200&fit=crop",
-    },
-    {
-        _id: "4",
-        name: "Mechanical Keyboard",
-        price: 89.99,
-        stock: 15,
-        image: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=200&h=200&fit=crop",
-    },
-    {
-        _id: "5",
-        name: "Headphones",
-        price: 65.0,
-        stock: 25,
-        image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200&h=200&fit=crop",
-    },
-    {
-        _id: "6",
-        name: "Webcam HD",
-        price: 55.0,
-        stock: 18,
-        image: "https://images.unsplash.com/photo-1589739900243-51091308ee52?w=200&h=200&fit=crop",
-    },
-    {
-        _id: "7",
-        name: "External SSD 1TB",
-        price: 120.0,
-        stock: 22,
-        image: "https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?w=200&h=200&fit=crop",
-    },
-    {
-        _id: "8",
-        name: 'Monitor 27"',
-        price: 299.99,
-        stock: 8,
-        image: "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=200&h=200&fit=crop",
-    },
-];
-
-const mockSuppliers = [
-    { _id: "s1", name: "Tech Supplies Inc." },
-    { _id: "s2", name: "Global Electronics" },
-    { _id: "s3", name: "Premium Hardware Co." },
-];
+import { useGetAllSuppliers } from "../../api/Hooks/supplier.api";
+import { useGetAllProducts } from "../../api/Hooks/product.api";
+import { useAddBill } from "../../api/Hooks/bill.api";
+import ItemsList from "./ItemsList";
 
 const SplitBillForm = () => {
     const [searchQuery, setSearchQuery] = useState("");
+    const [suppliersData, setSuppliersData] = useState([
+        { _id: "s1", name: "Tech Supplies Inc." },
+        { _id: "s2", name: "Global Electronics" },
+        { _id: "s3", name: "Premium Hardware Co." },
+    ]);
+
+    const [productsData, setProductsData] = useState([]);
+    const navigate = useNavigate();
+
     const [billData, setBillData] = useState({
         supplierId: "",
         purchaseDate: new Date().toISOString().split("T")[0],
@@ -82,8 +30,13 @@ const SplitBillForm = () => {
         note: "",
     });
 
+    // ----------- HOOKS -----------
+    const { getAllSuppliers } = useGetAllSuppliers();
+    const { getAllProducts } = useGetAllProducts();
+    const { addBill, loading: addBillLoading } = useAddBill();
+
     // Filter products based on search
-    const filteredProducts = mockProducts.filter((p) =>
+    const filteredProducts = productsData.filter((p) =>
         p.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
@@ -116,32 +69,6 @@ const SplitBillForm = () => {
         }
     };
 
-    // Update item quantity
-    const updateQuantity = (index, delta) => {
-        const items = [...billData.items];
-        const newQty = items[index].quantity + delta;
-
-        if (newQty <= 0) {
-            removeItem(index);
-        } else {
-            items[index].quantity = newQty;
-            setBillData({ ...billData, items });
-        }
-    };
-
-    // Update item field
-    const updateItem = (index, field, value) => {
-        const items = [...billData.items];
-        items[index][field] = value;
-        setBillData({ ...billData, items });
-    };
-
-    // Remove item
-    const removeItem = (index) => {
-        const items = billData.items.filter((_, i) => i !== index);
-        setBillData({ ...billData, items });
-    };
-
     // Calculations
     const subtotal = billData.items.reduce((acc, item) => {
         const qty = Number(item.quantity) || 0;
@@ -152,15 +79,40 @@ const SplitBillForm = () => {
 
     const dueAmount = subtotal - (Number(billData.paidAmount) || 0);
 
+    const handleAddBill = async (e) => {
+        e.preventDefault();
+        if (billData.supplierId) {
+            const response = await addBill(billData);
+            if (response.success) {
+                navigate("/billing");
+            }
+        }
+    };
+
+    useEffect(() => {
+        getAllSuppliers().then((res) => {
+            if (res?.success) {
+                setSuppliersData(res.suppliers);
+            }
+        });
+
+        getAllProducts().then((res) => {
+            if (res?.success) {
+                console.log(res);
+                setProductsData(res.Products);
+            }
+        });
+    }, []);
+
     return (
-        <div className="h-screen flex overflow-hidden bg-gray-50">
+        <div className="h-screen flex overflow-hidden">
             {/* LEFT SIDE - Products */}
             <div className="flex-1 flex flex-col overflow-hidden border-r border-gray-200">
                 {/* Header */}
-                <div className="bg-white border-b border-gray-300 p-4">
-                    <h2 className="text-xl font-bold text-gray-800 mb-2">
-                        Products
-                    </h2>
+                <div className="p-2">
+                    <label className="block text-xs font-medium text-gray-700 mb-1">
+                        Search Products
+                    </label>
                     <div className="relative">
                         <Search
                             className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
@@ -187,7 +139,9 @@ const SplitBillForm = () => {
                             >
                                 <div className=" bg-gray-100 overflow-hidden">
                                     <img
-                                        src={product.image}
+                                        src={`${import.meta.env.VITE_API_URL}/${
+                                            product.imageUrl
+                                        }`}
                                         alt={product.name}
                                         className="w-38 h-38 object-cover hover:scale-105 transition-transform"
                                     />
@@ -201,7 +155,7 @@ const SplitBillForm = () => {
                                     </h3>
                                     <div className="flex justify-between items-center mt-2">
                                         <span className="text-sm font-bold text-blue-600">
-                                            ${product.price.toFixed(2)}
+                                            ${product.price?.toFixed(2)}
                                         </span>
                                         <span
                                             className={`text-xs px-1 py-0.5 rounded ${
@@ -223,9 +177,9 @@ const SplitBillForm = () => {
             </div>
 
             {/* RIGHT SIDE - Bill */}
-            <div className="flex-1 flex flex-col bg-white shadow-xl">
+            <div className="flex-1 flex flex-col bg-white">
                 {/* Supplier & Date */}
-                <div className="flex p-2 items-center border-b border-gray-300 gap-4">
+                <div className="flex p-2 items-center gap-4">
                     <div>
                         <label className="block text-xs font-medium text-gray-700 mb-1">
                             Supplier <span className="text-red-500">*</span>
@@ -236,7 +190,7 @@ const SplitBillForm = () => {
                                 setBillData({ ...billData, supplierId: val })
                             }
                             placeholder="Select supplier"
-                            options={mockSuppliers.map((s) => ({
+                            options={suppliersData.map((s) => ({
                                 label: s.name,
                                 value: s._id,
                             }))}
@@ -282,129 +236,7 @@ const SplitBillForm = () => {
                 </div>
 
                 {/* Items List */}
-                <div className="flex-1 overflow-y-auto p-4 space-y-2">
-                    {billData.items.length === 0 ? (
-                        <div className="h-full flex flex-col items-center justify-center text-gray-400">
-                            <ShoppingCart size={48} className="mb-2" />
-                            <p>No items in cart</p>
-                            <p className="text-sm">Click on products to add</p>
-                        </div>
-                    ) : (
-                        billData.items.map((item, index) => (
-                            <Card key={index} className="p-3">
-                                <div className="flex gap-3">
-                                    <div className="flex-1">
-                                        <h4 className="font-semibold text-sm text-gray-800">
-                                            {item.productName}
-                                        </h4>
-
-                                        <div className="grid grid-cols-2 gap-2 mt-2">
-                                            <div>
-                                                <label className="text-xs text-gray-600">
-                                                    Price
-                                                </label>
-                                                <Input
-                                                    type="number"
-                                                    value={item.price}
-                                                    onChange={(e) =>
-                                                        updateItem(
-                                                            index,
-                                                            "price",
-                                                            Number(
-                                                                e.target.value
-                                                            )
-                                                        )
-                                                    }
-                                                    className="text-sm"
-                                                />
-                                            </div>
-                                            <div>
-                                                <label className="text-xs text-gray-600">
-                                                    Discount
-                                                </label>
-                                                <Input
-                                                    type="number"
-                                                    value={item.discount}
-                                                    onChange={(e) =>
-                                                        updateItem(
-                                                            index,
-                                                            "discount",
-                                                            Number(
-                                                                e.target.value
-                                                            )
-                                                        )
-                                                    }
-                                                    className="text-sm"
-                                                />
-                                            </div>
-                                        </div>
-
-                                        <div className="flex items-center justify-between mt-1">
-                                            <div className="flex items-center gap-2">
-                                                <label className="text-sm">
-                                                    Quantity
-                                                </label>
-                                                <span
-                                                    className="flex items-center justify-center border border-gray-300 rounded-lg hover:bg-red-100 transition-colors duration-200 h-6 w-6 text-red-600"
-                                                    onClick={() =>
-                                                        updateQuantity(
-                                                            index,
-                                                            -1
-                                                        )
-                                                    }
-                                                >
-                                                    <Minus size={14} />
-                                                </span>
-                                                <Input
-                                                    type="number"
-                                                    value={item.quantity}
-                                                    className="w-18! h-8! text-center text-sm "
-                                                    onChange={(e) =>
-                                                        updateQuantity(
-                                                            index,
-                                                            Number(
-                                                                e.target.value
-                                                            )
-                                                        )
-                                                    }
-                                                />
-                                                <span
-                                                    className="flex items-center justify-center border border-gray-300 rounded-lg hover:bg-green-100 transition-colors duration-200 h-6 w-6 text-green-600"
-                                                    onClick={() =>
-                                                        updateQuantity(index, 1)
-                                                    }
-                                                >
-                                                    <Plus size={14} />
-                                                </span>
-                                            </div>
-
-                                            <div className="text-right">
-                                                <p className="text-xs text-gray-600">
-                                                    Subtotal
-                                                </p>
-                                                <p className="font-bold text-sm text-blue-600">
-                                                    $
-                                                    {(
-                                                        item.quantity *
-                                                            item.price -
-                                                        item.discount
-                                                    ).toFixed(2)}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <span
-                                        className="flex items-center justify-center border border-gray-300 rounded-lg hover:bg-red-100 transition-colors duration-200 h-6 w-6 text-red-600"
-                                        onClick={() => removeItem(index)}
-                                    >
-                                        <X size={16} />
-                                    </span>
-                                </div>
-                            </Card>
-                        ))
-                    )}
-                </div>
+                <ItemsList billData={billData} setBillData={setBillData} />
 
                 {/* Footer - Summary */}
                 <div className="bg-gray-50 p-2">
@@ -442,34 +274,46 @@ const SplitBillForm = () => {
                         </div>
                     </div>
 
-                    <div className="space-y-2 pt-2 flex items-center justify-between">
-                        <div className="flex justify-between text-md">
-                            <span className="font-medium">Total:</span>
-                            <span className="font-bold">
-                                ${subtotal.toFixed(2)}
-                            </span>
+                    <div className="flex items-center justify-between">
+                        <div className="flex flex-col justify-between">
+                            <div className="flex justify-between text-md">
+                                <span className="font-medium mr-2">Total:</span>
+                                <span className="font-bold">
+                                    ${subtotal.toFixed(2)}
+                                </span>
+                            </div>
+                            <div className="flex justify-between text-md">
+                                <span className="font-medium mr-2">Due:</span>
+                                <span
+                                    className={`font-bold ${
+                                        dueAmount > 0
+                                            ? "text-red-600"
+                                            : "text-green-600"
+                                    }`}
+                                >
+                                    ${dueAmount.toFixed(2)}
+                                </span>
+                            </div>
                         </div>
-                        <div className="flex justify-between text-md">
-                            <span className="font-medium">Due:</span>
-                            <span
-                                className={`font-bold ${
-                                    dueAmount > 0
-                                        ? "text-red-600"
-                                        : "text-green-600"
-                                }`}
-                            >
-                                ${dueAmount.toFixed(2)}
-                            </span>
-                        </div>
-                    </div>
 
-                    <div className="flex gap-2 pt-2">
-                        <Button variant="secondary" className="flex-1">
-                            Cancel
-                        </Button>
-                        <Button className="flex-1 bg-blue-600">
-                            Save Bill
-                        </Button>
+                        <div className="flex gap-2 pt-2">
+                            <Button variant="secondary" className="">
+                                Cancel
+                            </Button>
+                            <Button
+                                onClick={handleAddBill}
+                                className="bg-blue-600"
+                            >
+                                {addBillLoading ? (
+                                    <Loader
+                                        size={28}
+                                        className="animate-spin"
+                                    />
+                                ) : (
+                                    "Save Bill"
+                                )}
+                            </Button>
+                        </div>
                     </div>
                 </div>
             </div>
