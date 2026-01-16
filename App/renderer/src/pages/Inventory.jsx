@@ -189,16 +189,7 @@ const Inventory = () => {
                                 onChange={(e) => setSearchQuery(e.target.value)}
                             />
                         </div>
-                        <Select
-                            placeholder="Search by category"
-                            onChange={setSearchQuery}
-                            options={categoryData.map((cat) => {
-                                return {
-                                    label: cat.name,
-                                    value: cat.name,
-                                };
-                            })}
-                        />
+
                     </div>
 
                     {/* Button Section */}

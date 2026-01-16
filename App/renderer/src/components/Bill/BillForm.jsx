@@ -197,7 +197,7 @@ const BillForm = ({
                                     id={`items.${index}.productId`}
                                     name={`items[${index}].productId`}
                                     required
-                                    value={item.productId._id}
+                                    value={item.productId?._id}
                                     onChange={(val) =>
                                         handleItemChange(
                                             index,

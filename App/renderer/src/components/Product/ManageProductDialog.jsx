@@ -7,15 +7,6 @@ import {
     useUpdateProduct,
 } from "../../api/Hooks/product.api";
 
-const INITIAL_FORM_STATE = {
-    name: "",
-    description: "",
-    categoryId: null,
-    isActive: true,
-    imageUrl: "",
-    customFields: [],
-};
-
 const ManageProductDialog = ({
     open,
     onClose,
@@ -24,7 +15,8 @@ const ManageProductDialog = ({
     selectedProduct,
     setProductState,
 }) => {
-    const [formData, setFormData] = useState(INITIAL_FORM_STATE);
+    const [formData, setFormData] = useState({});
+
     const [selectedImage, setSelectedImage] = useState(null);
 
     const { createProduct, loading: createProductLoading } = useCreateProduct();
@@ -32,13 +24,13 @@ const ManageProductDialog = ({
 
     useEffect(() => {
         if (open && !isEditing) {
-            setFormData(INITIAL_FORM_STATE);
+            setFormData({});
         }
 
-        if (open && isEditing) {
+        if (open && isEditing && selectedProduct.categoryId) {
             setFormData(selectedProduct);
         }
-    }, [open, isEditing, selectedProduct]);
+    }, [open, isEditing]);
 
     if (!open) return null;
 
@@ -59,7 +51,7 @@ const ManageProductDialog = ({
                 setProductData((prev) =>
                     prev.map((product) =>
                         product._id === response.product._id
-                            ? response.product
+                            ? { ...response.product }
                             : product
                     )
                 );

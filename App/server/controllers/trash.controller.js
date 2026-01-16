@@ -54,7 +54,7 @@ export const deleteFromTrash = expressAsyncHandler(async (req, res, next) => {
         }
 
         // Delete product image if item is product
-        if (trashedItem.collectionName === "products") {
+        if (trashedItem.collectionName === "products" && trashedItem.data.imageUrl) {
             const filename = trashedItem.data.imageUrl.split("/").pop();
 
             const filePath = path.join(

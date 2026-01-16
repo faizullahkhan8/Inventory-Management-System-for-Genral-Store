@@ -41,7 +41,7 @@ export const createProduct = AsyncHandler(async (req, res, next) => {
 
         const newProduct = new Product({
             ...data,
-            imageUrl: `${process.env.BACKEND_SERVER_IMAGE_PATH}/${req.file.filename}`,
+            imageUrl: req.file?.filename ? `${process.env.BACKEND_SERVER_IMAGE_PATH}/${req.file.filename}` : "",
         });
 
         const newInventory = await Inventory.create({
@@ -52,12 +52,16 @@ export const createProduct = AsyncHandler(async (req, res, next) => {
 
         newProduct.inventoryId = newInventory._id;
 
-        await newProduct.save({ validateModifiedOnly: true });
+        await newProduct.save({ validateModifiedOnly: true })
+
+        const populatedProduct = await Product.findById(newProduct._id)
+            .populate('inventoryId')
+            .populate('categoryId');
 
         return res.status(201).json({
             success: true,
             message: "Product created successfully.",
-            product: new ProductDto(newProduct),
+            product: new ProductDto(populatedProduct),
         });
     } catch (error) {
         console.log("Error in create product controller.", error.message);
@@ -135,8 +139,8 @@ export const updateProduct = AsyncHandler(async (req, res, next) => {
         }
 
         const isExist = await Product.findOne({
-            $or: [{ name: data?.name }, { sku: data?.sku }],
-            _id: { $ne: productId }, // Exclude the current product
+            $or: [{ name: data?.name }],
+            _id: { $ne: productId },
         });
 
         if (isExist) {
@@ -179,14 +183,20 @@ export const updateProduct = AsyncHandler(async (req, res, next) => {
                         );
                 });
                 dbProduct.imageUrl = `${process.env.BACKEND_SERVER_IMAGE_PATH}/${req.file.filename}`;
+            } else {
+                dbProduct.imageUrl = `${process.env.BACKEND_SERVER_IMAGE_PATH}/${req.file.filename}`;
             }
         }
 
         await dbProduct.save({ validateModifiedOnly: true });
 
+        const populatedProduct = await Product.findById(dbProduct._id)
+            .populate("inventoryId")
+            .populate("categoryId");
+
         return res.status(201).json({
             success: true,
-            product: new ProductDto(dbProduct),
+            product: new ProductDto(populatedProduct),
         });
     } catch (error) {
         console.log("Error in update product controller: ", error.message);
